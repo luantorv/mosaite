@@ -26,12 +26,13 @@
 
 ## Funcionalidades
 
-__Nada de momento__
+_Nada de momento_
 
 ---
 
 ## Estrucutra del Proyecto
 
+```
 mosaite/
 |   backend/
 |   |   back-api/
@@ -46,6 +47,7 @@ mosaite/
 |   .env
 |   .gitignore
 |   README.md
+```
 
 ---
 
@@ -53,7 +55,7 @@ mosaite/
 
 El sistema permitirá a los usuarios hacer preguntas como:
 
-> __"¿Cuánto gasté en proveedores en abril?"__
+> _"¿Cuánto gasté en proveedores en abril?"_
 
 Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
 
