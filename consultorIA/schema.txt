@@ -1,0 +1,15 @@
+TABLA clientes:
+  - id_cliente (INT, PK)
+  - nombre (VARCHAR)
+  - email (VARCHAR)
+
+TABLA pedidos:
+  - id_pedido (INT, PK)
+  - id_cliente (INT, FK → clientes.id_cliente)
+  - fecha (DATE)
+  - total (DECIMAL)
+
+TABLA productos:
+  - id_producto (INT, PK)
+  - nombre (VARCHAR)
+  - stock (INT)

@@ -5,16 +5,23 @@
 ---
 
 >[!IMPORTANT]
-> En este README.md solo se tratarán algunas cuestiones generales del proyecto, ya que al estar dividido en dos partes que pueden funcionar por separado, se hizo un archivo README.md para cada una de las partes de forma más detallada.
+> En este README.md solo se tratarán algunas cuestiones generales del proyecto, ya que al estar dividido en partes que pueden funcionar por separado, se hizo un archivo README.md para cada una de las partes de forma más detallada.
 
 ## Tecnologías Utilizadas
 
 ### BackEnd:
 
-- Python 3.13
-- Django
+- Python 
+- Django 
 - Django REST FrameWork
-- PostgreSQL
+- MySQL
+
+### ConsultorIA (Módulo de IA)
+
+- Python
+- llama.cpp
+- sentence-transformers
+- Gemma-3n-E4B-it-Q4_K_M
 
 ### FrontEnd:
 
@@ -26,7 +33,7 @@
 
 ## Funcionalidades
 
-_Nada de momento_
+- ConsultarIA _(el módulo de IA)_ ya funciona _relativamente_ bien, falta hacer más prubas y añadir una validación de salida para integrarlo al backend.
 
 ---
 
@@ -37,6 +44,14 @@ mosaite/
 |   backend/
 |   |   back-api/
 |   |   README.md
+|   consultorIA/
+|   |   core/
+|   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
+|   |   model-ia/
+|   |   examples.json
+|   |   pipeline.py
+|   |   schema.txt
+|   |   test.py
 |   frontend/
 |   |   public/
 |   |   src/
@@ -49,6 +64,11 @@ mosaite/
 |   README.md
 ```
 
+>[!CAUTION]
+> Para el desarrollo de éste proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
+> Es necesario que esté el archivo **.GGUF** en `mosaite/consultorIA/core/`.
+> Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
+
 ---
 
 ## Consultas por Lenguaje Natural
@@ -59,11 +79,13 @@ El sistema permitirá a los usuarios hacer preguntas como:
 
 Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
 
-> **Estado:** Pendiente
+> **Estado:** Hay un test disponible de una versión utilizable, pero falta hacer validaciones de salida para poder implementarlo en el backend.
 
 ## Por hacer
 
-**TODO**
+- El backend y el frontend solo tienen una estructura básica.
+
+- Hacer validaciones de salida de consultorIA.
 
 ## Licencia
 

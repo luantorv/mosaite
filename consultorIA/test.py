@@ -1,4 +1,4 @@
-from modelo import consultar_modelo
+from pipeline import consultar_modelo, seleccionar_sql, generar_sql
 from os import name, system
 
 def limpiar():
@@ -37,9 +37,25 @@ while seg:
                 if message != "exit":
                     print("Gemma:\n", consultar_modelo(message))
         case "2":
-            pass
+            limpiar()
+            message = ""
+
+            while message != "exit":
+                print(">>>", end=" ")
+                message = input()
+
+                if message != "exit":
+                    print("Ember:\n", seleccionar_sql(message))
         case "3":
-            pass
+            limpiar()
+            message = ""
+
+            while message != "exit":
+                print(">>>", end=" ")
+                message = input()
+
+                if message != "exit":
+                    print("Pipeline:\n", generar_sql(message))
         case "0":
             limpiar()
             seg = False

@@ -1,0 +1,10 @@
+[
+  {
+    "question": "Mostrar todos los clientes que hicieron pedidos en enero de 2024",
+    "sql": "SELECT * FROM pedidos WHERE fecha BETWEEN '2024-01-01' AND '2024-01-31';"
+  },
+  {
+    "question": "Listar productos con stock menor a 10",
+    "sql": "SELECT nombre, stock FROM productos WHERE stock < 10;"
+  }
+]
