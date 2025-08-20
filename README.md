@@ -33,7 +33,7 @@
 
 ## Funcionalidades
 
-- ConsultarIA _(el módulo de IA)_ ya funciona _relativamente_ bien, falta hacer más pruebas y añadir una validación de salida para integrarlo al backend.
+- ConsultarIA _(el módulo de IA)_ ya funciona, falta hacer el resto.
 
 ---
 
@@ -50,6 +50,8 @@ mosaite/
 |   |   model-ia/
 |   |   examples.json
 |   |   pipeline.py
+|   |   README.md
+|   |   requirements.txt
 |   |   schema.txt
 |   |   test.py
 |   frontend/
@@ -81,13 +83,13 @@ El sistema permitirá a los usuarios hacer preguntas como:
 
 Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
 
-> **Estado:** Hay un test disponible de una versión utilizable, pero falta hacer validaciones de salida para poder implementarlo en el backend.
+> **Estado:** Está listo para implementarlo en el backend _(todavía no está hecho el backend)_.
 
 ## Por hacer
 
 - El backend y el frontend solo tienen una estructura básica.
 
-- Hacer validaciones de salida de consultorIA.
+- En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
 
 ## Licencia
 
@@ -95,4 +97,4 @@ Este proyecto es de uso libre para fines académicos. Para otros usos contactar 
 
 ## Autor
 
-Luis Antonio Reis Viera - Estudiante
+Luis Antonio Reis Viera - Estudiante de la Técnicatura Superior en Ciencia de Datos e Inteligencia Artificial.
