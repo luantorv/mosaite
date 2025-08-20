@@ -32,30 +32,35 @@ while seg:
 
             while (message != "exit"):
                 print(">>>", end=" ")
-                message = input()
+                message = input(":")
 
                 if message != "exit":
-                    print("Gemma:\n", consultar_modelo(message))
+                    print("Gemma:\n", consultar_modelo(message), "\n")
         case "2":
             limpiar()
             message = ""
 
             while message != "exit":
                 print(">>>", end=" ")
-                message = input()
+                message = input(":")
 
                 if message != "exit":
-                    print("Ember:\n", seleccionar_sql(message))
+                    print("Ember:\n", seleccionar_sql(message), "\n")
         case "3":
             limpiar()
             message = ""
 
             while message != "exit":
                 print(">>>", end=" ")
-                message = input()
+                message = input(":")
 
                 if message != "exit":
-                    print("Pipeline:\n", generar_sql(message))
+                    respuesta = generar_sql(message)
+
+                    if respuesta["valida"]:
+                        print("Pipeline:\n", respuesta["consulta"], "\n")
+                    else:
+                        print("Pipeline:\n", respuesta["error_tecnico"], "\n")
         case "0":
             limpiar()
             seg = False

@@ -33,7 +33,7 @@
 
 ## Funcionalidades
 
-- ConsultarIA _(el módulo de IA)_ ya funciona _relativamente_ bien, falta hacer más prubas y añadir una validación de salida para integrarlo al backend.
+- ConsultarIA _(el módulo de IA)_ ya funciona _relativamente_ bien, falta hacer más pruebas y añadir una validación de salida para integrarlo al backend.
 
 ---
 
@@ -66,7 +66,9 @@ mosaite/
 
 >[!CAUTION]
 > Para el desarrollo de éste proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
+>
 > Es necesario que esté el archivo **.GGUF** en `mosaite/consultorIA/core/`.
+>
 > Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
 
 ---
