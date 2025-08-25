@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+consultoria.egg-info/PKG-INFO
+consultoria.egg-info/SOURCES.txt
+consultoria.egg-info/dependency_links.txt
+consultoria.egg-info/requires.txt
+consultoria.egg-info/top_level.txt
