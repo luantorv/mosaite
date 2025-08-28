@@ -2,7 +2,7 @@
 
 **Mosaite** es un sistema de registro contable moderno, desarrollado como proyecto académico, que permite a los usuarios gestionar sus movimientos contables desde una interfaz web centralizada. Además, incorpora un modelo de lenguaje (LLM) paa realizar consultas semánticas y acceder a información contable usando lenguaje natural.
 
-<img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite">
+<img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto>
 
 ---
 
@@ -28,6 +28,7 @@
 ### FrontEnd:
 
 - React
+- BootStrap
 
 ### Otros:
 
@@ -36,6 +37,7 @@
 ## Funcionalidades
 
 - ConsultarIA _(el módulo de IA)_ ya funciona, falta hacer el resto.
+- Ya hay algo del frontend hecho.
 
 ---
 
@@ -120,7 +122,11 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ## Por hacer
 
-- El backend y el frontend solo tienen una estructura básica.
+- La Base de Datos y el backend completos.
+
+- Terminar el frontend.
+
+- Complementar la integración de back y front.
 
 - En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
 
