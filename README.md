@@ -2,6 +2,8 @@
 
 **Mosaite** es un sistema de registro contable moderno, desarrollado como proyecto académico, que permite a los usuarios gestionar sus movimientos contables desde una interfaz web centralizada. Además, incorpora un modelo de lenguaje (LLM) paa realizar consultas semánticas y acceder a información contable usando lenguaje natural.
 
+<img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite">
+
 ---
 
 >[!IMPORTANT]
@@ -43,20 +45,51 @@
 mosaite/
 |   backend/
 |   |   back-api/
+|   |   |   backapi/
+|   |   |   |   __init__.py
+|   |   |   |   asgi.py
+|   |   |   |   settings.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   |   wsgi.py
+|   |   |   consultorIA/
+|   |   |   |   core/
+|   |   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
+|   |   |   |   example.py
+|   |   |   |   examples.json
+|   |   |   |   main.py
+|   |   |   |   schema.txt
+|   |   manage.py
 |   |   README.md
-|   consultorIA/
-|   |   core/
-|   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
-|   |   model-ia/
-|   |   examples.json
-|   |   pipeline.py
-|   |   README.md
-|   |   requirements.txt
-|   |   schema.txt
-|   |   test.py
 |   frontend/
 |   |   public/
+|   |   |   icon.png
+|   |   |   index.html
+|   |   |   manifest.json
+|   |   |   robots.txt
 |   |   src/
+|   |   |   assets/
+|   |   |   |   icon.png
+|   |   |   |   logo.png
+|   |   |   components/
+|   |   |   |   Content.js
+|   |   |   |   Dashboard.js
+|   |   |   |   Login.js
+|   |   |   |   ProtectedRoute.js
+|   |   |   |   Searchbar.js
+|   |   |   |   SideBar.js
+|   |   |   |   ThemeToggle.js
+|   |   |   |   UserMenu.js
+|   |   |   context/
+|   |   |   |   AuthContext.js
+|   |   |   |   ThemeContext.js
+|   |   |   App.css
+|   |   |   App.js
+|   |   |   App.test.js
+|   |   |   index.css
+|   |   |   index.js
+|   |   |   reportWebVitals.js
+|   |   |   setupTests.js
 |   |   .gitignore
 |   |   package-lock.json
 |   |   package.json
@@ -69,7 +102,7 @@ mosaite/
 >[!CAUTION]
 > Para el desarrollo de éste proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
 >
-> Es necesario que esté el archivo **.GGUF** en `mosaite/consultorIA/core/`.
+> Es necesario que esté el archivo **.GGUF** en `mosaite/backend/back-api/consultorIA/core/`.
 >
 > Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
 
@@ -97,4 +130,8 @@ Este proyecto es de uso libre para fines académicos. Para otros usos contactar 
 
 ## Autor
 
-Luis Antonio Reis Viera - Estudiante de la Técnicatura Superior en Ciencia de Datos e Inteligencia Artificial.
+Luis Antonio Reis Viera
+
+### Contacto:
+
+- Mail: `luantorv@gmail.com`

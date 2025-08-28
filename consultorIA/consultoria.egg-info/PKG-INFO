@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: consultoria
-Version: 0.1.1
-Summary: Módulo de utilidades para traducción de Lenguaje Natural a SQL
-Author-email: Luis <luantorv@gmail.com>
-Requires-Dist: llama-cpp-python
-Requires-Dist: sentence-transformers

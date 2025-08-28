@@ -1,4 +1,4 @@
-from pipeline import consultar_modelo, seleccionar_sql, generar_sql
+from main import consultar_modelo, seleccionar_sql, generar_sql
 from os import name, system
 
 def limpiar():
@@ -32,7 +32,7 @@ while seg:
 
             while (message != "exit"):
                 print(">>>", end=" ")
-                message = input(":")
+                message = input()
 
                 if message != "exit":
                     print("Gemma:\n", consultar_modelo(message), "\n")
@@ -42,7 +42,7 @@ while seg:
 
             while message != "exit":
                 print(">>>", end=" ")
-                message = input(":")
+                message = input()
 
                 if message != "exit":
                     print("Ember:\n", seleccionar_sql(message), "\n")
@@ -52,7 +52,7 @@ while seg:
 
             while message != "exit":
                 print(">>>", end=" ")
-                message = input(":")
+                message = input()
 
                 if message != "exit":
                     respuesta = generar_sql(message)
