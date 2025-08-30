@@ -1,12 +1,15 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useTheme } from "../context/ThemeContext";
 
 function SearchBar() {
+  const { theme } = useTheme();
+
   return (
     <div
       style={{
-        background: "#e0e5ec",
+        background: theme.background,
         borderRadius: "25px",
-        boxShadow: "inset 8px 8px 16px #a3b1c6, inset -8px -8px 16px #ffffff",
+        boxShadow: theme.buttonShadowIn,
         padding: "10px 20px",
         width: "100%",
         maxWidth: "500px",
@@ -19,9 +22,9 @@ function SearchBar() {
       {/* Ícono de búsqueda */}
       <div
         style={{
-          background: "#e0e5ec",
+          background: theme.background,
           borderRadius: "50%",
-          boxShadow: "3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff",
+          boxShadow: theme.buttonShadowOut,
           width: "32px",
           height: "32px",
           display: "flex",
@@ -43,25 +46,25 @@ function SearchBar() {
           background: "transparent",
           border: "none",
           outline: "none",
-          color: "#555",
+          color: theme.textColor,
           fontSize: "15px",
           width: "100%",
           fontWeight: "400",
         }}
         onFocus={(e) => {
-          e.target.parentElement.style.boxShadow = "inset 12px 12px 20px #a3b1c6, inset -12px -12px 20px #ffffff";
+          e.target.parentElement.style.boxShadow = theme.cardShadowIn;
         }}
         onBlur={(e) => {
-          e.target.parentElement.style.boxShadow = "inset 8px 8px 16px #a3b1c6, inset -8px -8px 16px #ffffff";
+          e.target.parentElement.style.boxShadow = theme.cardShadowOut;
         }}
       />
       
       {/* Botón de limpiar */}
       <button
         style={{
-          background: "#e0e5ec",
+          background: theme.background,
           borderRadius: "50%",
-          boxShadow: "3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff",
+          boxShadow: theme.buttonShadowOut,
           width: "35px",
           height: "35px",
           display: "flex",
@@ -69,16 +72,16 @@ function SearchBar() {
           justifyContent: "center",
           border: "none",
           fontSize: "14px",
-          color: "#666",
+          color: theme.textColor,
           cursor: "pointer",
           transition: "all 0.2s ease",
           flexShrink: 0,
         }}
         onMouseEnter={(e) => {
-          e.target.style.boxShadow = "inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff";
+          e.target.style.boxShadow = theme.cardShadowIn;       
         }}
         onMouseLeave={(e) => {
-          e.target.style.boxShadow = "3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff";
+          e.target.style.boxShadow = theme.cardShadowOut;
         }}
         onClick={() => {
           const input = document.querySelector('input[type="text"]');

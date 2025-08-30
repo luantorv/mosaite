@@ -1,14 +1,18 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../assets/logo.png";
+import SidebarMenu from "./SidebarMenu";
+import { useTheme } from "../context/ThemeContext";
 
 function Sidebar() {
+  const { theme } = useTheme();
+
   return (
     <div
       className="d-flex flex-column"
       style={{
         width: "250px",
         height: "100vh",
-        background: "#e0e5ec",
+        background: theme.background,
         position: "fixed",
         top: 0,
         left: 0,
@@ -20,9 +24,9 @@ function Sidebar() {
       {/* Contenedor con efecto neumórfico para el sidebar */}
       <div
         style={{
-          background: "#e0e5ec",
+          background: theme.background,
           borderRadius: "20px",
-          boxShadow: "9px 9px 16px #a3b1c6,-9px -9px 16px #ffffff",
+          boxShadow: theme.cardShadowOut,
           padding: "20px",
           height: "100%",
           display: "flex",
@@ -47,6 +51,10 @@ function Sidebar() {
               objectFit: "contain",
             }}
           />
+        </div>
+
+        <div>
+            <SidebarMenu />
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
 import UserMenu from "./UserMenu";
+import { useTheme } from "../context/ThemeContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Dashboard() {
@@ -12,6 +13,8 @@ function Dashboard() {
   }, []);
 
   const [isOpen, setIsOpen] = useState(true);
+
+  const { theme } = useTheme();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -22,8 +25,9 @@ function Dashboard() {
       className="d-flex" 
       style={{ 
         height: "100vh", 
-        background: "#e0e5ec",
-        position: "relative" 
+        background: theme.background,
+        position: "relative",
+        transition: "background 0.3s ease"
       }}
     >
       {/* Sidebar con animación */}
@@ -42,7 +46,7 @@ function Dashboard() {
       <div
         className="flex-grow-1"
         style={{
-          background: "#e0e5ec",
+          background: theme.background,
           padding: "20px",
           marginLeft: isOpen ? "0" : "-250px",
           transition: "margin-left 0.3s ease",
@@ -52,9 +56,9 @@ function Dashboard() {
         <div
           className="h-100"
           style={{
-            background: "#e0e5ec",
+            background: theme.background,
             borderRadius: "25px",
-            boxShadow: "15px 15px 30px #a3b1c6, -15px -15px 30px #ffffff",
+            boxShadow: theme.cardShadowOut,
             position: "relative",
             padding: "20px",
           }}
@@ -72,21 +76,21 @@ function Dashboard() {
                     width: "45px",
                     height: "45px",
                     borderRadius: "10px",
-                    background: "#e0e5ec",
-                    boxShadow: "8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff",
+                    background: theme.background,
+                    boxShadow: theme.cardShadowOut,
                     transition: "all 0.3s ease",
                     border: "none",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "18px",
-                    color: "#666",
+                    color: theme.textColor,
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.boxShadow = "inset 8px 8px 16px #a3b1c6, inset -8px -8px 16px #ffffff";
+                    e.target.style.boxShadow = theme.cardShadowOut
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.boxShadow = "8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff";
+                    e.target.style.boxShadow = theme.cardShadowOut
                   }}
                 >
                   {isOpen ? "←" : "→"}

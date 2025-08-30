@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 function UserMenu() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { theme } = useTheme();
 
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
@@ -22,27 +24,27 @@ function UserMenu() {
             width: "45px",
             height: "45px",
             borderRadius: "10px",
-            background: "#e0e5ec",
+            background: theme.background,
             boxShadow: isUserMenuOpen 
-              ? "inset 8px 8px 16px #a3b1c6, inset -8px -8px 16px #ffffff"
-              : "8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff",
+              ? theme.buttonShadowIn
+              : theme.buttonShadowOut,
             transition: "all 0.3s ease",
             border: "none",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             fontSize: "18px",
-            color: "#666",
+            color: theme.textColor,
             marginLeft: "10px",
           }}
           onMouseEnter={(e) => {
             if (!isUserMenuOpen) {
-              e.target.style.boxShadow = "inset 8px 8px 16px #a3b1c6, inset -8px -8px 16px #ffffff";
+              e.target.style.boxShadow = theme.buttonShadowIn;
             }
           }}
           onMouseLeave={(e) => {
             if (!isUserMenuOpen) {
-              e.target.style.boxShadow = "8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff";
+              e.target.style.boxShadow = theme.buttonShadowOut;
             }
           }}
         >
@@ -57,9 +59,9 @@ function UserMenu() {
               top: "55px",
               right: "0",
               width: "220px",
-              background: "#e0e5ec",
+              background: theme.background,
               borderRadius: "15px",
-              boxShadow: "15px 15px 30px #a3b1c6, -15px -15px 30px #ffffff",
+              boxShadow: theme.cardShadowOut,
               zIndex: 1000,
               padding: "15px",
               transform: "translateY(0)",
@@ -68,7 +70,7 @@ function UserMenu() {
             }}
           >
             {/* Contenido del menú de usuario */}
-            <div style={{ color: "#666", fontSize: "14px" }}>
+            <div style={{ color: theme.textColor, fontSize: "14px" }}>
               <div 
                 style={{
                   padding: "10px 0",
@@ -77,7 +79,7 @@ function UserMenu() {
                 }}
               >
                 <strong>Usuario Demo</strong>
-                <div style={{ fontSize: "12px", color: "#999" }}>
+                <div style={{ fontSize: "12px", color: theme.textColorMuted }}>
                   usuario@ejemplo.com
                 </div>
               </div>
@@ -87,21 +89,21 @@ function UserMenu() {
                   className="btn"
                   onClick={closeUserMenu}
                   style={{
-                    background: "#e0e5ec",
+                    background: theme.background,
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "8px",
-                    boxShadow: "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff",
-                    color: "#666",
+                    boxShadow: theme.smallButtonShadowOut,
+                    color: theme.textColor,
                     fontSize: "13px",
                     textAlign: "left",
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.boxShadow = "inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff";
+                    e.target.style.boxShadow = theme.smallButtonShadowIn;
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.boxShadow = "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff";
+                    e.target.style.boxShadow = theme.smallButtonShadowOut;
                   }}
                 >
                   Mi Perfil
@@ -111,21 +113,21 @@ function UserMenu() {
                   className="btn"
                   onClick={closeUserMenu}
                   style={{
-                    background: "#e0e5ec",
+                    background: theme.background,
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "8px",
-                    boxShadow: "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff",
-                    color: "#666",
+                    boxShadow: theme.smallButtonShadowOut,
+                    color: theme.textColor,
                     fontSize: "13px",
                     textAlign: "left",
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.boxShadow = "inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff";
+                    e.target.style.boxShadow = theme.smallButtonShadowIn;
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.boxShadow = "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff";
+                    e.target.style.boxShadow = theme.smallButtonShadowOut;
                   }}
                 >
                   Configuración
@@ -135,11 +137,11 @@ function UserMenu() {
                   className="btn"
                   onClick={closeUserMenu}
                   style={{
-                    background: "#e0e5ec",
+                    background: theme.background,
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "8px",
-                    boxShadow: "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff",
+                    boxShadow: theme.smallButtonShadowOut,
                     color: "#d73027",
                     fontSize: "13px",
                     textAlign: "left",
@@ -147,10 +149,10 @@ function UserMenu() {
                     marginTop: "5px",
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.boxShadow = "inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff";
+                    e.target.style.boxShadow = theme.smallButtonShadowIn;
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.boxShadow = "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff";
+                    e.target.style.boxShadow = theme.smallButtonShadowOut;
                   }}
                 >
                   Cerrar Sesión

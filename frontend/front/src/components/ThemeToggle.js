@@ -1,34 +1,30 @@
-import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useTheme } from '../context/ThemeContext';
 
 function ThemeToggle() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+  const { theme, toggleTheme, isLight, isDark } = useTheme();
 
   return (
-    /*<div
+    <div
       style={{
-        background: "#e0e5ec",
+        background: theme.background,
         borderRadius: "20px",
-        boxShadow: "5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff",
-        padding: "10px",
-        display: "inline-block",
+        boxShadow: theme.buttonShadowOut,
+        padding: "4px",
+        transition: "all 0.3s ease",
       }}
-    >*/
+    >
       <label
         style={{
           position: "relative",
           display: "inline-block",
           width: "60px",
           height: "34px",
+          cursor: "pointer",
         }}
       >
         <input
           type="checkbox"
-          checked={isDarkMode}
+          checked={isDark}
           onChange={toggleTheme}
           style={{
             opacity: 0,
@@ -36,21 +32,23 @@ function ThemeToggle() {
             height: 0,
           }}
         />
+        
+        {/* Background del switch */}
         <div
           style={{
             position: "absolute",
-            cursor: "pointer",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: isDarkMode ? "black" : "#2196f3",
+            backgroundColor: isDark ? "#1a252f" : "#87CEEB",
             transition: "0.4s",
-            zIndex: 0,
-            overflow: "hidden",
             borderRadius: "34px",
+            overflow: "hidden",
+            boxShadow: "inset 2px 2px 4px rgba(0,0,0,0.2)",
           }}
         >
+          {/* Slider (Sol/Luna) */}
           <div
             style={{
               position: "absolute",
@@ -58,201 +56,199 @@ function ThemeToggle() {
               width: "26px",
               left: "4px",
               bottom: "4px",
-              backgroundColor: isDarkMode ? "white" : "yellow",
+              backgroundColor: isDark ? "#f0f0f0" : "#FFD700",
               transition: "0.4s",
               borderRadius: "50%",
-              transform: isDarkMode ? "translateX(26px)" : "translateX(0)",
-              animation: isDarkMode ? "rotate-center 0.6s ease-in-out both" : "none",
+              transform: isDark ? "translateX(26px)" : "translateX(0)",
+              boxShadow: isDark 
+                ? "0 2px 6px rgba(0,0,0,0.3)" 
+                : "0 0 10px rgba(255, 215, 0, 0.5)",
             }}
           >
-            {/* Moon dots */}
-            <svg
-              viewBox="0 0 100 100"
-              style={{
-                left: "10px",
-                top: "3px",
-                position: "absolute",
-                width: "6px",
-                height: "6px",
-                zIndex: 4,
-                opacity: isDarkMode ? 1 : 0,
-                transition: "0.4s",
-                fill: "gray",
-              }}
-            >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
-            <svg
-              viewBox="0 0 100 100"
-              style={{
-                left: "2px",
-                top: "10px",
-                position: "absolute",
-                width: "10px",
-                height: "10px",
-                zIndex: 4,
-                opacity: isDarkMode ? 1 : 0,
-                transition: "0.4s",
-                fill: "gray",
-              }}
-            >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
-            <svg
-              viewBox="0 0 100 100"
-              style={{
-                left: "16px",
-                top: "18px",
-                position: "absolute",
-                width: "3px",
-                height: "3px",
-                zIndex: 4,
-                opacity: isDarkMode ? 1 : 0,
-                transition: "0.4s",
-                fill: "gray",
-              }}
-            >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
+            {/* Cráteres de la luna */}
+            {isDark && (
+              <>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "10px",
+                    top: "3px",
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "50%",
+                    backgroundColor: "#d0d0d0",
+                    transition: "0.4s",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "2px",
+                    top: "10px",
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: "#d0d0d0",
+                    transition: "0.4s",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "16px",
+                    top: "18px",
+                    width: "3px",
+                    height: "3px",
+                    borderRadius: "50%",
+                    backgroundColor: "#d0d0d0",
+                    transition: "0.4s",
+                  }}
+                />
+              </>
+            )}
 
-            {/* Light rays */}
-            <svg
-              viewBox="0 0 100 100"
-              style={{
-                left: "-8px",
-                top: "-8px",
-                position: "absolute",
-                width: "43px",
-                height: "43px",
-                zIndex: -1,
-                fill: "white",
-                opacity: isDarkMode ? 0 : "10%",
-                transition: "0.4s",
-              }}
-            >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
-            <svg
-              viewBox="0 0 100 100"
-              style={{
-                left: "-50%",
-                top: "-50%",
-                position: "absolute",
-                width: "55px",
-                height: "55px",
-                zIndex: -1,
-                fill: "white",
-                opacity: isDarkMode ? 0 : "10%",
-                transition: "0.4s",
-              }}
-            >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
-            <svg
-              viewBox="0 0 100 100"
-              style={{
-                left: "-18px",
-                top: "-18px",
-                position: "absolute",
-                width: "60px",
-                height: "60px",
-                zIndex: -1,
-                fill: "white",
-                opacity: isDarkMode ? 0 : "10%",
-                transition: "0.4s",
-              }}
-            >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
+            {/* Rayos de sol */}
+            {isLight && (
+              <>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "-8px",
+                    top: "-8px",
+                    width: "43px",
+                    height: "43px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(255, 215, 0, 0.1)",
+                    transition: "0.4s",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "-13px",
+                    top: "-13px",
+                    width: "55px",
+                    height: "55px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(255, 215, 0, 0.05)",
+                    transition: "0.4s",
+                  }}
+                />
+              </>
+            )}
           </div>
 
-          {/* Stars */}
+          {/* Estrellas para el modo oscuro */}
           <div
             style={{
-              transform: isDarkMode ? "translateY(0)" : "translateY(-32px)",
-              opacity: isDarkMode ? 1 : 0,
+              transform: isDark ? "translateY(0)" : "translateY(-32px)",
+              opacity: isDark ? 1 : 0,
               transition: "0.4s",
             }}
           >
-            <svg
-              viewBox="0 0 20 20"
+            <div
               style={{
-                fill: "white",
                 position: "absolute",
-                transition: "0.4s",
-                width: "20px",
-                top: "2px",
-                left: "3px",
+                top: "8px",
+                left: "8px",
+                width: "4px",
+                height: "4px",
+                backgroundColor: "white",
+                clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
                 animation: "star-twinkle 2s infinite",
                 animationDelay: "0.3s",
               }}
-            >
-              <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
-            </svg>
-            <svg
-              viewBox="0 0 20 20"
+            />
+            <div
               style={{
-                fill: "white",
                 position: "absolute",
-                transition: "0.4s",
-                width: "6px",
-                top: "16px",
-                left: "3px",
+                top: "18px",
+                left: "6px",
+                width: "3px",
+                height: "3px",
+                backgroundColor: "white",
+                clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
                 animation: "star-twinkle 2s infinite",
               }}
-            >
-              <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
-            </svg>
-            <svg
-              viewBox="0 0 20 20"
+            />
+            <div
               style={{
-                fill: "white",
                 position: "absolute",
-                transition: "0.4s",
-                width: "12px",
-                top: "20px",
-                left: "10px",
+                top: "22px",
+                left: "18px",
+                width: "3px",
+                height: "3px",
+                backgroundColor: "white",
+                clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
                 animation: "star-twinkle 2s infinite",
                 animationDelay: "0.6s",
               }}
-            >
-              <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
-            </svg>
-            <svg
-              viewBox="0 0 20 20"
+            />
+            <div
               style={{
-                fill: "white",
                 position: "absolute",
-                transition: "0.4s",
-                width: "18px",
-                top: "0px",
-                left: "18px",
+                top: "4px",
+                left: "22px",
+                width: "4px",
+                height: "4px",
+                backgroundColor: "white",
+                clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
                 animation: "star-twinkle 2s infinite",
                 animationDelay: "1.3s",
               }}
-            >
-              <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
-            </svg>
+            />
+          </div>
+
+          {/* Nubes para el modo claro */}
+          <div
+            style={{
+              transform: isLight ? "translateY(0)" : "translateY(32px)",
+              opacity: isLight ? 0.6 : 0,
+              transition: "0.4s",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "6px",
+                right: "8px",
+                width: "12px",
+                height: "6px",
+                backgroundColor: "white",
+                borderRadius: "10px",
+                animation: "cloud-float 3s ease-in-out infinite",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "18px",
+                right: "12px",
+                width: "8px",
+                height: "4px",
+                backgroundColor: "white",
+                borderRadius: "10px",
+                animation: "cloud-float 3s ease-in-out infinite",
+                animationDelay: "1s",
+              }}
+            />
           </div>
         </div>
       </label>
 
-      //{/* CSS animations as style tag */}
-      /*<style jsx>{`
-        @keyframes rotate-center {
-          0% { transform: translateX(26px) rotate(0deg); }
-          100% { transform: translateX(26px) rotate(360deg); }
+      <style>{`
+        @keyframes star-twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
         }
         
-        @keyframes star-twinkle {
-          0% { transform: scale(1); }
-          40% { transform: scale(1.2); }
-          80% { transform: scale(0.8); }
-          100% { transform: scale(1); }
+        @keyframes cloud-float {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(2px); }
         }
       `}</style>
-    </div>*/
+    </div>
   );
 }
 
-export default ThemeToggle
+export default ThemeToggle;
