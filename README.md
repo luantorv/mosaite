@@ -46,14 +46,13 @@
 ```
 mosaite/
 |   backend/
-|   |   back-api/
-|   |   |   backapi/
-|   |   |   |   __init__.py
-|   |   |   |   asgi.py
-|   |   |   |   settings.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   |   wsgi.py
+|   |   backapi/
+|   |   |   __init__.py
+|   |   |   asgi.py
+|   |   |   settings.py
+|   |   |   urls.py
+|   |   |   wsgi.py
+|   |   mosaite/
 |   |   |   consultorIA/
 |   |   |   |   core/
 |   |   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
@@ -61,6 +60,14 @@ mosaite/
 |   |   |   |   examples.json
 |   |   |   |   main.py
 |   |   |   |   schema.txt
+|   |   |   migrations/
+|   |   |   |   __init__.py
+|   |   |   __init__.py
+|   |   |   admin.py
+|   |   |   apps.py
+|   |   |   models.py
+|   |   |   tests.py
+|   |   |   views.py
 |   |   manage.py
 |   |   README.md
 |   frontend/
@@ -80,6 +87,7 @@ mosaite/
 |   |   |   |   ProtectedRoute.js
 |   |   |   |   Searchbar.js
 |   |   |   |   SideBar.js
+|   |   |   |   SidebarMenu.js
 |   |   |   |   ThemeToggle.js
 |   |   |   |   UserMenu.js
 |   |   |   context/
@@ -104,7 +112,7 @@ mosaite/
 >[!CAUTION]
 > Para el desarrollo de éste proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
 >
-> Es necesario que esté el archivo **.GGUF** en `mosaite/backend/back-api/consultorIA/core/`.
+> Es necesario que esté el archivo **.GGUF** en `mosaite/backend/mosaite/consultorIA/core/`.
 >
 > Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
 
