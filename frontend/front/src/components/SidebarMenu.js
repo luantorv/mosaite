@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
 function SidebarMenu() {
-    const { theme } = useTheme();
+  const { theme } = useTheme();
+  
   // JSON de datos del menú
   const menuData = {
     "Compra": ["Nueva Compra", "Historial Compras", "Proveedores"],

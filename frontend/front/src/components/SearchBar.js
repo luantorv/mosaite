@@ -9,7 +9,7 @@ function SearchBar() {
       style={{
         background: theme.background,
         borderRadius: "25px",
-        boxShadow: theme.buttonShadowIn,
+        boxShadow: theme.buttonShadowOut,
         padding: "10px 20px",
         width: "100%",
         maxWidth: "500px",
