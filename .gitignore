@@ -1,6 +1,8 @@
 Notas/
-backend/mosaite/consultorIA/core/gemma-3n-E4B-it-Q4_K_M.gguf
-backend/mosaite/consultorIA/__pycache__
+backend/accounts/consultorIA/core/gemma-3n-E4B-it-Q4_K_M.gguf
+backend/accounts/consultorIA/__pycache__
+backend/accounts/__pycache__
 backend/db.sqlite3
 backend/backapi/__pycache__
 .env
+frontend/front/.env

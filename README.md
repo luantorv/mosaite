@@ -13,31 +13,53 @@
 
 ### BackEnd:
 
-- Python 
-- Django 
-- Django REST FrameWork
-- MySQL
+- Python (3.12.7)
+- Django (5.2.4)
+- Django REST FrameWork (3.16.0)
+- mysqlclient (2.2.7)
 
 ### ConsultorIA (Módulo de IA)
 
-- Python
-- llama.cpp
-- sentence-transformers
+- Python (3.12.7)
+- llama-cpp-python (0.3.16)
+- sentence-transformers (5.1.0)
 - Gemma-3n-E4B-it-Q4_K_M
 
 ### FrontEnd:
 
-- React
-- BootStrap
+- NodeJS (24.7.0)
+- React (19.1.1)
+- Axios (1.11.0)
+- BootStrap (5.3.7)
+- lucide-react (0.540.0)
+- motion (12.23.12)
+- web-vitals (2.1.4)
 
 ### Otros:
+
+- MariaDB (12.0.2)
+
+>[!CAUTION]
+> Éstas son las versiones en las que fueron hechas y probadas todas las funcionalidades del proyecto, el proyecto podría no llegar a funcionar en otras versiones o configuraciones.
 
 ---
 
 ## Funcionalidades
 
 - ConsultarIA _(el módulo de IA)_ ya funciona, falta hacer el resto.
+- Hay un POC básico, para utilizar.
 - Ya hay algo del frontend hecho.
+
+---
+
+## Prueba de Concepto (POC):
+
+Se agregó una versión duplicada del frontend (React + Bootstrap) con funcionalidades simuladas. 
+
+Sirve solo para mostrar flujo y apariencia: no hay lógica real detrás de los botones ni llamadas a API.
+
+>[!IMPORTANT]
+> No usar en producción.
 
 ---
 
@@ -71,39 +93,93 @@ mosaite/
 |   |   manage.py
 |   |   README.md
 |   frontend/
-|   |   public/
-|   |   |   icon.png
-|   |   |   index.html
-|   |   |   manifest.json
-|   |   |   robots.txt
-|   |   src/
-|   |   |   assets/
+|   |   front/
+|   |   |   public/
 |   |   |   |   icon.png
+|   |   |   |   index.html
 |   |   |   |   logo.png
-|   |   |   components/
-|   |   |   |   Content.js
-|   |   |   |   Dashboard.js
-|   |   |   |   Login.js
-|   |   |   |   ProtectedRoute.js
-|   |   |   |   Searchbar.js
-|   |   |   |   SideBar.js
-|   |   |   |   SidebarMenu.js
-|   |   |   |   ThemeToggle.js
-|   |   |   |   UserMenu.js
-|   |   |   context/
-|   |   |   |   AuthContext.js
-|   |   |   |   ThemeContext.js
-|   |   |   App.css
-|   |   |   App.js
-|   |   |   App.test.js
-|   |   |   index.css
-|   |   |   index.js
-|   |   |   reportWebVitals.js
-|   |   |   setupTests.js
-|   |   .gitignore
-|   |   package-lock.json
-|   |   package.json
-|   |   README.md
+|   |   |   |   manifest.json
+|   |   |   |   robots.txt
+|   |   |   src/
+|   |   |   |   assets/
+|   |   |   |   |   icon.png
+|   |   |   |   |   logo.png
+|   |   |   |   components/
+|   |   |   |   |   Content.js
+|   |   |   |   |   Dashboard.js
+|   |   |   |   |   Login.js
+|   |   |   |   |   LogoutButton.js
+|   |   |   |   |   ProtectedRoute.js
+|   |   |   |   |   Searchbar.js
+|   |   |   |   |   SideBar.js
+|   |   |   |   |   SidebarMenu.js
+|   |   |   |   |   ThemeToggle.js
+|   |   |   |   |   UserMenu.js
+|   |   |   |   context/
+|   |   |   |   |   AuthContext.js
+|   |   |   |   |   ThemeContext.js
+|   |   |   |   services/
+|   |   |   |   |   authService.js
+|   |   |   |   App.css
+|   |   |   |   App.js
+|   |   |   |   App.test.js
+|   |   |   |   index.css
+|   |   |   |   index.js
+|   |   |   |   reportWebVitals.js
+|   |   |   |   setupTests.js
+|   |   |   .gitignore
+|   |   |   package-lock.json
+|   |   |   package.json
+|   |   |   README.md
+|   POC/
+|   |   front/
+|   |   |   public/
+|   |   |   |   icon.png
+|   |   |   |   index.html
+|   |   |   |   manifest.json
+|   |   |   |   logo.png
+|   |   |   |   robots.txt
+|   |   |   src/
+|   |   |   |   assets/
+|   |   |   |   |   icon.png
+|   |   |   |   |   logo.png
+|   |   |   |   components/
+|   |   |   |   |   Content/
+|   |   |   |   |   |   CuentaCrear.js
+|   |   |   |   |   |   DashboardHome.js
+|   |   |   |   |   |   EstadisticasPanel.js
+|   |   |   |   |   |   index.js
+|   |   |   |   |   |   LibroDiarioBuscar.js
+|   |   |   |   |   |   LibroDiarioCrear.js
+|   |   |   |   |   |   LibroDiariosRecientes.js
+|   |   |   |   |   |   TransaccionBuscar.js
+|   |   |   |   |   |   TransaccionCrear.js
+|   |   |   |   |   |   TransaccionRecientes.js
+|   |   |   |   |   |   UsuariosLista.js
+|   |   |   |   |   Dashboard.js
+|   |   |   |   |   Login.js
+|   |   |   |   |   ProtectedRoute.js
+|   |   |   |   |   Searchbar.js
+|   |   |   |   |   SideBar.js
+|   |   |   |   |   SidebarMenu.js
+|   |   |   |   |   ThemeToggle.js
+|   |   |   |   |   |   UserMenu.js
+|   |   |   |   context/
+|   |   |   |   |   AuthContext.js
+|   |   |   |   |   ThemeContext.js
+|   |   |   |   services/
+|   |   |   |   |   authService.js
+|   |   |   |   App.css
+|   |   |   |   App.js
+|   |   |   |   App.test.js
+|   |   |   |   index.css
+|   |   |   |   index.js
+|   |   |   |   reportWebVitals.js
+|   |   |   |   setupTests.js
+|   |   |   .gitignore
+|   |   |   package-lock.json
+|   |   |   package.json
+|   |   |   README.md
 |   .env
 |   .gitignore
 |   README.md
@@ -135,6 +211,8 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - Terminar el frontend.
 
 - Complementar la integración de back y front.
+
+- Terminar el POC.
 
 - En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
 
