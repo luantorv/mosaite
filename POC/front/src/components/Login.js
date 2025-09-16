@@ -84,11 +84,6 @@ function Login() {
         <div className="card-body">
           <img src={logo} alt="Mosaite" style={{ width:'100%'}}></img>
           
-          {/* Mensaje informativo para el POC */}
-          <div className="alert alert-info mt-3" style={{ fontSize: '0.85rem' }}>
-            <strong>POC:</strong> Ingresa cualquier email y contraseña para acceder
-          </div>
-          
           <div style={{ height: '50px'}}>
             {error && (
               <div className="alert alert-danger d-flex justify-content-center align-items-center" role="alert" style={{ width: '100%', height:'50px'}}>

@@ -5,7 +5,7 @@ function LibroDiarioCrear() {
 
   return (
     <div>
-      <h3 style={{ color: theme.textColor }}>Crear Libro Diario</h3>
+      <h4 style={{ color: theme.textColor }}>Crear Libro Diario</h4>
       <p style={{ color: theme.textColorSecondary }}>
         [POC] Funcionalidad para crear nuevos libros diarios.
       </p>

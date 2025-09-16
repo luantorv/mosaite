@@ -8,9 +8,9 @@ function DashboardHome() {
 
   return (
     <div>
-      <h2 style={{ color: theme.textColor, marginBottom: "20px" }}>
+      <h3 style={{ color: theme.textColor, marginBottom: "20px" }}>
         ¡Bienvenido, {user?.name}!
-      </h2>
+      </h3>
       <div className="row">
         <div className="col-md-6">
           <div style={{ 

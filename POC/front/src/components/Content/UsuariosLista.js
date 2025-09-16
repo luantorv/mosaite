@@ -5,7 +5,7 @@ function UsuariosLista() {
   
   return (
     <div>
-      <h3 style={{ color: theme.textColor }}>Lista de Usuarios</h3>
+      <h4 style={{ color: theme.textColor }}>Lista de Usuarios</h4>
       <p style={{ color: theme.textColorSecondary }}>
         [POC] Gestión y visualización de usuarios del sistema.
       </p>

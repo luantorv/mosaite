@@ -1,14 +1,19 @@
 import { useTheme } from "../../context/ThemeContext";
+import TransaccionesApp from "./TransaccionCard";
 
-function TransaccionRecientes() {
+function TransaccionRecientes({ transacciones, plan, onEliminar, onActualizarEstado, onEditar }) {
   const { theme } = useTheme();
   
   return (
     <div>
-      <h3 style={{ color: theme.textColor }}>Transacciones Recientes</h3>
-      <p style={{ color: theme.textColorSecondary }}>
-        [POC] Lista de las transacciones más recientes.
-      </p>
+      <h4 style={{ color: theme.textColor }}>Transacciones Recientes</h4>
+      <TransaccionesApp 
+        transacciones={transacciones}
+        plan={plan}
+        onEliminar={onEliminar}
+        onActualizarEstado={onActualizarEstado}
+        onEditar={onEditar}
+      />
     </div>
   );
 }

@@ -5,7 +5,7 @@ function LibroDiarioRecientes() {
   
   return (
     <div>
-      <h3 style={{ color: theme.textColor }}>Libros Diarios Recientes</h3>
+      <h4 style={{ color: theme.textColor }}>Libros Diarios Recientes</h4>
       <p style={{ color: theme.textColorSecondary }}>
         [POC] Lista de libros diarios creados recientemente.
       </p>

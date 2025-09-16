@@ -2,7 +2,7 @@ import React from "react";
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
-function TransaccionCrear() {
+function TransaccionCrear({ plan, onCrearTransaccion }) {
   const { theme } = useTheme();
   const { user } = useAuth();
   const hoy = new Date();
@@ -16,61 +16,6 @@ function TransaccionCrear() {
   const [descripcion, setDescripcion] = React.useState('');
   const [showAccountMenuEntradas, setShowAccountMenuEntradas] = React.useState(false);
   const [showAccountMenuSalidas, setShowAccountMenuSalidas] = React.useState(false);
-
-  // Plan de cuentas simulado
-  const plan = [
-    [11101, "Caja"],
-    [11102, "Banco XX Cuenta Corriente"],
-    [11103, "Banco XX Caja de Ahorro"],
-    [11104, "Valores a depositar"],
-    [11105, "Fondo Fijo"],
-    [11201, "Moneda extranjera"],
-    [11301, "Documentos a cobrar"],
-    [11302, "Deudores por ventas"],
-    [11303, "Deudores morosos"],
-    [11304, "Deudores en gestión judicial"],
-    [11401, "Alquileres pagados por adelantado"],
-    [11402, "Gastos pagados por adelantado"],
-    [11403, "IVA Crédito Fiscal"],
-    [11404, "IVA Saldo a favor"],
-    [11501, "Mercaderías"],
-    [11502, "Anticipo a proveedores"],
-
-    [12101, "Inmuebles"],
-    [12102, "Mauinarias y equipos"],
-    [12103, "Rodados"],
-    [12104, "Muebles y útiles"],
-    [12105, "Instalaciones"],
-    [12201, "Patentes"],
-    [12202, "Marcas"],
-    [12203, "Software"],
-    [12204, "Costo de organización"],
-    [21101, "Proveedores"],
-    [21102, "Documentos a pagar"],
-    [21201, "Deudas bancarias a pagar"],
-    [21202, "Tarjeta de Crédito XX a pagar"],
-    [21301, "Sueldos a pagar"],
-    [21302, "Contribuciones sociales a pagar"],
-    [21303, "S.A.C. a pagar"],
-    [21401, "IVA Débito Fiscal"],
-    [21402, "IVA Saldo a pagar"],
-    [21403, "Impuestos a pagar"],
-    [21404, "Retenciones a pagar"],
-    [21501, "Anticipo a clientes"],
-    [21601, "Alquileres a pagar"],
-    [21602, "Seguros a pagar"],
-    [21603, "Comisiones a pagar"],
-    [22101, "Deudas comerciales"],
-    [22102, "Préstamos"],
-    [22103, "Otros pasivos"],
-    [31101, "Capital Social"],
-    [31102, "Aportes por capitalizar"],
-    [31201, "Reserva Legal"],
-    [31202, "Reserva Estatutaria"],
-    [31203, "Otras reservas"],
-    [31301, "Resultados del ejercicio"],
-    [31302, "Resultados No Asignados"]
-];
 
   // Función para agregar cuenta a entradas
   const agregarEntrada = (codigo, nombre) => {
@@ -134,13 +79,20 @@ function TransaccionCrear() {
       Entradas: entradas.map(e => [e.codigo, e.monto]),
       Salidas: salidas.map(s => [s.codigo, s.monto]),
       descripcion: descripcion,
-      autor: user?.id || user?.email
+      autor: user?.name || user?.email
     };
 
-    // Guardar en lista de transacciones (simulado)
-    console.log('Transacción creada:', transaccion);
-    alert('Transacción creada exitosamente');
-    limpiarFormulario();
+    // Llamar a la función del componente padre para guardar la transacción
+    if (onCrearTransaccion) {
+      const transaccionCreada = onCrearTransaccion(transaccion);
+      console.log('Transacción creada:', transaccionCreada);
+      alert('Transacción creada exitosamente');
+      limpiarFormulario();
+    } else {
+      // Fallback si no se proporciona la función
+      console.warn('No se proporcionó onCrearTransaccion prop');
+      alert('Error: No se pudo guardar la transacción');
+    }
   };
 
   const totalEntradas = entradas.reduce((sum, e) => sum + e.monto, 0);
@@ -148,7 +100,7 @@ function TransaccionCrear() {
 
   return (
     <div>
-      <h3 style={{ color: theme.textColor, marginBottom: "25px" }}>Crear Nueva Transacción</h3>
+      <h4 style={{ color: theme.textColor, marginBottom: "25px" }}>Crear Nueva Transacción</h4>
       
       {/* Fecha */}
       <div style={{ marginBottom: "25px", display: "flex", alignItems: "center", gap: "10px" }}>
@@ -490,4 +442,4 @@ function TransaccionCrear() {
   );
 }
 
-export default TransaccionCrear;
+export default TransaccionCrear; 

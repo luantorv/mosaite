@@ -5,7 +5,7 @@ function EstadisticasPanel() {
   
   return (
     <div>
-      <h3 style={{ color: theme.textColor }}>Panel de Estadísticas</h3>
+      <h4 style={{ color: theme.textColor }}>Panel de Estadísticas</h4>
       <p style={{ color: theme.textColorSecondary }}>
         [POC] Dashboard con métricas y estadísticas de la empresa.
       </p>
