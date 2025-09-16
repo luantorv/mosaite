@@ -153,22 +153,22 @@ mosaite/
 |   |   |   |   |   |   LibroDiarioCrear.js
 |   |   |   |   |   |   LibroDiariosRecientes.js
 |   |   |   |   |   |   TransaccionBuscar.js
+|   |   |   |   |   |   TransaccionCard.js
 |   |   |   |   |   |   TransaccionCrear.js
 |   |   |   |   |   |   TransaccionRecientes.js
 |   |   |   |   |   |   UsuariosLista.js
 |   |   |   |   |   Dashboard.js
 |   |   |   |   |   Login.js
+|   |   |   |   |   LogoutButton.js
 |   |   |   |   |   ProtectedRoute.js
 |   |   |   |   |   Searchbar.js
 |   |   |   |   |   SideBar.js
 |   |   |   |   |   SidebarMenu.js
 |   |   |   |   |   ThemeToggle.js
-|   |   |   |   |   |   UserMenu.js
+|   |   |   |   |   UserMenu.js
 |   |   |   |   context/
 |   |   |   |   |   AuthContext.js
 |   |   |   |   |   ThemeContext.js
-|   |   |   |   services/
-|   |   |   |   |   authService.js
 |   |   |   |   App.css
 |   |   |   |   App.js
 |   |   |   |   App.test.js
@@ -208,11 +208,15 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 - La Base de Datos y el backend completos.
 
+- Hacer el módulo de creación de Libros Diarios.
+
 - Terminar el frontend.
 
 - Complementar la integración de back y front.
 
 - Terminar el POC.
+
+- Hacer el manual de usuario.
 
 - En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
 
