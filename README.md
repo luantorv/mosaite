@@ -9,6 +9,12 @@
 >[!IMPORTANT]
 > En este README.md solo se tratarán algunas cuestiones generales del proyecto, ya que al estar dividido en partes que pueden funcionar por separado, se hizo un archivo README.md para cada una de las partes de forma más detallada.
 
+## Manual de Usuario
+
+Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalles distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
+
+En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos o compilarlos.
+
 ## Tecnologías Utilizadas
 
 ### BackEnd:
@@ -131,6 +137,17 @@ mosaite/
 |   |   |   package-lock.json
 |   |   |   package.json
 |   |   |   README.md
+|   manual/
+|   |   cap/
+|   |   |   cap1.tex
+|   |   |   cap2.tex
+|   |   img/
+|   |   |   logo.png
+|   |   other/
+|   |   |   intro.tex
+|   |   |   portada.tex
+|   |   main.pdf
+|   |   main.tex
 |   POC/
 |   |   front/
 |   |   |   public/

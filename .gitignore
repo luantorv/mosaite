@@ -6,3 +6,10 @@ backend/db.sqlite3
 backend/backapi/__pycache__
 .env
 frontend/front/.env
+
+manual/*.out
+manual/*.fls
+manual/*.aux
+manual/*.fdb_latexmk
+manual/*.log
+manual/*.synctex.gz

@@ -1,0 +1,36 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{xcolor}   % Para usar colores
+\usepackage{geometry} % Para ajustar márgenes
+\usepackage{tocloft}  % Para el indice
+\usepackage{hyperref} % Para links
+\usepackage{tcolorbox} % Cuadros de texto
+
+\title{Mosaite - Manual de Usuario}
+\author{Reis Viera, Luis Antonio}
+\date{Año 2025}
+
+% Cambiar márgenes
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+\hypersetup{
+    colorlinks=true,      % Colores en lugar de cajas
+    linkcolor=black,      % Color para enlaces internos
+    urlcolor=blue,        % Color para enlaces externos
+    breaklinks=true       % Permitir saltos de línea en los enlaces
+}
+
+
+\begin{document}
+
+\input{other/portada.tex}
+
+\input{other/intro.tex}
+
+\input{cap/cap1.tex}
+\input{cap/cap2.tex}
+
+\end{document}
