@@ -1,11 +1,10 @@
 Notas/
-backend/accounts/consultorIA/core/gemma-3n-E4B-it-Q4_K_M.gguf
-backend/accounts/consultorIA/__pycache__
-backend/accounts/__pycache__
+backend/*/core/gemma-3n-E4B-it-Q4_K_M.gguf
 backend/db.sqlite3
-backend/backapi/__pycache__
 .env
 frontend/front/.env
+backend/*/__pycache__
+backend/*/*/__pycache__
 
 manual/*.out
 manual/*.fls

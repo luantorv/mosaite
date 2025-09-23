@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+import LogoutButton from "./LogoutButton";
 
 function UserMenu() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -132,31 +133,8 @@ function UserMenu() {
                 >
                   Configuración
                 </button>
-                
-                <button
-                  className="btn"
-                  onClick={closeUserMenu}
-                  style={{
-                    background: theme.background,
-                    border: "none",
-                    padding: "8px 12px",
-                    borderRadius: "8px",
-                    boxShadow: theme.smallButtonShadowOut,
-                    color: "#d73027",
-                    fontSize: "13px",
-                    textAlign: "left",
-                    transition: "all 0.2s ease",
-                    marginTop: "5px",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.boxShadow = theme.smallButtonShadowIn;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.boxShadow = theme.smallButtonShadowOut;
-                  }}
-                >
-                  Cerrar Sesión
-                </button>
+
+                <LogoutButton />
               </div>
             </div>
           </div>

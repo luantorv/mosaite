@@ -1,148 +1,171 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
+import { authAPI } from '../services/authService';
 import logo from '../assets/logo.png';
 
 function Login() {
-  const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const { login, isAuthenticated } = useAuth();
+  const { theme } = useTheme();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Mosaite - Login";
+  }, []);
+
+  // Inicializar CSRF token cuando se monta el componente
+  useEffect(() => {
+    authAPI.initializeCSRF().catch(console.error);
+  }, []);
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate])
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí irá la lógica de autenticación
-    console.log('Login:', { email, password });
-  };
+    setLoading(true);
+    setError('')
+
+    try {
+      const result = await login(email, password);
+
+      if (result.success) {
+        navigate('/');
+      } else {
+        setError(result.error);
+      }
+    } catch {
+      setError('Error inesperado al iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div 
-      className="d-flex align-items-center justify-content-center vh-100"
-      style={{
-        background: theme.background,
-        transition: "background 0.3s ease",
-      }}
+      className="d-flex justify-content-center align-items-center min-vh-100"
+      style={{ background: theme.background }}
     >
       <div 
+        className="card p-4"
         style={{
+          height:'95%',
+          width: '100%',
+          maxWidth: '400px',
           background: theme.background,
-          borderRadius: "20px",
+          borderRadius: '20px',
           boxShadow: theme.cardShadowOut,
-          width: "350px",
-          padding: "3rem",
-          transition: "all 0.3s ease",
+          border: 'none'
         }}
       >
-        {/* Título principal */}
-        <img src={logo} alt="Mosaite" width="100%"></img>
-        
-        {/* Formulario */}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label 
-              className="form-label"
+        <div className="card-body">
+          <img src={logo} alt="Mosaite" style={{ width:'100%'}}></img>
+          
+          <div style={{ height: '50px'}}>
+            {error && (
+              <div className="alert alert-danger d-flex justify-content-center align-items-center" role="alert" style={{ width: '100%', height:'50px'}}>
+                {error}
+              </div>
+            )}
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label 
+                htmlFor="email" 
+                className="form-label"
+                style={{ color: theme.text }}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+                style={{
+                  background: theme.background,
+                  color: theme.text,
+                  border: `2px solid ${theme.border}`,
+                  borderRadius: '10px',
+                  boxShadow: theme.cardShadowIn,
+                }}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label 
+                htmlFor="password" 
+                className="form-label"
+                style={{ color: theme.text }}
+              >
+                Contraseña
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+                style={{
+                  background: theme.background,
+                  color: theme.text,
+                  border: `2px solid ${theme.border}`,
+                  borderRadius: '10px',
+                  boxShadow: theme.cardShadowIn,
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn w-100 mt-3"
+              disabled={loading}
               style={{
+                background: theme.primaryColor,
                 color: theme.textColor,
-                marginBottom: "0.5rem",
-                fontSize: "0.9rem",
-                fontWeight: "500",
-                transition: "color 0.3s ease",
+                border: 'none',
+                borderRadius: '10px',
+                padding: '12px',
+                fontWeight: '600',
+                boxShadow: theme.buttonShadow,
+                transition: 'all 0.3s ease',
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = `0 8px 25px rgba(0,0,0,0.2)`;
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = theme.buttonShadow;
               }}
             >
-              Usuario
-            </label>
-            <input 
-              type="email" 
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{
-                background: theme.background,
-                border: "none",
-                borderRadius: "12px",
-                boxShadow: theme.cardShadowIn,
-                padding: "12px 16px",
-                color: theme.textColor,
-                fontSize: "0.9rem",
-                transition: "all 0.3s ease",
-              }}
-              onFocus={(e) => {
-                e.target.style.boxShadow = `${theme.cardShadowIn}, 0 0 0 2px ${theme.name === 'light' ? '#7C9A5D' : '#93B676'}`;
-              }}
-              onBlur={(e) => {
-                e.target.style.boxShadow = theme.cardShadowIn;
-              }}
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label 
-              className="form-label"
-              style={{
-                color: theme.textColor,
-                marginBottom: "0.5rem",
-                fontSize: "0.9rem",
-                fontWeight: "500",
-                transition: "color 0.3s ease",
-              }}
-            >
-              Contraseña
-            </label>
-            <input 
-              type="password" 
-              className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{
-                background: theme.background,
-                border: "none",
-                borderRadius: "12px",
-                boxShadow: theme.cardShadowIn,
-                padding: "12px 16px",
-                color: theme.textColor,
-                fontSize: "0.9rem",
-                transition: "all 0.3s ease",
-              }}
-              onFocus={(e) => {
-                e.target.style.boxShadow = `${theme.cardShadowIn}, 0 0 0 2px ${theme.name === 'light' ? '#7C9A5D' : '#93B676'}`;
-              }}
-              onBlur={(e) => {
-                e.target.style.boxShadow = theme.cardShadowIn;
-              }}
-            />
-          </div>
-          
-          <button 
-            type="submit" 
-            className="btn w-100"
-            style={{
-              background: theme.name === 'light' ? '#7C9A5D' : '#93B676',
-              border: "none",
-              borderRadius: "12px",
-              color: "#ffffff",
-              fontWeight: "600",
-              padding: "12px",
-              fontSize: "1rem",
-              boxShadow: theme.buttonShadowOut,
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.filter = "brightness(1.1)";
-              e.target.style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.filter = "brightness(1)";
-              e.target.style.transform = "translateY(0)";
-            }}
-            onMouseDown={(e) => {
-              e.target.style.boxShadow = theme.buttonShadowIn;
-              e.target.style.transform = "translateY(0)";
-            }}
-            onMouseUp={(e) => {
-              e.target.style.boxShadow = theme.buttonShadowOut;
-            }}
-          >
-            Entrar
-          </button>
-        </form>
+              {loading ? (
+                <span>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Iniciando sesión...
+                </span>
+              ) : (
+                'Iniciar Sesión'
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

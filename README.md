@@ -9,11 +9,27 @@
 >[!IMPORTANT]
 > En este README.md solo se tratarán algunas cuestiones generales del proyecto, ya que al estar dividido en partes que pueden funcionar por separado, se hizo un archivo README.md para cada una de las partes de forma más detallada.
 
+---
+
 ## Manual de Usuario
 
 Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalles distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
 
-En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos o compilarlos.
+En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
+
+---
+
+## Consultas por Lenguaje Natural
+
+El sistema permitirá a los usuarios hacer preguntas como:
+
+> _"¿Cuánto gasté en proveedores en abril?"_
+
+Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
+
+> **Estado:** Está listo para implementarlo en el backend _(todavía no está hecho el backend)_.
+
+---
 
 ## Tecnologías Utilizadas
 
@@ -37,24 +53,24 @@ En éste repositorio también se dejarán los archivos `.tex` para quien quiera 
 - React (19.1.1)
 - Axios (1.11.0)
 - BootStrap (5.3.7)
-- lucide-react (0.540.0)
-- motion (12.23.12)
-- web-vitals (2.1.4)
 
 ### Otros:
 
 - MariaDB (12.0.2)
+- TeXLive (3.141592653)
 
 >[!CAUTION]
-> Éstas son las versiones en las que fueron hechas y probadas todas las funcionalidades del proyecto, el proyecto podría no llegar a funcionar en otras versiones o configuraciones.
+> Estas son las versiones en las que fueron hechas y probadas todas las funcionalidades del proyecto, podría no llegar a funcionar en otras versiones o configuraciones.
 
 ---
 
 ## Funcionalidades
 
 - ConsultarIA _(el módulo de IA)_ ya funciona, falta hacer el resto.
+- Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
 - Hay un POC básico, para utilizar.
 - Ya hay algo del frontend hecho.
+- El login está implementado, pero hay que arreglar errores.
 
 ---
 
@@ -62,10 +78,26 @@ En éste repositorio también se dejarán los archivos `.tex` para quien quiera 
 
 Se agregó una versión duplicada del frontend (React + Bootstrap) con funcionalidades simuladas. 
 
-Sirve solo para mostrar flujo y apariencia: no hay lógica real detrás de los botones ni llamadas a API.
+Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de los botones ni llamadas a API.
 
 >[!IMPORTANT]
 > No usar en producción.
+
+---
+
+## Por hacer
+
+- La Base de Datos y el backend completos.
+
+- Terminar el frontend.
+
+- Complementar la integración de back y front.
+
+- Terminar el POC.
+
+- Terminar el manual de usuario.
+
+- En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
 
 ---
 
@@ -74,20 +106,7 @@ Sirve solo para mostrar flujo y apariencia: no hay lógica real detrás de los b
 ```
 mosaite/
 |   backend/
-|   |   backapi/
-|   |   |   __init__.py
-|   |   |   asgi.py
-|   |   |   settings.py
-|   |   |   urls.py
-|   |   |   wsgi.py
-|   |   mosaite/
-|   |   |   consultorIA/
-|   |   |   |   core/
-|   |   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
-|   |   |   |   example.py
-|   |   |   |   examples.json
-|   |   |   |   main.py
-|   |   |   |   schema.txt
+|   |   accounts/
 |   |   |   migrations/
 |   |   |   |   __init__.py
 |   |   |   __init__.py
@@ -96,6 +115,23 @@ mosaite/
 |   |   |   models.py
 |   |   |   tests.py
 |   |   |   views.py
+|   |   backapi/
+|   |   |   __init__.py
+|   |   |   asgi.py
+|   |   |   settings.py
+|   |   |   urls.py
+|   |   |   wsgi.py
+|   |   consultorIA/
+|   |   |   core/
+|   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
+|   |   |   __init__.py
+|   |   |   example.py
+|   |   |   examples.json
+|   |   |   main.py
+|   |   |   schema.txt
+|   |   daily/
+|   |   |   __init__.py
+|   |   |   main.py
 |   |   manage.py
 |   |   README.md
 |   frontend/
@@ -203,43 +239,22 @@ mosaite/
 ```
 
 >[!CAUTION]
-> Para el desarrollo de éste proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
+> Para el desarrollo de este proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
 >
 > Es necesario que esté el archivo **.GGUF** en `mosaite/backend/mosaite/consultorIA/core/`.
 >
 > Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
 
+>[!IMPORTANT]
+> Las carpetas `consultorIA` y `daily` dentro del backend están ubicadas de forma temporal hasta que se creen las apps de Django correspondientes.
+
 ---
-
-## Consultas por Lenguaje Natural
-
-El sistema permitirá a los usuarios hacer preguntas como:
-
-> _"¿Cuánto gasté en proveedores en abril?"_
-
-Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
-
-> **Estado:** Está listo para implementarlo en el backend _(todavía no está hecho el backend)_.
-
-## Por hacer
-
-- La Base de Datos y el backend completos.
-
-- Hacer el módulo de creación de Libros Diarios.
-
-- Terminar el frontend.
-
-- Complementar la integración de back y front.
-
-- Terminar el POC.
-
-- Hacer el manual de usuario.
-
-- En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
 
 ## Licencia
 
 Este proyecto es de uso libre para fines académicos. Para otros usos contactar al autor.
+
+---
 
 ## Autor
 
