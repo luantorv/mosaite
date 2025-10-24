@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'accounts'
+    'apps.accounts.apps.MosaiteConfig'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backapi.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backapi.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -79,15 +79,8 @@ WSGI_APPLICATION = 'backapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mosaite',
-        'USER': 'admin',
-        'PASSWORD': 'jh1i(6&Zx9z/',
-        'HOST': 'localhost',
-        'PORT':'3306',
-        'OPTIONS':{
-            'charset': 'utf8mb4'
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

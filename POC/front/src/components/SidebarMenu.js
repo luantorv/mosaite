@@ -1,28 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
-function SidebarMenu({ onPanelChange, activePanel }) {
+function SidebarMenu({ onPanelChange, activePanel, closeMenuTrigger }) {
   const { theme } = useTheme();
   
   // Tu menuData para el sistema contable
   const menuData = {
     "Transacciones" : ["Crear", "Recientes", "Buscar"],
-    "Libros Diarios" : ["Crear","Recientes","Buscar"],
-    "Cuentas" : ["Crear"],
-    "Usuarios" : ["Ver todos"],
-    "Estadísticas": ["Panel"]
+    "Libros Diarios" : ["Crear","Recientes"],
+    "Plan de Cuentas": null,
+    "Usuarios" : null,
+    "Configuración": null,
+    "Ayuda": null
   };
 
   // Estado para controlar qué menú está abierto (solo uno a la vez)
   const [openMenu, setOpenMenu] = useState(null);
 
+  // Cerrar el menú cuando se cambie la propiedad closeMenuTrigger
+  useEffect(() => {
+    setOpenMenu(null);
+  }, [closeMenuTrigger]);
+
   const toggleMenu = (menuKey) => {
-    setOpenMenu(prev => prev === menuKey ? null : menuKey);
+    // Si el menú que se va a abrir es diferente al actual, cierra el anterior
+    if (openMenu !== menuKey) {
+      setOpenMenu(menuKey);
+    } else {
+      setOpenMenu(null);
+    }
   };
 
   const handleOptionClick = (mainCategory, option) => {
     console.log(`Seleccionado: ${mainCategory} -> ${option}`);
-    // Llamar a la función del Dashboard para cambiar el panel
+    // No cerrar el menú, solo cambiar el panel
     if (onPanelChange) {
       onPanelChange(mainCategory, option);
     }
@@ -33,155 +44,186 @@ function SidebarMenu({ onPanelChange, activePanel }) {
     return activePanel === `${mainCategory}-${option}`;
   };
 
+  // Función para verificar si un menú directo está activo
+  const isDirectMenuActive = (mainCategory) => {
+    return activePanel === mainCategory;
+  };
+
   return (
     <div style={{ padding: "20px 10px" }}>
-      {/* Botón Dashboard/Inicio */}
-      <div 
-        style={{ 
-          marginBottom: "16px",
-          background: activePanel === "Dashboard" ? theme.primaryColor : theme.background,
-          borderRadius: "12px",
-          boxShadow: theme.smallButtonShadowOut,
-          overflow: "hidden",
-          transition: "all 0.3s ease",
-          cursor: "pointer"
-        }}
-        onClick={() => onPanelChange && onPanelChange("Dashboard", "")}
-      >
-        <div
-          style={{
-            padding: "12px 16px",
-            color: activePanel === "Dashboard" ? "white" : theme.textColor,
-            fontSize: "14px",
-            fontWeight: "500",
-            transition: "all 0.3s ease",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px"
-          }}
-        >
-          <span>Dashboard</span>
-        </div>
-      </div>
-
       {/* Menús dinámicos */}
-      {Object.entries(menuData).map(([mainCategory, options]) => (
-        <div 
-          key={mainCategory} 
-          style={{ 
-            marginBottom: "12px",
-            background: theme.background,
-            borderRadius: "12px",
-            boxShadow: theme.smallButtonShadowOut,
-            overflow: "hidden",
-            transition: "all 0.3s ease",
-          }}
-        >
-          {/* Header del menú (siempre visible) */}
-          <button
-            className="btn w-100"
-            onClick={() => toggleMenu(mainCategory)}
-            style={{
-              background: "transparent",
-              border: "none",
-              padding: "12px 16px",
-              color: theme.textColor,
-              fontSize: "14px",
-              fontWeight: "500",
-              textAlign: "left",
-              transition: "all 0.3s ease",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderRadius: "0",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = theme.hoverBackground;
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "transparent";
-            }}
-          >
-            <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span>{getMenuIcon(mainCategory)}</span>
-              <span>{mainCategory}</span>
-            </span>
-            <span
-              style={{
-                transform: openMenu === mainCategory ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease",
-                fontSize: "12px",
+      {Object.entries(menuData).map(([mainCategory, options]) => {
+        // Si options es null, renderizar como botón directo
+        if (options === null) {
+          return (
+            <div 
+              key={mainCategory}
+              style={{ 
+                marginBottom: "12px",
+                background: isDirectMenuActive(mainCategory) ? theme.primaryColor : theme.background,
+                borderRadius: "12px",
+                boxShadow: theme.smallButtonShadowOut,
+                overflow: "hidden",
+                transition: "all 0.3s ease",
+                cursor: "pointer"
+              }}
+              onClick={() => {
+                console.log('Click en menú directo:', mainCategory);
+                // Cierra el menú abierto al hacer click en otra categoría
+                setOpenMenu(null);
+                if (onPanelChange) {
+                  onPanelChange(mainCategory, "");
+                }
               }}
             >
-              ▼
-            </span>
-          </button>
+              <div
+                style={{
+                  padding: "12px 16px",
+                  color: isDirectMenuActive(mainCategory) ? "white" : theme.textColor,
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  transition: "all 0.3s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px"
+                }}
+                onMouseEnter={(e) => {
+                  if (!isDirectMenuActive(mainCategory)) {
+                    e.currentTarget.parentElement.style.background = theme.hoverBackground || "rgba(0,0,0,0.05)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isDirectMenuActive(mainCategory)) {
+                    e.currentTarget.parentElement.style.background = theme.background;
+                  }
+                }}
+              >
+                <span>{getMenuIcon(mainCategory)}</span>
+                <span>{mainCategory}</span>
+              </div>
+            </div>
+          );
+        }
 
-          {/* Contenido expandible dentro de la misma tarjeta */}
-          <div
-            style={{
-              maxHeight: openMenu === mainCategory ? "200px" : "0",
+        // Si options tiene valores, renderizar como menú desplegable
+        return (
+          <div 
+            key={mainCategory} 
+            style={{ 
+              marginBottom: "12px",
+              background: theme.background,
+              borderRadius: "12px",
+              boxShadow: theme.smallButtonShadowOut,
               overflow: "hidden",
-              transition: "max-height 0.3s ease",
+              transition: "all 0.3s ease",
             }}
           >
-            {/* Separador visual */}
-            <div 
+            {/* Header del menú (siempre visible) */}
+            <button
+              className="btn w-100"
+              onClick={() => toggleMenu(mainCategory)}
               style={{
-                height: "1px",
-                background: theme.separatorGradient || "linear-gradient(90deg, transparent, #d0d7e3, transparent)",
-                margin: "0 16px 8px 16px",
-                opacity: openMenu === mainCategory ? 1 : 0,
-                transition: "opacity 0.3s ease",
+                background: "transparent",
+                border: "none",
+                padding: "12px 16px",
+                color: theme.textColor,
+                fontSize: "14px",
+                fontWeight: "500",
+                textAlign: "left",
+                transition: "all 0.3s ease",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderRadius: "0",
               }}
-            />
-            
-            {/* Lista de opciones */}
-            <div style={{ padding: "0 16px 12px 16px" }}>
-              {options.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleOptionClick(mainCategory, option)}
-                  style={{
-                    padding: "8px 12px",
-                    color: isOptionActive(mainCategory, option) 
-                      ? theme.primaryColor 
-                      : theme.textColorSecondary || theme.textColor,
-                    fontSize: "13px",
-                    cursor: "pointer",
-                    borderRadius: "6px",
-                    marginBottom: "4px",
-                    background: isOptionActive(mainCategory, option) 
-                      ? `${theme.primaryColor}15` 
-                      : "transparent",
-                    fontWeight: isOptionActive(mainCategory, option) ? "600" : "normal",
-                    transition: "all 0.2s ease",
-                    opacity: openMenu === mainCategory ? 1 : 0,
-                    transform: openMenu === mainCategory ? "translateY(0)" : "translateY(-10px)",
-                    transitionDelay: openMenu === mainCategory ? `${index * 50}ms` : "0ms",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isOptionActive(mainCategory, option)) {
-                      e.target.style.background = theme.hoverBackground || "rgba(0,0,0,0.05)";
-                    }
-                    e.target.style.transform = "translateY(0) translateX(4px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isOptionActive(mainCategory, option)) {
-                      e.target.style.background = "transparent";
-                    } else {
-                      e.target.style.background = `${theme.primaryColor}15`;
-                    }
-                    e.target.style.transform = "translateY(0) translateX(0)";
-                  }}
-                >
-                  • {option}
-                </div>
-              ))}
+              onMouseEnter={(e) => {
+                e.target.style.background = theme.hoverBackground;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "transparent";
+              }}
+            >
+              <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span>{getMenuIcon(mainCategory)}</span>
+                <span>{mainCategory}</span>
+              </span>
+              <span
+                style={{
+                  transform: openMenu === mainCategory ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 0.3s ease",
+                  fontSize: "12px",
+                }}
+              >
+                ▼
+              </span>
+            </button>
+
+            {/* Contenido expandible dentro de la misma tarjeta */}
+            <div
+              style={{
+                maxHeight: openMenu === mainCategory ? "200px" : "0",
+                overflow: "hidden",
+                transition: "max-height 0.3s ease",
+              }}
+            >
+              {/* Separador visual */}
+              <div 
+                style={{
+                  height: "1px",
+                  background: theme.separatorGradient || "linear-gradient(90deg, transparent, #d0d7e3, transparent)",
+                  margin: "0 16px 8px 16px",
+                  opacity: openMenu === mainCategory ? 1 : 0,
+                  transition: "opacity 0.3s ease",
+                }}
+              />
+              
+              {/* Lista de opciones */}
+              <div style={{ padding: "0 16px 12px 16px" }}>
+                {options.map((option, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleOptionClick(mainCategory, option)}
+                    style={{
+                      padding: "8px 12px",
+                      color: isOptionActive(mainCategory, option) 
+                        ? theme.primaryColor 
+                        : theme.textColorSecondary || theme.textColor,
+                      fontSize: "13px",
+                      cursor: "pointer",
+                      borderRadius: "6px",
+                      marginBottom: "4px",
+                      background: isOptionActive(mainCategory, option) 
+                        ? `${theme.primaryColor}15` 
+                        : "transparent",
+                      fontWeight: isOptionActive(mainCategory, option) ? "600" : "normal",
+                      transition: "all 0.2s ease",
+                      opacity: openMenu === mainCategory ? 1 : 0,
+                      transform: openMenu === mainCategory ? "translateY(0)" : "translateY(-10px)",
+                      transitionDelay: openMenu === mainCategory ? `${index * 50}ms` : "0ms",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isOptionActive(mainCategory, option)) {
+                        e.target.style.background = theme.hoverBackground || "rgba(0,0,0,0.05)";
+                      }
+                      e.target.style.transform = "translateY(0) translateX(4px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isOptionActive(mainCategory, option)) {
+                        e.target.style.background = "transparent";
+                      } else {
+                        e.target.style.background = `${theme.primaryColor}15`;
+                      }
+                      e.target.style.transform = "translateY(0) translateX(0)";
+                    }}
+                  >
+                    • {option}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -191,8 +233,9 @@ function getMenuIcon(category) {
   const icons = {
     "Transacciones": "",
     "Libros Diarios": "",
-    "Cuentas": "",
+    "Plan de Cuentas": "",
     "Usuarios": "",
+    "Configuración": "",
     "Estadísticas": ""
   };
   return icons[category] || "";

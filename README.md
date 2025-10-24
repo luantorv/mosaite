@@ -1,6 +1,12 @@
 # Mosaite
 
-**Mosaite** es un sistema de registro contable moderno, desarrollado como proyecto académico, que permite a los usuarios gestionar sus movimientos contables desde una interfaz web centralizada. Además, incorpora un modelo de lenguaje (LLM) paa realizar consultas semánticas y acceder a información contable usando lenguaje natural.
+**Mosaite** es una plataforma interactiva para la **enseñanza y práctica de la contabilidad básica**.
+
+Permite registrar asientos contables, generar libros diarios y explorar conceptos clave desde una interfaz web intuitiva.
+
+Además, incluye herramientas basadas en lenguaje natural —como búsquedas y un asistente contable (RAG)— que ayudan a comprender el porqué de cada registro y a reforzar el aprendizaje.
+
+Mosaite está diseñado para su uso tanto individual como en entornos educativos, permitiendo que profesores y estudiantes trabajen sobre el mismo sistema.
 
 <img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto>
 
@@ -13,7 +19,7 @@
 
 ## Manual de Usuario
 
-Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalles distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
+Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalle distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
 
 En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
 
@@ -38,7 +44,6 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - Python (3.12.7)
 - Django (5.2.4)
 - Django REST FrameWork (3.16.0)
-- mysqlclient (2.2.7)
 
 ### ConsultorIA (Módulo de IA)
 
@@ -53,10 +58,10 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - React (19.1.1)
 - Axios (1.11.0)
 - BootStrap (5.3.7)
+- Recharts (3.2.1)
 
 ### Otros:
 
-- MariaDB (12.0.2)
 - TeXLive (3.141592653)
 
 >[!CAUTION]
@@ -66,11 +71,11 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ## Funcionalidades
 
-- ConsultarIA _(el módulo de IA)_ ya funciona, falta hacer el resto.
+- ConsultarIA _(el módulo de IA)_ ya funciona, implementarlo.
 - Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
-- Hay un POC básico, para utilizar.
-- Ya hay algo del frontend hecho.
-- El login está implementado, pero hay que arreglar errores.
+- Hay un POC para utilizar (No terminado).
+- Ya hay algo del frontend hecho (No terminado).
+- El login está implementado, pero tiene errores (Falta corregir).
 
 ---
 
@@ -89,15 +94,17 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 
 - La Base de Datos y el backend completos.
 
-- Terminar el frontend.
+- Terminar el frontend _(en progreso)_.
 
 - Complementar la integración de back y front.
 
-- Terminar el POC.
+- Terminar el POC _(en progreso)_.
 
 - Terminar el manual de usuario.
 
-- En algún momento implementar NGINX para manejar la comunicacíon del proyecto.
+- Implementar un RAG para el uso del sistema y cuestiones contables _(en progreso)_.
+
+- En algún momento implementar NGINX y dockerizar la solución.
 
 ---
 
@@ -106,32 +113,37 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 ```
 mosaite/
 |   backend/
-|   |   accounts/
-|   |   |   migrations/
+|   |   apps/
+|   |   |   accounts/
+|   |   |   |   migrations/
+|   |   |   |   |   __init__.py
 |   |   |   |   __init__.py
-|   |   |   __init__.py
-|   |   |   admin.py
-|   |   |   apps.py
-|   |   |   models.py
-|   |   |   tests.py
-|   |   |   views.py
-|   |   backapi/
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   tests.py
+|   |   |   |   views.py
+|   |   config/
 |   |   |   __init__.py
 |   |   |   asgi.py
 |   |   |   settings.py
 |   |   |   urls.py
 |   |   |   wsgi.py
-|   |   consultorIA/
-|   |   |   core/
-|   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
-|   |   |   __init__.py
-|   |   |   example.py
-|   |   |   examples.json
-|   |   |   main.py
-|   |   |   schema.txt
-|   |   daily/
-|   |   |   __init__.py
-|   |   |   main.py
+|   |   services/
+|   |   |   chat/
+|   |   |   |   data/
+|   |   |   |   __init__.py
+|   |   |   consultorIA/
+|   |   |   |   core/
+|   |   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
+|   |   |   |   __init__.py
+|   |   |   |   example.py
+|   |   |   |   examples.json
+|   |   |   |   main.py
+|   |   |   |   schema.txt
+|   |   |   daily/
+|   |   |   |   __init__.py
+|   |   |   |   main.py
 |   |   manage.py
 |   |   README.md
 |   frontend/
@@ -173,6 +185,7 @@ mosaite/
 |   |   |   package-lock.json
 |   |   |   package.json
 |   |   |   README.md
+|   helper/
 |   manual/
 |   |   cap/
 |   |   |   cap1.tex
@@ -198,10 +211,12 @@ mosaite/
 |   |   |   |   |   logo.png
 |   |   |   |   components/
 |   |   |   |   |   Content/
+|   |   |   |   |   |   Chat.js
+|   |   |   |   |   |   Configuracion.js
 |   |   |   |   |   |   CuentaCrear.js
 |   |   |   |   |   |   DashboardHome.js
-|   |   |   |   |   |   EstadisticasPanel.js
 |   |   |   |   |   |   index.js
+|   |   |   |   |   |   LibroDiarioCard.js
 |   |   |   |   |   |   LibroDiarioBuscar.js
 |   |   |   |   |   |   LibroDiarioCrear.js
 |   |   |   |   |   |   LibroDiariosRecientes.js
@@ -241,25 +256,27 @@ mosaite/
 >[!CAUTION]
 > Para el desarrollo de este proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
 >
-> Es necesario que esté el archivo **.GGUF** en `mosaite/backend/mosaite/consultorIA/core/`.
+> Es necesario que esté el archivo **.GGUF** en `mosaite/backend/services/consultorIA/core/`.
 >
 > Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
-
->[!IMPORTANT]
-> Las carpetas `consultorIA` y `daily` dentro del backend están ubicadas de forma temporal hasta que se creen las apps de Django correspondientes.
 
 ---
 
 ## Licencia
 
-Este proyecto es de uso libre para fines académicos. Para otros usos contactar al autor.
+Este proyecto es de uso libre para fines académicos y de investigación. Para otros usos contactar al autor.
 
 ---
 
 ## Autor
 
-Luis Antonio Reis Viera
+### Luis Antonio Reis Viera
+
+*Estudiante de la Tecnicatura Superior en Ciencia de Datos e Inteligencia Articial | [Instituto Superior de Formación Docente y Técnica.](https://web.esim.edu.ar/)*
+
+*Este proyecto fue desarrollado como parte de la materia Práctica Profesionalizante I de 1er Año.*
 
 ### Contacto:
 
-- Mail: `luantorv@gmail.com`
+- **Mail**: `luantorv@gmail.com`
+- **GitHub**: [luantorv](https://github.com/luantorv)

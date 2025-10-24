@@ -1,126 +1,152 @@
-// context/AuthContext.js
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useState } from "react"
 
-const AuthContext = createContext();
+const AuthContext = createContext()
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
+  const context = useContext(AuthContext)
   if (!context) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider")
   }
-  return context;
-};
+  return context
+}
+
+export const ROLES = {
+  0: "Viewer",
+  1: "Operator",
+  2: "Accountant",
+  3: "Manager",
+  4: "Admin",
+}
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Usuario por defecto para desarrollo
+  const [user, setUser] = useState({
+    name: "Usuario Demo",
+    email: "demo@example.com",
+    id: "demo-user-001",
+    role: 4, // Admin por defecto
+    status: true, // Activo por defecto
+  })
 
-  // Verificar si hay una sesión guardada al cargar la aplicación
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+  const [isAuthenticated, setIsAuthenticated] = useState(true)
 
-  const checkAuthStatus = () => {
-    try {
-      setLoading(true);
-      // Simular verificación de sesión - en un POC podemos usar variables en memoria
-      // o localStorage si queremos persistir entre recargas de página
-      const savedUser = sessionStorage.getItem('poc_user');
-      
-      if (savedUser) {
-        const userData = JSON.parse(savedUser);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } else {
-        setUser(null);
-        setIsAuthenticated(false);
-      }
-    } catch (error) {
-      console.error('Error checking auth status:', error);
-      setUser(null);
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [users, setUsers] = useState([
+    {
+      id: "user-001",
+      name: "Juan Viewer",
+      email: "viewer@example.com",
+      company: "Empresa Demo",
+      role: 0,
+      status: true,
+      createdAt: new Date("2024-01-15").toISOString(),
+      updatedAt: new Date("2024-01-15").toISOString(),
+    },
+    {
+      id: "user-002",
+      name: "María Operator",
+      email: "operator@example.com",
+      company: "Empresa Demo",
+      role: 1,
+      status: true,
+      createdAt: new Date("2024-02-10").toISOString(),
+      updatedAt: new Date("2024-02-10").toISOString(),
+    },
+    {
+      id: "user-003",
+      name: "Carlos Accountant",
+      email: "accountant@example.com",
+      company: "Empresa Demo",
+      role: 2,
+      status: false,
+      createdAt: new Date("2024-03-05").toISOString(),
+      updatedAt: new Date("2024-03-05").toISOString(),
+    },
+    {
+      id: "user-004",
+      name: "Ana Manager",
+      email: "manager@example.com",
+      company: "Empresa Demo",
+      role: 3,
+      status: true,
+      createdAt: new Date("2024-04-20").toISOString(),
+      updatedAt: new Date("2024-04-20").toISOString(),
+    },
+    {
+      id: "user-005",
+      name: "Pedro Admin",
+      email: "admin@example.com",
+      company: "Empresa Demo",
+      role: 4,
+      status: true,
+      createdAt: new Date("2024-05-12").toISOString(),
+      updatedAt: new Date("2024-05-12").toISOString(),
+    },
+  ])
 
-  const login = (userData) => {
-    try {
-      // Simular delay mínimo para hacer más realista
-      const enhancedUserData = {
-        id: Date.now(), // ID único basado en timestamp
-        email: userData.email,
-        name: userData.name,
-        company: userData.company || 'Empresa Demo',
-        role: userData.role || 'Usuario',
-        avatar: null, // Podrías agregar avatars por defecto después
-        loginTime: new Date().toISOString()
-      };
-
-      setUser(enhancedUserData);
-      setIsAuthenticated(true);
-      
-      // Guardar en sessionStorage para persistir durante la sesión
-      sessionStorage.setItem('poc_user', JSON.stringify(enhancedUserData));
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Error in login:', error);
-      return { 
-        success: false, 
-        error: 'Error al iniciar sesión' 
-      };
-    }
-  };
+  const login = (email, password) => {
+    // Simulación de login
+    setUser({
+      name: email.split("@")[0],
+      email: email,
+      id: `user-${Date.now()}`,
+      role: 0,
+      status: true,
+    })
+    setIsAuthenticated(true)
+  }
 
   const logout = () => {
-    try {
-      setUser(null);
-      setIsAuthenticated(false);
-      
-      // Limpiar datos guardados
-      sessionStorage.removeItem('poc_user');
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Error in logout:', error);
-      // Incluso si hay error, limpiamos el estado local
-      setUser(null);
-      setIsAuthenticated(false);
-      sessionStorage.removeItem('poc_user');
-      
-      return { 
-        success: false, 
-        error: 'Error al cerrar sesión, pero se limpió la sesión local' 
-      };
-    }
-  };
+    setUser(null)
+    setIsAuthenticated(false)
+  }
 
-  // Función adicional para actualizar datos del usuario (útil para el POC)
-  const updateUser = (updates) => {
-    if (user) {
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-      sessionStorage.setItem('poc_user', JSON.stringify(updatedUser));
-      return { success: true };
+  const createUser = (userData) => {
+    const newUser = {
+      ...userData,
+      id: `user-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: true,
     }
-    return { success: false, error: 'No hay usuario logueado' };
-  };
+    setUsers((prev) => [...prev, newUser])
+    return newUser
+  }
+
+  const updateUser = (userId, updates) => {
+    setUsers((prev) =>
+      prev.map((u) => (u.id === userId ? { ...u, ...updates, updatedAt: new Date().toISOString() } : u)),
+    )
+  }
+
+  const deleteUser = (userId) => {
+    setUsers((prev) => prev.filter((u) => u.id !== userId))
+  }
+
+  const toggleUserStatus = (userId) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === userId
+          ? {
+              ...u,
+              status: !u.status,
+              updatedAt: new Date().toISOString(),
+            }
+          : u,
+      ),
+    )
+  }
 
   const value = {
     user,
     isAuthenticated,
-    loading,
     login,
     logout,
-    checkAuthStatus,
-    updateUser // Función adicional para el POC
-  };
+    users,
+    createUser,
+    updateUser,
+    deleteUser,
+    toggleUserStatus,
+  }
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
