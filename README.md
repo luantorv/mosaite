@@ -8,12 +8,42 @@ Además, incluye herramientas basadas en lenguaje natural —como búsquedas y u
 
 Mosaite está diseñado para su uso tanto individual como en entornos educativos, permitiendo que profesores y estudiantes trabajen sobre el mismo sistema.
 
-<img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto>
+<img src=https:github.com/luantorv/mosaite/blob/main/frontend/front/src/assets/logo.png alt="Logo Mosaite" width=auto>
 
 ---
 
 >[!IMPORTANT]
 > En este README.md solo se tratarán algunas cuestiones generales del proyecto, ya que al estar dividido en partes que pueden funcionar por separado, se hizo un archivo README.md para cada una de las partes de forma más detallada.
+
+---
+
+## Gestor de Proyecto TUI (Terminal User Interface)
+
+Se ha implementado un gestor de proyecto interactivo basado en una Interfaz de Usuario por Terminal (TUI) utilizando la librería Textual de Python. Esta herramienta simplifica el proceso de instalación, configuración y ejecución del proyecto Mosaite, eliminando la necesidad de comandos manuales en la consola.
+
+### Funcionalidades Principales
+
+El TUI guía al usuario a través de los siguientes pasos:
+
+- *Verificación de Dependencias:* Chequea automáticamente las versiones de Python, NodeJS y TeXLive instaladas en el sistema para asegurar la compatibilidad.
+
+- *Instalación Inicial:* Gestiona la creación del entorno virtual de Python (venv), la instalación de dependencias de Pip y la inicialización de dependencias de NPM (NodeJS).
+
+- *Gestión de Entornos de Datos:* Permite crear, renombrar y seleccionar entornos de datos separados, definiendo rutas específicas para el archivo SQLite de la base de datos y la carpeta de PDFs generados.
+
+- *Configuración de Django:* Facilita la ejecución de migraciones de base de datos (migrate) y la creación de un Superusuario de Django.
+
+- *Ejecución del Proyecto:* Permite iniciar y detener los servidores de Django (Backend) y React (Frontend) simultáneamente desde una única terminal, mostrando los logs en tiempo real.
+
+### Uso
+
+Para iniciar el gestor TUI, ejecuta el archivo principal del proyecto:
+
+```bash
+python3 main.py
+# o si ya está configurado:
+./main.py
+```
 
 ---
 
@@ -44,10 +74,6 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - Python (3.12.7)
 - Django (5.2.4)
 - Django REST FrameWork (3.16.0)
-
-### ConsultorIA (Módulo de IA)
-
-- Python (3.12.7)
 - llama-cpp-python (0.3.16)
 - sentence-transformers (5.1.0)
 - Gemma-3n-E4B-it-Q4_K_M
@@ -62,6 +88,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ### Otros:
 
+- Textual (6.4.0)
 - TeXLive (3.141592653)
 
 >[!CAUTION]
@@ -81,9 +108,9 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ## Prueba de Concepto (POC):
 
-Se agregó una versión duplicada del frontend (React + Bootstrap) con funcionalidades simuladas. 
+Se agregó una versión duplicada del frontend con funcionalidades simuladas. 
 
-Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de los botones ni llamadas a API.
+Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de los botones ni llamadas a la API.
 
 >[!IMPORTANT]
 > No usar en producción.
@@ -185,7 +212,6 @@ mosaite/
 |   |   |   package-lock.json
 |   |   |   package.json
 |   |   |   README.md
-|   helper/
 |   manual/
 |   |   cap/
 |   |   |   cap1.tex
@@ -248,17 +274,18 @@ mosaite/
 |   |   |   package-lock.json
 |   |   |   package.json
 |   |   |   README.md
+|   tui/
+|   |   __init__.py
+|   |   app.py
+|   |   constants.py
+|   |   logic.py
+|   |   screens.py
 |   .env
 |   .gitignore
+|   main.py
+|   main.tcss
 |   README.md
 ```
-
->[!CAUTION]
-> Para el desarrollo de este proyecto se uso `gemma-3n-E4B-it-Q4_K_M.gguf` como IA/LLM para el módulo `consultorIA`.
->
-> Es necesario que esté el archivo **.GGUF** en `mosaite/backend/services/consultorIA/core/`.
->
-> Para más infomación (Hugging Face): [unsloth/gemma-3n-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF)
 
 ---
 
@@ -274,7 +301,7 @@ Este proyecto es de uso libre para fines académicos y de investigación. Para o
 
 *Estudiante de la Tecnicatura Superior en Ciencia de Datos e Inteligencia Articial | [Instituto Superior de Formación Docente y Técnica.](https://web.esim.edu.ar/)*
 
-*Este proyecto fue desarrollado como parte de la materia Práctica Profesionalizante I de 1er Año.*
+*Este proyecto fue desarrollado como parte de las materias Práctica Profesionalizante I e Inteligencia Artificial de 1er Año.*
 
 ### Contacto:
 

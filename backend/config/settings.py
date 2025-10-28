@@ -77,12 +77,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+DATABASE_PATH = os.environ.get(
+    'DATABASE_PATH', 
+    BASE_DIR / 'db.sqlite3' # Una base de datos 'default' si no se define
+)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATABASE_PATH,
     }
 }
+
+# Ruta de los PDFs de Daily
+PDF_STORAGE_PATH = os.environ.get(
+    'PDF_PATH',
+    BASE_DIR / 'default_pdfs' # Un 'default' por si acaso
+)
 
 # Usuario personalizado
 AUTH_USER_MODEL = 'accounts.User'

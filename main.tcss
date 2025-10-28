@@ -1,0 +1,173 @@
+/* main.tcss - Hoja de estilos básica para MosaiteApp */
+
+Screen {
+    layout: vertical;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+Container {
+    layout: vertical;
+    width: 100%;
+    height: auto;
+    padding: 1 2;
+}
+
+/* --- Contenedores de Pantallas --- */
+#dep-container, #setup-container, #env-container, 
+#django-container, #main-menu-container, 
+#select-env-container, #run-container, #compile-container {
+    width: 100%;
+    height: 100%;
+    padding: 1 2;
+    border: solid $accent-lighten-2;
+    border-title-align: center;
+}
+
+#dep-container { border-title: "Chequeo de Dependencias"; }
+#setup-container { border-title: "Instalación"; }
+#env-container { border-title: "Gestión de Entornos"; }
+#django-container { border-title: "Configuración Django"; }
+#main-menu-container { border-title: "Menú Principal"; }
+#select-env-container { border-title: "Cambiar Entorno"; }
+#run-container { border-title: "Ejecución del Proyecto"; }
+#compile-container { border-title: "Compilar Manual"; }
+
+
+/* --- Clases genéricas --- */
+.title {
+    width: 100%;
+    text-align: center;
+    text-style: bold;
+    color: $accent;
+    margin-bottom: 1;
+}
+
+.subtitle {
+    text-style: bold;
+    margin-top: 1;
+}
+
+.button-row {
+    layout: horizontal;
+    width: 100%;
+    height: auto;
+    margin-top: 1;
+    content-align: center middle;
+}
+
+.button-row Button {
+    margin: 0 1;
+}
+
+/* --- Widgets específicos --- */
+Log {
+    width: 100%;
+    height: 15;
+    border: solid $primary-lighten-2;
+    background: $surface;
+    margin-top: 1;
+}
+
+Input {
+    width: 70%;
+    margin-bottom: 1;
+}
+
+/* Menú principal */
+.menu-buttons {
+    width: 60%;
+    height: auto;
+    align: center middle;
+}
+.menu-buttons Button {
+    width: 100%;
+    margin: 1;
+}
+
+/* Estado de entorno */
+.env-display {
+    width: 100%;
+    text-align: center;
+    color: $text-muted;
+}
+
+/* Modal */
+CreateSuperUserModal {
+    align: center middle;
+}
+
+.modal-container {
+    width: 60;
+    height: auto;
+    background: $surface-darken-1;
+    border: thick $primary;
+    padding: 1 2;
+}
+
+.modal-container .title {
+    color: $primary;
+}
+
+/* Para los botones de Renombrar/Borrar */
+.button-row-spaced {
+    layout: horizontal;
+    width: 100%;
+    height: auto;
+    margin-top: 1;
+    content-align: center middle;
+}
+
+.button-row-spaced Button {
+    margin: 0 2; /* Más espacio entre botones */
+}
+
+/* Para el modal de confirmación de borrado */
+.modal-container .title-warning {
+    width: 100%;
+    text-align: center;
+    text-style: bold;
+    color: $warning; /* Color de advertencia */
+    margin-bottom: 1;
+}
+
+/* Estilo general del modal (del ejemplo anterior, por si acaso) */
+CreateSuperUserModal, ConfirmDeleteModal, RenameEnvironmentModal {
+    align: center middle;
+}
+
+.modal-container {
+    width: 70;
+    height: auto;
+    background: $surface-darken-1;
+    border: thick $primary;
+    padding: 1 2;
+}
+
+/* Un modal más ancho para el formulario de configuración */
+.modal-container-large {
+    width: 90; /* Más ancho que el modal-container estándar */
+    height: auto;
+    background: $surface-darken-1;
+    border: thick $primary;
+    padding: 1 2;
+}
+
+.modal-container-large Select {
+    width: 100%;
+}
+
+/* Estilo para la barra de progreso de descarga */
+.progress-bar {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    color: $primary;
+    margin-top: 1;
+    display: none; /* Oculto por defecto */
+}
+
+/* Muestra la barra de progreso solo si tiene contenido */
+.progress-bar:not(.-blank) {
+    display: block;
+}
