@@ -8,7 +8,7 @@ Además, incluye herramientas basadas en lenguaje natural —como búsquedas y u
 
 Mosaite está diseñado para su uso tanto individual como en entornos educativos, permitiendo que profesores y estudiantes trabajen sobre el mismo sistema.
 
-<img src=https:github.com/luantorv/mosaite/blob/main/frontend/front/src/assets/logo.png alt="Logo Mosaite" width=auto>
+<img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto>
 
 ---
 
@@ -40,9 +40,8 @@ El TUI guía al usuario a través de los siguientes pasos:
 Para iniciar el gestor TUI, ejecuta el archivo principal del proyecto:
 
 ```bash
-python3 main.py
-# o si ya está configurado:
-./main.py
+python3 main.py # en Windows
+python main.py # en MacOS o Linux
 ```
 
 ---
@@ -52,6 +51,8 @@ python3 main.py
 Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalle distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
 
 En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
+
+> **Estado:** No terminado.
 
 ---
 
@@ -100,7 +101,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 - ConsultarIA _(el módulo de IA)_ ya funciona, implementarlo.
 - Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
-- Hay un POC para utilizar (No terminado).
+- Hay un POC para eperimentar el flujo de uso del proyecto.
 - Ya hay algo del frontend hecho (No terminado).
 - El login está implementado, pero tiene errores (Falta corregir).
 
@@ -112,6 +113,8 @@ Se agregó una versión duplicada del frontend con funcionalidades simuladas.
 
 Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de los botones ni llamadas a la API.
 
+> **Estado:** Terminado.
+
 >[!IMPORTANT]
 > No usar en producción.
 
@@ -119,19 +122,15 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 
 ## Por hacer
 
-- La Base de Datos y el backend completos.
+- Terminar el backend, hacer el testing y relizar su documentación.
 
 - Terminar el frontend _(en progreso)_.
 
 - Complementar la integración de back y front.
 
-- Terminar el POC _(en progreso)_.
-
 - Terminar el manual de usuario.
 
 - Implementar un RAG para el uso del sistema y cuestiones contables _(en progreso)_.
-
-- En algún momento implementar NGINX y dockerizar la solución.
 
 ---
 
@@ -141,14 +140,27 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 mosaite/
 |   backend/
 |   |   apps/
-|   |   |   accounts/
-|   |   |   |   migrations/
-|   |   |   |   |   __init__.py
+|   |   |   config/
+|   |   |   |   __init__.py
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   middleware.py
+|   |   |   |   models.py
+|   |   |   |   serializers.py
+|   |   |   |   tests.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   core/management/commands/
+|   |   |   |   init_config.py
+|   |   |   |   init_roles.py
+|   |   |   users/
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
 |   |   |   |   apps.py
 |   |   |   |   models.py
+|   |   |   |   permissions.py
 |   |   |   |   tests.py
+|   |   |   |   urls.py
 |   |   |   |   views.py
 |   |   config/
 |   |   |   __init__.py
@@ -279,6 +291,7 @@ mosaite/
 |   |   app.py
 |   |   constants.py
 |   |   logic.py
+|   |   README.md
 |   |   screens.py
 |   .env
 |   .gitignore

@@ -4,6 +4,7 @@ import subprocess
 import os
 import urllib.request
 from urllib.error import URLError, HTTPError
+import socket
 from typing import Optional, Dict, List
 
 from textual.app import ComposeResult
@@ -16,10 +17,30 @@ from textual import work
 # Importamos desde nuestros módulos
 from .constants import (
     PROJECT_ROOT, BACKEND_DIR, FRONTEND_DIR,
-    IS_WINDOWS, get_os_name,
-    LLM_DOWNLOAD_URL, LLM_FILE_NAME, LLM_DEST_DIR, LLM_DEST_PATH
+    IS_WINDOWS, LLM_DOWNLOAD_URL, LLM_FILE_NAME, 
+    LLM_DEST_DIR, LLM_DEST_PATH
 )
-from .logic import ProjectConfig, DependencyChecker
+from .logic import ProjectConfig, DependencyChecker, get_os_name
+
+def get_lan_ip() -> str:
+    """
+    Intenta encontrar la dirección IP local (LAN) de la máquina.
+    Se conecta a un DNS público (no envía datos) para forzar al OS
+    a elegir la interfaz de red correcta.
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Conectar a una IP externa (no tiene que ser alcanzable)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = "127.0.0.1" # Fallback a localhost si no hay conexión
+    finally:
+        try:
+            s.close()
+        except NameError:
+            pass # Si la 's' no se creó por un error
+    return ip
 
 
 # --- PANTALLA DE CHEQUEO DE DEPENDENCIAS ---
@@ -59,7 +80,9 @@ class DependencyCheckScreen(Screen):
         yield Footer()
     
     def on_mount(self):
-        """Al montar la pantalla, inicia el chequeo en un worker."""
+        """Al montar la pantalla, inicia el chequeo en un worker y pone el título del contenedor."""
+        # Se establece el título del borde usando el ID del contenedor
+        self.query_one("#dep-container").border_title = "Chequeo de Dependencias"
         self.check_dependencies()
     
     @work(exclusive=True)
@@ -172,6 +195,12 @@ class SetupScreen(Screen):
             self.run_setup()
         elif event.button.id == "skip-btn":
             self.app.push_screen(EnvironmentConfigScreen())
+
+    def on_mount(self):
+        """Al montar la pantalla, establece el título del contenedor."""
+        self.query_one("#setup-container").border_title = "Instalación"
+        # Esto es importante para el fix del progress-bar de la pregunta anterior
+        self.query_one("#download-progress").remove_class("-active")
     
     @work(exclusive=True)
     async def run_setup(self):
@@ -417,7 +446,8 @@ class EnvironmentConfigScreen(Screen):
         yield Footer()
     
     def on_mount(self):
-        """Al montar, actualiza la lista del Select."""
+        """Al montar, actualiza la lista del Select y establece el título."""
+        self.query_one("#env-container").border_title = "Gestión de Entornos"
         self.refresh_env_list()
     
     def refresh_env_list(self):
@@ -456,13 +486,18 @@ class EnvironmentConfigScreen(Screen):
             self.on_delete_pressed()
     
     def create_environment(self):
-        """Crea un nuevo entorno y actualiza la lista."""
+        """
+        (MODIFICADO)
+        Crea un nuevo entorno, lo establece como activo y 
+        empuja al usuario a la pantalla de setup de Django.
+        """
         name_input = self.query_one("#env-name", Input)
         path_input = self.query_one("#data-path", Input)
-        name = name_input.value.strip()
-        data_path = path_input.value.strip()
         
-        if not name or not data_path:
+        name = name_input.value.strip()
+        base_data_path = path_input.value.strip()
+        
+        if not name or not base_data_path:
             self.notify("Completa todos los campos", severity="error")
             return
             
@@ -470,19 +505,36 @@ class EnvironmentConfigScreen(Screen):
             self.notify(f"Error: El entorno '{name}' ya existe", severity="error")
             return
         
-        # Expande la ruta del usuario (ej. ~/)
-        data_dir = os.path.expanduser(data_path)
         try:
-            # Asegurarse de que las carpetas base existen
-            os.makedirs(data_dir, exist_ok=True)
-            os.makedirs(os.path.join(data_dir, "pdfs"), exist_ok=True)
+            # 1. Crear las carpetas
+            data_dir = os.path.expanduser(base_data_path)
+            full_data_path = os.path.join(data_dir, "MosaiteData")
+            pdf_dir = os.path.join(full_data_path, "pdfs")
+
+            os.makedirs(full_data_path, exist_ok=True)
+            os.makedirs(pdf_dir, exist_ok=True)
             
-            self.config.add_environment(name, data_dir)
-            self.notify(f"✅ Entorno '{name}' creado", severity="information")
+            # 2. Guardar la configuración
+            self.config.add_environment(name, full_data_path)
             
+            # 3. Establecer el entorno recién creado como activo
+            self.config.set_current_env(name) 
+            
+            # 4. Notificar y empujar a la pantalla de inicialización
+            self.notify(f"✅ Entorno '{name}' creado. Ahora debes inicializarlo.", severity="information")
+            
+            # Limpiar los inputs para cuando volvamos
             name_input.value = ""
             path_input.value = ""
-            self.refresh_env_list()
+            
+            # (El refresh_env_list() se ejecutará cuando el usuario vuelva a esta pantalla)
+            
+            # 5. Ir a la pantalla de Setup de Django
+            # Pasamos la config para asegurar que la pantalla usa la instancia correcta
+            self.app.push_screen(DjangoSetupScreen(self.config)) 
+            
+            # --------------------------
+            
         except Exception as e:
             self.notify(f"Error al crear directorios: {str(e)}", severity="error")
             
@@ -699,6 +751,10 @@ class DjangoSetupScreen(Screen):
             id="django-container"
         )
         yield Footer()
+
+    def on_mount(self):
+        """Al montar, establece el título del contenedor."""
+        self.query_one("#django-container").border_title = "Configuración Django"
     
     def on_button_pressed(self, event: Button.Pressed):
         """Maneja los botones (migrar, init, superusuario, finalizar)."""
@@ -828,6 +884,10 @@ class MainMenuScreen(Screen):
             id="main-menu-container"
         )
         yield Footer()
+
+    def on_mount(self):
+        """Al montar, establece el título del contenedor."""
+        self.query_one("#main-menu-container").border_title = "Menú Principal"
     
     def on_button_pressed(self, event: Button.Pressed):
         if event.button.id == "start-project-btn":
@@ -878,6 +938,10 @@ class SelectEnvironmentScreen(Screen):
             id="select-env-container"
         )
         yield Footer()
+
+    def on_mount(self):
+        """Al montar, establece el título del contenedor."""
+        self.query_one("#select-env-container").border_title = "Cambiar Entorno"
     
     def on_button_pressed(self, event: Button.Pressed):
         if event.button.id == "change-btn":
@@ -930,11 +994,13 @@ class RunProjectScreen(Screen):
         yield Footer()
     
     def on_mount(self):
+        """Al montar la pantalla, inicia los servidores y establece el título."""
+        self.query_one("#run-container").border_title = "Ejecución del Proyecto"
         self.start_servers()
     
     @work(exclusive=True)
     async def start_servers(self):
-        """Inicia los subprocesos de backend y frontend."""
+        """Inicia los servidores en 0.0.0.0 y muestra la IP de LAN."""
         backend_log = self.query_one("#backend-log", Log)
         frontend_log = self.query_one("#frontend-log", Log)
         status = self.query_one("#run-status", Static)
@@ -949,18 +1015,28 @@ class RunProjectScreen(Screen):
         python_path = str(PROJECT_ROOT / "venv" / ("Scripts" if IS_WINDOWS else "bin") / "python")
         manage_py = str(BACKEND_DIR / "manage.py")
         
+        # --- Obtener IP y construir URLs ---
+        lan_ip = get_lan_ip()
+        backend_url = f"http://{lan_ip}:8000"
+        frontend_url = f"http://{lan_ip}:3000"
+
         # Iniciar backend
         backend_log.write_line("\n🔵 Iniciando servidor Django...")
         try:
             self.backend_process = subprocess.Popen(
-                [python_path, manage_py, "runserver"],
+                # --- Escuchar en 0.0.0.0 ---
+                [python_path, manage_py, "runserver", "0.0.0.0:8000"],
                 cwd=str(BACKEND_DIR),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
                 bufsize=1
             )
-            backend_log.write_line("✅ Backend iniciado en http://localhost:8000")
+            # --- Mostrar URL de LAN ---
+            backend_log.write_line(f"✅ Backend iniciado en: {backend_url}")
+            if lan_ip == "127.0.0.1":
+                backend_log.write_line("   (No se pudo detectar IP de LAN, verifica tu conexión de red)")
+            
             self.is_running = True
         except Exception as e:
             backend_log.write_line(f"❌ Error iniciando backend: {str(e)}")
@@ -971,6 +1047,7 @@ class RunProjectScreen(Screen):
         frontend_log.write_line("\n🟢 Iniciando servidor React...")
         try:
             npm_cmd = "npm.cmd" if IS_WINDOWS else "npm"
+            # (Nota: 'npm start' de React usualmente ya escucha en 0.0.0.0 por defecto)
             self.frontend_process = subprocess.Popen(
                 [npm_cmd, "start"],
                 cwd=str(FRONTEND_DIR),
@@ -979,14 +1056,18 @@ class RunProjectScreen(Screen):
                 text=True,
                 bufsize=1
             )
-            frontend_log.write_line("✅ Frontend iniciado en http://localhost:3000")
+            # --- CAMBIO 4: Mostrar URL de LAN para Frontend ---
+            frontend_log.write_line(f"✅ Frontend iniciado. Accede desde:")
+            frontend_log.write_line(f"   - Esta máquina: http://localhost:3000")
+            frontend_log.write_line(f"   - Otros dispositivos: {frontend_url}")
+
         except Exception as e:
             frontend_log.write_line(f"❌ Error iniciando frontend: {str(e)}")
         
         status.update("✅ Servidores en ejecución | Presiona 'S' o Ctrl+C para detener")
         
         # Iniciar monitoreo de logs
-        self.monitor_logs(backend_log, frontend_log)
+        self
     
     @work(exclusive=True, thread=True)
     def monitor_logs(self, backend_log, frontend_log):

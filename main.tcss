@@ -24,15 +24,6 @@ Container {
     border-title-align: center;
 }
 
-#dep-container { border-title: "Chequeo de Dependencias"; }
-#setup-container { border-title: "Instalación"; }
-#env-container { border-title: "Gestión de Entornos"; }
-#django-container { border-title: "Configuración Django"; }
-#main-menu-container { border-title: "Menú Principal"; }
-#select-env-container { border-title: "Cambiar Entorno"; }
-#run-container { border-title: "Ejecución del Proyecto"; }
-#compile-container { border-title: "Compilar Manual"; }
-
 
 /* --- Clases genéricas --- */
 .title {
@@ -165,9 +156,4 @@ CreateSuperUserModal, ConfirmDeleteModal, RenameEnvironmentModal {
     color: $primary;
     margin-top: 1;
     display: none; /* Oculto por defecto */
-}
-
-/* Muestra la barra de progreso solo si tiene contenido */
-.progress-bar:not(.-blank) {
-    display: block;
 }

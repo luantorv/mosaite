@@ -6,7 +6,9 @@ frontend/front/.env
 backend/*/__pycache__
 backend/*/*/__pycache__
 backend/*/*/*/__pycache__
-
+backend/*/*/*/*/__pycache__
+backend/apps/*/migrations/
+*/__pycache__
 manual/*.out
 manual/*.fls
 manual/*.aux
