@@ -1,38 +1,19 @@
-from django.utils.deprecation import MiddlewareMixin
 from .models import Config
 
 
-class ConfigMiddleware(MiddlewareMixin):
+class SystemModeMiddleware:
     """
-    Middleware que hace disponible la configuración del sistema
-    en todas las requests como request.config.
-    
-    También proporciona acceso individual a cada campo:
-    - request.company_name
-    - request.system_mode
-    - request.date_format
-    - request.currency
+    Middleware para agregar el modo del sistema al request
     """
+    def __init__(self, get_response):
+        self.get_response = get_response
     
-    def process_request(self, request):
-        """
-        Agrega la configuración al objeto request.
-        """
-        config = Config.get_config()
+    def __call__(self, request):
+        try:
+            config = Config.objects.first()
+            request.system_mode = config.system_mode if config else False
+        except:
+            request.system_mode = False
         
-        # Agrega el objeto config completo
-        request.config = config
-        
-        # Agrega cada campo individualmente para fácil acceso
-        if config:
-            request.company_name = config.company_name
-            request.system_mode = config.system_mode
-            request.date_format = config.date_format
-            request.currency = config.currency
-        else:
-            request.company_name = None
-            request.system_mode = None
-            request.date_format = None
-            request.currency = None
-        
-        return None
+        response = self.get_response(request)
+        return response

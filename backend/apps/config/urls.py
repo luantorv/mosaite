@@ -1,8 +1,10 @@
-from django.urls import path
-from .views import ConfigView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ConfigViewSet
 
-app_name = 'config'
+router = DefaultRouter()
+router.register(r'', ConfigViewSet, basename='config')
 
 urlpatterns = [
-    path('', ConfigView.as_view(), name='config'),
+    path('', include(router.urls)),
 ]

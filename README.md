@@ -17,6 +17,121 @@ Mosaite está diseñado para su uso tanto individual como en entornos educativos
 
 ---
 
+## Instalación del Proyecto
+
+1. Tener instaladas las dependencias:
+
+- [Python](https://www.python.org/downloads/)
+- [NodeJS](https://nodejs.org/es/download)
+- [TeXLive](https://www.tug.org/texlive/acquire-netinstall.html)
+
+2. Clonar el repositorio:
+
+```bash
+git clone https://github.com/luantorv/mosaite.git
+```
+
+>[!TIP]
+> Se recomienda eliminar la carpeta `.git` que se creará:
+>
+> ```bash
+> rm -rf .git
+> ```
+
+3. Instalar las librerías para el backend:
+
+```bash
+# Instalar virtualenv si no lo tiene instalado
+pip install virtualenv
+
+# Cambiar a la carpeta del backend
+cd ./backend
+
+# Crear el entorno virtual
+python venv -m venv
+
+# Activar el entorno virtual
+source venv/bin/activate # En Linux/MacOS
+.venv/Scripts/activate # En Windows
+
+# Instalar las librerías mediante pip
+pip install -r requirements.txt
+```
+
+4. Migrar los modelos a la base de datos y crear el superusuario de Django:
+
+```bash
+# Crear las migraciones
+python manage.py makemigrations
+
+# Realizar las migraciones
+python manage.py migrate
+
+# Crear el superusuario de Django
+python manage.py createsuperuser 
+```
+
+5. Instalar las librerías del frontend mediante npm:
+
+```bash
+# Cambiar a la carpeta del frontend
+cd .. && cd ./frontend/front/
+
+# Instalar las librerías
+npm install
+```
+
+>[!TIP]
+> Es recomendable crear una versión optimizada:
+>
+> ```bash
+> npm run build
+> npm install -g serve
+> ```
+
+## Levantar el Proyecto
+
+1. Abrir una terminal en la carpeta del backend y hacer:
+
+```bash
+python manage.py runserver 0.0.0.0:8000
+```
+
+2. Abrir una segunda terminal en la carpeta del frontend y hacer:
+
+```bash
+# Si creaste la version optimizada
+serve -s build
+
+# Sino
+npm start
+```
+
+3. En la terminal aparecerá algo como:
+
+```txt
+You can now view front in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://*.*.*.*:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+```
+
+Haciendo Ctrl+Click en el primer link podrá acceder al proyecto, de igual forma las máquinas dentro de la misma red prodrán acceder al proyecto usando el segundo enlace.
+
+>[!CAUTION]
+> La aplicación se sirve en 0.0.0.0, lo que permite acceder desde otros dispositivos dentro de la LAN (por ejemplo: http://192.168.x.x:3000).
+>
+> Sin embargo, algunos routers o puntos de acceso tienen activada la opción `AP Isolation` / `Client Isolation`, que bloquea la comunicación entre dispositivos conectados a la misma red WiFi.
+>
+> Si no podés acceder desde otro dispositivo aún estando en la misma red, probablemente sea por esta configuración del router.
+
+---
+
 ## Gestor de Proyecto TUI (Terminal User Interface)
 
 Se ha implementado un gestor de proyecto interactivo basado en una Interfaz de Usuario por Terminal (TUI) utilizando la librería Textual de Python. Esta herramienta simplifica el proceso de instalación, configuración y ejecución del proyecto Mosaite, eliminando la necesidad de comandos manuales en la consola.
@@ -44,6 +159,8 @@ python3 main.py # en Windows
 python main.py # en MacOS o Linux
 ```
 
+> **Estado:** No terminado.
+
 ---
 
 ## Manual de Usuario
@@ -64,7 +181,7 @@ El sistema permitirá a los usuarios hacer preguntas como:
 
 Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
 
-> **Estado:** Está listo para implementarlo en el backend _(todavía no está hecho el backend)_.
+> **Estado:** Está listo para implementarlo en el backend _(todavía no está terminado el backend)_.
 
 ---
 
@@ -75,8 +192,11 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - Python (3.12.7)
 - Django (5.2.4)
 - Django REST FrameWork (3.16.0)
+- Simple JWT (5.5.1)
+- Django CORS Headers (4.9.0)
 - llama-cpp-python (0.3.16)
 - sentence-transformers (5.1.0)
+- faiss-cpu (1.12.0)
 - Gemma-3n-E4B-it-Q4_K_M
 
 ### FrontEnd:
@@ -99,11 +219,11 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ## Funcionalidades
 
-- ConsultarIA _(el módulo de IA)_ ya funciona, implementarlo.
+- ConsultarIA _(el módulo de IA)_ ya funciona, falta implementarlo.
 - Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
-- Hay un POC para eperimentar el flujo de uso del proyecto.
+- Hay un POC para experimentar el flujo de uso del proyecto.
 - Ya hay algo del frontend hecho (No terminado).
-- El login está implementado, pero tiene errores (Falta corregir).
+- El login funciona y hay manejo de usuarios mediante el componente UsuariosLista.js.
 
 ---
 
@@ -122,11 +242,11 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 
 ## Por hacer
 
-- Terminar el backend, hacer el testing y relizar su documentación.
+- Terminar el backend, hacer el testing y realizar su documentación _(en progreso)_.
 
 - Terminar el frontend _(en progreso)_.
 
-- Complementar la integración de back y front.
+- Complementar la integración de back y front _(en progreso)_.
 
 - Terminar el manual de usuario.
 
@@ -150,9 +270,6 @@ mosaite/
 |   |   |   |   tests.py
 |   |   |   |   urls.py
 |   |   |   |   views.py
-|   |   |   core/management/commands/
-|   |   |   |   init_config.py
-|   |   |   |   init_roles.py
 |   |   |   users/
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
@@ -161,6 +278,7 @@ mosaite/
 |   |   |   |   permissions.py
 |   |   |   |   tests.py
 |   |   |   |   urls.py
+|   |   |   |   utils.py
 |   |   |   |   views.py
 |   |   config/
 |   |   |   __init__.py
@@ -171,7 +289,13 @@ mosaite/
 |   |   services/
 |   |   |   chat/
 |   |   |   |   data/
+|   |   |   |   |   manual_cuentas.md
 |   |   |   |   __init__.py
+|   |   |   |   config.py
+|   |   |   |   embedder.py
+|   |   |   |   llm.client.py
+|   |   |   |   rag_service.py
+|   |   |   |   vector_store.py
 |   |   |   consultorIA/
 |   |   |   |   core/
 |   |   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
@@ -185,6 +309,7 @@ mosaite/
 |   |   |   |   main.py
 |   |   manage.py
 |   |   README.md
+|   |   requirements.txt
 |   frontend/
 |   |   front/
 |   |   |   public/
@@ -198,7 +323,21 @@ mosaite/
 |   |   |   |   |   icon.png
 |   |   |   |   |   logo.png
 |   |   |   |   components/
-|   |   |   |   |   Content.js
+|   |   |   |   |   Content/
+|   |   |   |   |   |   Chat.js
+|   |   |   |   |   |   Configuracion.js
+|   |   |   |   |   |   CuentaCrear.js
+|   |   |   |   |   |   DashboardHome.js
+|   |   |   |   |   |   index.js
+|   |   |   |   |   |   LibroDiarioCard.js
+|   |   |   |   |   |   LibroDiarioBuscar.js
+|   |   |   |   |   |   LibroDiarioCrear.js
+|   |   |   |   |   |   LibroDiariosRecientes.js
+|   |   |   |   |   |   TransaccionBuscar.js
+|   |   |   |   |   |   TransaccionCard.js
+|   |   |   |   |   |   TransaccionCrear.js
+|   |   |   |   |   |   TransaccionRecientes.js
+|   |   |   |   |   |   UsuariosLista.js
 |   |   |   |   |   Dashboard.js
 |   |   |   |   |   Login.js
 |   |   |   |   |   LogoutButton.js
@@ -212,7 +351,10 @@ mosaite/
 |   |   |   |   |   AuthContext.js
 |   |   |   |   |   ThemeContext.js
 |   |   |   |   services/
-|   |   |   |   |   authService.js
+|   |   |   |   |   api.js
+|   |   |   |   |   AuthService.js
+|   |   |   |   |   ConfigService.js
+|   |   |   |   |   UserService.js
 |   |   |   |   App.css
 |   |   |   |   App.js
 |   |   |   |   App.test.js

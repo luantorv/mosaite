@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 function LogoutButton({ className = '', style = {} }) {
   const [loading, setLoading] = useState(false);
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     if (loading) return;
@@ -13,7 +15,9 @@ function LogoutButton({ className = '', style = {} }) {
     setLoading(true);
     try {
       const result = await logout();
-      if (!result.success) {
+      if (result.success) {
+        navigate('/login');
+      } else {
         console.error('Error al cerrar sesión:', result.error);
       }
     } catch (error) {
@@ -24,53 +28,41 @@ function LogoutButton({ className = '', style = {} }) {
   };
 
   return (
-    <div className="d-flex align-items-center">
-      {user && (
-        <span 
-          className="me-3 text-sm"
-          style={{ color: theme.text }}
-        >
-          {user.first_name || user.username} ({user.role})
+    <button
+      onClick={handleLogout}
+      disabled={loading}
+      className={`btn ${className}`}
+      style={{
+        width: '100%',
+        background: theme.background,
+        color: '#d73027',
+        border: 'none',
+        borderRadius: '10px',
+        padding: '12px 16px',
+        boxShadow: theme.smallButtonShadowOut,
+        transition: 'all 0.2s ease',
+        fontSize: '14px',
+        fontWeight: '600',
+        ...style
+      }}
+      onMouseOver={(e) => {
+        e.target.style.transform = 'translateY(-1px)';
+        e.target.style.boxShadow = theme.smallButtonShadowIn;
+      }}
+      onMouseOut={(e) => {
+        e.target.style.transform = 'translateY(0)';
+        e.target.style.boxShadow = theme.smallButtonShadowOut;
+      }}
+    >
+      {loading ? (
+        <span>
+          <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+          Cerrando sesión...
         </span>
+      ) : (
+        'Cerrar Sesión'
       )}
-      
-      <button
-        onClick={handleLogout}
-        disabled={loading}
-        className={`btn ${className}`}
-        style={{
-          width: '100%',
-          background: theme.background,
-          color: '#d73027',
-          border: 'none',
-          borderRadius: '8px',
-          padding: '8px 12px',
-          boxShadow: theme.smallButtonShadowOut,
-          transition: 'all 0.2s ease',
-          marginTop: '5px',
-          textAlign: 'left',
-          fontSize: '13px',
-          ...style
-        }}
-        onMouseOver={(e) => {
-          e.target.style.transform = 'translateY(-1px)';
-          e.target.style.boxShadow = theme.smallButtonShadowIn;
-        }}
-        onMouseOut={(e) => {
-          e.target.style.transform = 'translateY(0)';
-          e.target.style.boxShadow = theme.smallButtonShadowOut;
-        }}
-      >
-        {loading ? (
-          <span>
-            <span className="spinner-border spinner-border-sm me-1" role="status"></span>
-            Saliendo...
-          </span>
-        ) : (
-          'Cerrar Sesión'
-        )}
-      </button>
-    </div>
+    </button>
   );
 }
 

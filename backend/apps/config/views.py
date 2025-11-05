@@ -1,52 +1,47 @@
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Config
 from .serializers import ConfigSerializer
 
 
-class ConfigView(APIView):
-    """
-    Vista para obtener y actualizar la configuración del sistema.
-    
-    GET: Obtiene la configuración actual (los 4 campos)
-    PUT: Actualiza la configuración
-    """
+class ConfigViewSet(viewsets.ModelViewSet):
+    queryset = Config.objects.all()
+    serializer_class = ConfigSerializer
     permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        """
-        Obtiene la configuración del sistema.
-        Retorna un JSON con los 4 campos de configuración.
-        """
-        config = Config.get_config()
-        
+    
+    @action(detail=False, methods=['get'])
+    def current(self, request):
+        """Retorna la configuración actual del sistema"""
+        config = Config.objects.first()
         if not config:
-            return Response(
-                {"detail": "No existe configuración en el sistema."},
-                status=status.HTTP_404_NOT_FOUND
+            # Crear config por defecto si no existe
+            config = Config.objects.create(
+                system_mode=False,  # Modo educativo por defecto
+                date_format='DD/MM/YYYY',
+                currency='ARS'
             )
+        serializer = self.get_serializer(config)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def role_names(self, request):
+        """Retorna los nombres de roles según el modo del sistema"""
+        config = Config.objects.first()
         
-        serializer = ConfigSerializer(config)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self, request):
-        """
-        Actualiza la configuración del sistema.
-        """
-        config = Config.get_config()
+        if not config or not config.system_mode:  # Modo educativo
+            roles = {
+                0: 'Profesor',
+                2: 'Alumno'
+            }
+        else:  # Modo empresarial
+            roles = {
+                0: 'Admin',
+                1: 'Manager',
+                2: 'Accountant',
+                3: 'Operator',
+                4: 'Viewer'
+            }
         
-        if not config:
-            return Response(
-                {"detail": "No existe configuración en el sistema. Debe crear una primero."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        
-        serializer = ConfigSerializer(config, data=request.data, partial=True)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(roles)

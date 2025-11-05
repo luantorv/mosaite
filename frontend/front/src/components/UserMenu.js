@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
 import LogoutButton from "./LogoutButton";
 
 function UserMenu() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { theme } = useTheme();
+  const { user, roles } = useAuth();
 
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
@@ -12,6 +14,20 @@ function UserMenu() {
 
   const closeUserMenu = () => {
     setIsUserMenuOpen(false);
+  };
+
+  // Función para obtener iniciales del nombre
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const getRoleName = (rolNumber) => {
+    return roles[rolNumber] || `Rol ${rolNumber}`;
+  };
+
+  const getStatusText = (status) => {
+    return status === 0 ? 'Activo' : 'Inactivo';
   };
 
   return (
@@ -34,7 +50,8 @@ function UserMenu() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "18px",
+            fontSize: "14px",
+            fontWeight: "600",
             color: theme.textColor,
             marginLeft: "10px",
           }}
@@ -49,7 +66,7 @@ function UserMenu() {
             }
           }}
         >
-          👤
+          {getInitials(user?.name)}
         </button>
 
         {/* Menú flotante del usuario */}
@@ -59,83 +76,79 @@ function UserMenu() {
               position: "absolute",
               top: "55px",
               right: "0",
-              width: "220px",
+              width: "280px",
               background: theme.background,
               borderRadius: "15px",
               boxShadow: theme.cardShadowOut,
               zIndex: 1000,
-              padding: "15px",
+              padding: "20px",
               transform: "translateY(0)",
               opacity: 1,
               transition: "all 0.3s ease",
             }}
           >
             {/* Contenido del menú de usuario */}
-            <div style={{ color: theme.textColor, fontSize: "14px" }}>
+            <div style={{ color: theme.textColor }}>
               <div 
                 style={{
                   padding: "10px 0",
-                  borderBottom: "1px solid #d0d7e3",
-                  marginBottom: "10px"
+                  borderBottom: `2px solid ${theme.border}`,
+                  marginBottom: "15px"
                 }}
               >
-                <strong>Usuario Demo</strong>
-                <div style={{ fontSize: "12px", color: theme.textColorMuted }}>
-                  usuario@ejemplo.com
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                      background: theme.primaryColor,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                      fontSize: "18px",
+                      fontWeight: "700"
+                    }}
+                  >
+                    {getInitials(user?.name)}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ 
+                      fontSize: "16px", 
+                      fontWeight: "600",
+                      marginBottom: "4px"
+                    }}>
+                      {user?.name || "Usuario"}
+                    </div>
+                    <div style={{ 
+                      fontSize: "14px", 
+                      color: theme.textColorMuted,
+                      marginBottom: "4px"
+                    }}>
+                      {user?.email || "usuario@ejemplo.com"}
+                    </div>
+                    <div style={{ 
+                      fontSize: "13px", 
+                      color: theme.textColorMuted,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px"
+                    }}>
+                      <span>{getRoleName(user?.rol)}</span>
+                      <span>•</span>
+                      <span style={{ 
+                        color: user?.status === 0 ? '#4caf50' : '#f44336',
+                        fontWeight: "500"
+                      }}>
+                        {getStatusText(user?.status)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <button
-                  className="btn"
-                  onClick={closeUserMenu}
-                  style={{
-                    background: theme.background,
-                    border: "none",
-                    padding: "8px 12px",
-                    borderRadius: "8px",
-                    boxShadow: theme.smallButtonShadowOut,
-                    color: theme.textColor,
-                    fontSize: "13px",
-                    textAlign: "left",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.boxShadow = theme.smallButtonShadowIn;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.boxShadow = theme.smallButtonShadowOut;
-                  }}
-                >
-                  Mi Perfil
-                </button>
-                
-                <button
-                  className="btn"
-                  onClick={closeUserMenu}
-                  style={{
-                    background: theme.background,
-                    border: "none",
-                    padding: "8px 12px",
-                    borderRadius: "8px",
-                    boxShadow: theme.smallButtonShadowOut,
-                    color: theme.textColor,
-                    fontSize: "13px",
-                    textAlign: "left",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.boxShadow = theme.smallButtonShadowIn;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.boxShadow = theme.smallButtonShadowOut;
-                  }}
-                >
-                  Configuración
-                </button>
-
-                <LogoutButton />
-              </div>
+              <LogoutButton />
             </div>
           </div>
         )}

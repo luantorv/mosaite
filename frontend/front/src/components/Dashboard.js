@@ -1,33 +1,54 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import Sidebar from "./Sidebar";
-import SearchBar from "./SearchBar";
-import ThemeToggle from "./ThemeToggle";
-import UserMenu from "./UserMenu";
-import { useTheme } from "../context/ThemeContext";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react"
+import { useEffect } from "react"
+import Sidebar from "./Sidebar"
+import SearchBar from "./SearchBar"
+import ThemeToggle from "./ThemeToggle"
+import UserMenu from "./UserMenu"
+import Content from "./Content/index"
+import { useTheme } from "../context/ThemeContext"
+import "bootstrap/dist/css/bootstrap.min.css"
 
 function Dashboard() {
   useEffect(() => {
-    document.title = "Mosaite - Dashboard";
-  }, []);
+    document.title = "Mosaite - Dashboard"
+  }, [])
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true)
+  const [activePanel, setActivePanel] = useState("Dashboard")
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const { theme } = useTheme();
+  const { theme } = useTheme()
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+    setIsOpen(!isOpen)
+  }
+
+  const handlePanelChange = (mainCategory, option) => {
+    const panelKey = option ? `${mainCategory}-${option}` : mainCategory
+    setActivePanel(panelKey)
+    console.log(`Panel activo: ${panelKey}`)
+  }
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value)
+  }
+
+  const handleSearch = () => {
+    console.log("[v0] Search triggered with query:", searchQuery)
+    if (activePanel !== "Transacciones-Buscar") {
+      setActivePanel("Transacciones-Buscar")
+    }
+  }
 
   return (
-    <div 
-      className="d-flex" 
-      style={{ 
-        height: "100vh", 
+    <div
+      className="d-flex"
+      style={{
+        height: "100vh",
         background: theme.background,
         position: "relative",
-        transition: "background 0.3s ease"
+        transition: "background 0.3s ease",
+        overflow: "hidden",
       }}
     >
       {/* Sidebar con animación */}
@@ -39,7 +60,7 @@ function Dashboard() {
           flexShrink: 0,
         }}
       >
-        <Sidebar />
+        <Sidebar onPanelChange={handlePanelChange} activePanel={activePanel} />
       </div>
 
       {/* Contenido principal */}
@@ -50,6 +71,8 @@ function Dashboard() {
           padding: "20px",
           marginLeft: isOpen ? "0" : "-250px",
           transition: "margin-left 0.3s ease",
+          height: "100vh",
+          overflow: "hidden",
         }}
       >
         {/* Dashboard card principal */}
@@ -61,12 +84,25 @@ function Dashboard() {
             boxShadow: theme.cardShadowOut,
             position: "relative",
             padding: "20px",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           {/* Bootstrap Grid Container */}
-          <div className="container-fluid h-100">
+          <div
+            className="container-fluid h-100"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             {/* Fila superior con botón sidebar y theme toggle */}
-            <div className="row">
+            <div
+              className="row"
+              style={{
+                flexShrink: 0,
+              }}
+            >
               {/* Columna izquierda - Botón Sidebar */}
               <div className="col-auto">
                 <button
@@ -100,31 +136,45 @@ function Dashboard() {
               {/* Columna central - SearchBar */}
               <div className="col">
                 <div className="d-flex justify-content-center">
-                  <SearchBar />
+                  <SearchBar value={searchQuery} onChange={handleSearchChange} onSearch={handleSearch} />
                 </div>
               </div>
 
               {/* Columna Theme Toggle */}
-              <div className="col-auto align-content-center" style={{ position: "relative"}}>
+              <div className="col-auto align-content-center" style={{ position: "relative" }}>
                 <ThemeToggle />
               </div>
 
               {/* Columna derecha - User Menu */}
               <div className="col-auto">
-                  <UserMenu />
+                <UserMenu />
               </div>
             </div>
-
-            <div className="row">
-              <div className="col">
-                
+            {/* Segunda Fila - Contenido dinámico */}
+            <div
+              className="row flex-grow-1"
+              style={{
+                minHeight: 0,
+                overflow: "hidden",
+              }}
+            >
+              {/* Única columna para contenido */}
+              <div
+                className="col"
+                style={{
+                  padding: "2px, 0, 0, 0",
+                  height: "100%",
+                  overflow: "hidden",
+                }}
+              >
+                <Content activePanel={activePanel} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard

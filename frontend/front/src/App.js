@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from "./context/ThemeContext";
-//import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 
@@ -16,9 +16,9 @@ function App() {
 
             {/* Ruta raíz → Dashboard */}
             <Route path="/" element={
-              //<ProtectedRoute>
+              <ProtectedRoute>
                 <Dashboard />
-              //</ProtectedRoute>
+              </ProtectedRoute>
             } />
             {/* Más rutas protegidas... */}
           </Routes>

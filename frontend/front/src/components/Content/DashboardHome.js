@@ -18,7 +18,7 @@ function Dashboard() {
   const dashboardData = {
     "total-alumnos": 60,
     "cantidad-grupos": 4,
-    "asientos-ocupados": 300,
+    "asientos-cargados": 300,
     "libros-diarios": 6,
     // Evolución histórica de Actividad y Cobertura
     evolucionHistorica: [
@@ -82,7 +82,7 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Tarjeta 3: Asientos Totales Ocupados */}
+        {/* Tarjeta 3: Asientos Totales cargados */}
         <div className="col-12 col-sm-6 col-lg-3">
           <div
             className="card h-100"
@@ -94,10 +94,10 @@ function Dashboard() {
           >
             <div className="card-body text-center">
               <h6 className="card-subtitle mb-2" style={{ color: theme.textColorSecondary }}>
-                Asientos Totales Ocupados
+                Asientos Totales Cargados
               </h6>
               <h3 className="card-title mb-0" style={{ color: theme.textColor }}>
-                {dashboardData["asientos-ocupados"]}
+                {dashboardData["asientos-cargados"]}
               </h3>
             </div>
           </div>

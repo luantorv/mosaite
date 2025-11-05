@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import { authAPI } from '../services/authService';
 import logo from '../assets/logo.png';
 
 function Login() {
@@ -19,37 +18,40 @@ function Login() {
     document.title = "Mosaite - Login";
   }, []);
 
-  // Inicializar CSRF token cuando se monta el componente
-  useEffect(() => {
-    authAPI.initializeCSRF().catch(console.error);
-  }, []);
-
   // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('')
+    setError('');
 
     try {
+      // Validación básica
+      if (!email || !password) {
+        setError('Por favor, completa todos los campos');
+        setLoading(false);
+        return;
+      }
+
       const result = await login(email, password);
 
       if (result.success) {
         navigate('/');
       } else {
-        setError(result.error);
+        setError(result.error || 'Error al iniciar sesión');
       }
-    } catch {
+    } catch (error) {
       setError('Error inesperado al iniciar sesión');
+      console.error('Login error:', error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div 
@@ -59,7 +61,7 @@ function Login() {
       <div 
         className="card p-4"
         style={{
-          height:'95%',
+          height: '95%',
           width: '100%',
           maxWidth: '400px',
           background: theme.background,
@@ -69,11 +71,15 @@ function Login() {
         }}
       >
         <div className="card-body">
-          <img src={logo} alt="Mosaite" style={{ width:'100%'}}></img>
+          <img src={logo} alt="Mosaite" style={{ width: '100%' }} />
           
-          <div style={{ height: '50px'}}>
+          <div style={{ height: '50px' }}>
             {error && (
-              <div className="alert alert-danger d-flex justify-content-center align-items-center" role="alert" style={{ width: '100%', height:'50px'}}>
+              <div 
+                className="alert alert-danger d-flex justify-content-center align-items-center" 
+                role="alert" 
+                style={{ width: '100%', height: '50px' }}
+              >
                 {error}
               </div>
             )}
@@ -96,6 +102,7 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                placeholder="usuario@empresa.com"
                 style={{
                   background: theme.background,
                   color: theme.text,
@@ -122,6 +129,7 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
+                placeholder="Ingresa tu contraseña"
                 style={{
                   background: theme.background,
                   color: theme.text,
