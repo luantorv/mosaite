@@ -162,7 +162,8 @@ function Dashboard() {
               <div
                 className="col"
                 style={{
-                  padding: "2px, 0, 0, 0",
+                  padding: "3px, 0, 0, 0",
+                  marginTop: "5px",
                   height: "100%",
                   overflow: "hidden",
                 }}

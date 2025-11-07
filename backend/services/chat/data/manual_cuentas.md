@@ -1,8 +1,5 @@
 # Manual de Cuentas - Mosaite
 
-
-
-
 # Manual de Cuentas - Activo Corriente
 
 ## 1.1 ACTIVO CORRIENTE (11XXX)

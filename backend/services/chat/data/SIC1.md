@@ -3814,4 +3814,1320 @@ Encuadra en el art. 299 de la LGS en el nuevo inc. 7 (sociedades anónimas somet
 - Presentar Balance Anual en la IGJ
 - Abonar tasa anual IGJ
 
-**Transformación de pleno derecho en S.A.U 
+**Transformación de pleno derecho en S.A.U :**
+
+El nuevo Código elimina la causal de disolución por reducción a uno el número de socios y menciona que en el caso de las S.A., sociedades en comandita, simple o por acciones, y de capital e industria, en las que se reduce el paquete accionario a un solo socio, se transforman de pleno derecho en SAU si no se decidiera otra solución en el término de tres meses. La IGJ requiere que está transformación se inscriba conforme al mecanismo del art. 202 Res. IGJ 7/2015.
+
+#### 6. Sociedades en Comandita por Acciones - S.C.A.
+
+**Definición:** Está integrada por uno o más socios comanditados y uno o más socios comanditarios. La característica fundamental de esta sociedad es que los aportes de los socios comanditarios se encuentran divididos en partes iguales llamadas acciones. Esta sociedad se constituye por instrumento público.
+
+**Responsabilidad:**
+
+- **SOCIO COMANDITADO:** Solidaria. Ilimitada
+- **SOCIO COMANDITARIO:** Limitada al capital que suscriben
+
+**Denominación Social:**
+
+La denominación social se integra con las palabras "sociedad en comandita por acciones", su abreviatura o la sigla SCA. Se puede formar con el nombre de uno o más socios comanditados únicamente, o un nombre de fantasía.
+
+Por ejemplo: "Cometa" Sociedad en Comandita por Acciones (S.C.A.)
+
+**Administración:**
+
+La administración podrá ser unipersonal y será ejercida por socio comanditado o tercero, quienes durarán en su cargos el tiempo que fije el estatuto.
+
+**Decisiones Sociales:**
+
+Se toman por mayoría de capital salvo disposición en contrario del contrato.
+
+#### 7. Sociedad de Responsabilidad Limitada - S.R.L.
+
+**Definición:** Está constituida por dos o más socios que tienen responsabilidad limitada al capital aportado o que se comprometieron a aportar. Su capital se divide en partes iguales llamadas "cuotas". El número máximo de socios es de cincuenta (50). Esta sociedad se constituye por instrumento público.
+
+**Responsabilidad:**
+
+Los socios tienen responsabilidad limitada por la partes de las cuotas suscriptas. No responden con sus bienes particulares o personales.
+
+**Denominación Social:**
+
+Puede estar formada por el nombre de uno o más socios, y debe contener la indicación "sociedad de responsabilidad limitada", su abreviatura o la sigla S.R.L.
+
+Por Ejemplo: Fernando Alberto Lago e hijos S.R.L.
+
+En este tipo de sociedades interesa tanto el capital aportado, como las personas.
+
+**Del Capital y de las Cuotas Sociales:**
+
+Las cuotas sociales tendrán igual valor, el que será de pesos diez ($10) o sus múltiplos. El capital debe suscribirse íntegramente en el acto de constitución de la sociedad. Los aportes en dinero deben integrarse en un 25% como mínimo y completarse en el plazo de dos años. Los aportes en especie deben integrarse totalmente y su valor se justificara en la forma prevenida en el contrato o según su precio de plaza.
+
+**Administración:**
+
+La administración está a cargo de uno o mas gerentes, socios o no, designados por tiempo determinado o indeterminado en el contrato constitutivo o posteriormente. Si la gerencia es plural el contrato podrá establecer las funciones que a cada gerente compete en la administración o imponer la administración conjunta.
+
+**Decisiones Sociales:**
+
+Generalmente se toman por mayoría del capital presente en la asamblea o participe del acuerdo, salvo que el contrato exija lo contrario. Cada cuota solo da derecho a un voto. Salvo disposiciones en contrario del Contrato o de la Ley.
+
+### OTROS TIPOS SOCIETARIOS
+
+#### 1. Sociedad por Acciones Simplificadas - S.A.S.
+
+La Ley Nº 27.349 de Apoyo al capital emprendedor (LACE), introduce en el ordenamiento jurídico argentino un nuevo tipo societario, la Sociedad por Acciones Simplificada (SAS).
+
+Una SAS puede ser constituida por una o más personas humanas o jurídicas. Sin embargo, ciertas sociedades no se encuentran autorizadas a constituir una SAS, ni a convertirse en socias de una SAS ya existente:
+
+- Una SAS unipersonal no puede constituir, ni participar, en otra SAS unipersonal
+- Las sociedades incluidas en el régimen de fiscalización estatal permanente, no pueden controlar una SAS ni tener una participación mayor a un 30% del capital social de una SAS
+
+Si se produce alguno de estos casos, la SAS tendrá que transformarse en cualquier otro tipo social previsto por la LGS dentro del plazo de seis meses, término durante el cual los socios responderán frente a terceros en forma solidaria, ilimitada y subsidiaria LACE.
+
+**Constitución e Inscripción:**
+
+Pueden ser creadas por instrumento público o privado – en este ultimo caso con firmas certificadas en forma judicial, notarial, bancaria o por autoridad competente del Registro Público respectivo, e incluso por medios digitales.
+
+En todos los casos, la sociedad debe inscribirse en el Registro Público de la jurisdicción de constitución. La inscripción será realizada dentro del plazo de veinticuatro horas, contado desde el día hábil siguiente al de la presentación de la documentación pertinente, siempre que los socios utilicen el modelo tipo de instrumento constitutivo que se apruebe por el Registro Público.
+
+**Denominación Social:**
+
+La denominación social deberá contener la expresión "Sociedad por Acciones Simplificada", su abreviatura o la sigla SAS. La omisión de esta mención hará responsables ilimitada y solidariamente a los administradores o representantes de la sociedad, por los actos que celebren en esas condiciones.
+
+**Objeto Social:**
+
+El objeto social puede ser plural, no requiriéndose que exista conexidad o relación entre las actividades incluidas en el mismo. Sin embargo, la SAS no puede tener como objetos sociales:
+
+a. Hacer oferta pública de sus acciones o debentures
+b. Realizar operaciones de capitalización, ahorro o en cualquier forma requerir dinero o valores al público con promesas de prestaciones o beneficios futuros
+c. Explotar concesiones o servicios públicos
+
+En el caso que una SAS adopte alguno de los mencionados objetos sociales o realice alguna actividad relacionada con los mismos, la SAS tendrá que transformarse en cualquier otro tipo social previsto por la LGS dentro del plazo de seis meses, término durante el cual los socios responderán frente a terceros en forma solidaria, ilimitada y subsidiaria.
+
+**Capital Social:**
+
+El capital social mínimo no podrá ser inferior al importe equivalente a dos veces el salario mínimo vital y móvil. (Entre enero y julio de 2018, el Salario Mínimo, Vital y Móvil (SMVM) será de $9.500).
+
+Los aportes en dinero deben integrarse en un 25% cómo mínimo al momento de la suscripción. La integración del saldo no podrá superar el plazo máximo de dos años. Los aportes en especie deben integrarse en su totalidad al momento de la suscripción.
+
+El capital social se representa en acciones nominativas, no endosables. La sociedad puede emitir distintas clases de acciones y pactarse prestaciones accesorias.
+
+**Transformación:**
+
+Cualquier sociedad constituida de conformidad a las previsiones de la LGS (por ejemplo, sociedades anónimas, sociedades de responsabilidad limitada, sociedades anónimas unipersonales) pueden ser transformadas en SAS.
+
+**Administración:**
+
+La administración de la SAS estará a cargo de una o más personas humanas, socios o no. Pueden ser designados por plazo indeterminado y la administración puede ser individual, conjunta o colegiada.
+
+**Decisiones Sociales:**
+
+Las resoluciones de los socios pueden ser adoptadas mediante reuniones o procedimientos de consulta establecidos en el estatuto. A diferencia del resto de las sociedades, las reuniones de los socios pueden celebrare en la sede social o fuera de ella, utilizando medios que les permitan a los socios y participantes comunicarse simultáneamente entre ellos.
+
+**Conclusión:**
+
+Este tipo societario SAS, con una regulación independiente afuera de la ley general de sociedades, que combina las ventajas de la SRL (menores formalidades y no sometimiento a la Inspección de Justicia) con las ventajas de la SA (el capital se divide en acciones cuya titularidad figura en un libro que lleva la propia sociedad, pueden optar por tener un "presidente" y un "directorio"), a las que suman los bajos costos y las facilidades para la constitución, obtención de la CUIT y actuación es una de las mejores opciones para las empresas familiares.
+
+### OTRAS MODIFICACIONES SOCIETARIAS DEL NUEVO CÓDIGO CIVIL Y COMERCIAL
+
+**Sociedades Sección IV**
+
+El anterior art. 21 de la LSC contemplaba dos causales de inclusión de sociedades en esta sección:
+
+a) Sociedades de hecho (SH) con un objeto comercial
+b) Sociedades de los tipos autorizados que no se constituyan regularmente
+
+El nuevo art. 21 de la LGS amplía estas causales:
+
+1. Sociedades que no se constituyan con los tipos societarios del Capítulo II (como ser el caso de las sociedades civiles)
+2. Sociedades que omitan requisitos esenciales, cuyo contrato incumpla con alguno de los requisitos del art. 11 LGS
+3. Sociedades que incumplan con las formalidades exigidas por esta ley: si la sociedad no está inscripta en el Registro Público
+
+Al entrar en vigencia el nuevo Código, la AFIP había dejado de otorgar la CUIT a las SH manifestando que estas habían dejado de existir con el nuevo Código. Sin embargo, las SH continúan existiendo porque cumplen con las causales 1 y 3 del nuevo art. 21 LGS y podrían también quedar encuadradas por la segunda causal si no tuvieran contrato o este omita requisitos del art. 11 LGS.
+
+Ante esta cuestión, el CPCECABA envió una nota a la AFIP, en la que informa tal situación y solicita se tomen las medidas necesarias para subsanarlo. El Organismo dio la razón a este pedido e incorporó en el aplicativo "Módulo de Inscripción de Personas Jurídicas (M.I.P.J.)" el nuevo tipo societario a consignar en el caso de sociedades de hecho: 'Sociedad Ley N° 19.550 Capítulo I Sección IV'.
+
+**Las características principales de las sociedades Sección IV son:**
+
+- Se acredita su existencia por cualquier medio de prueba
+- El contrato tiene efectos entre las partes y en algunos casos puede tener efectos ante terceros (si se prueba que el contrato era conocido)
+- La representación estará conformada por cualquiera de los socios, salvo pacto en contrario y de conocimiento ante terceros
+- Son capaces de adquirir bienes registrables
+- La responsabilidad de los socios es mancomunada y por partes iguales, salvo pacto en contrario y de conocimiento ante terceros
+- Pueden ser subsanadas por el mecanismo de "subsanación" (art. 184 Res. IGJ 7/2015), que reemplaza al acto societario de "regularización" que establecía el art. 25 de la LSC
+
+**Asambleas Autoconvocadas y a Distancia**
+
+Hasta el 31 de julio de 2015, las asambleas autoconvocadas no eran permitidas, pero con el nuevo Código se admiten siempre y cuando las decisiones sean aprobadas por unanimidad, cuestión que la IGJ adaptó en el art. 85 de la Res. 7/2015.
+
+Además, el nuevo Código se adecuó a las nuevas herramientas tecnológicas de comunicación, autorizando a llevar a cabo las asambleas y reuniones de directorio a distancia siempre que el estatuto lo permita, y se utilicen los medios que les permitan a los participantes comunicarse simultáneamente entre ellos.
+
+En el art. 84 de la Res. IGJ 7/2015 se contemplaron las reuniones de directorio a distancia incorporando como requisito que el quórum debe ser cumplimentado por los directores que estén presentes físicamente en la reunión; sin embargo, la IGJ no ha adecuado sus normas para permitir las asambleas a distancia.
+
+### ASOCIACIONES CIVILES, SIMPLES ASOCIACIONES Y FUNDACIONES
+
+#### 1. Asociación Civil
+
+**Definición:** Una asociación civil es aquella persona jurídica de carácter privado, que se origina a partir del acuerdo fundacional de un grupo de personas, quienes ejerciendo el derecho de asociarse con fines útiles previsto en el artículo 14 de la Constitución Nacional, deciden asociarse entre ellas para emprender en forma conjunta una actividad sin fines de lucro, de bien común o interés general.
+
+**A. Objeto:**
+
+La asociación civil debe tener un objeto que no sea contrario al interés general o al bien común. El interés general se interpreta dentro del respeto a las diversas identidades, creencias y tradiciones, sean culturales, religiosas, artísticas, literarias, sociales, políticas o étnicas que no vulneren los valores constitucionales.
+
+No puede perseguir el lucro como fin principal, ni puede tener por fin el lucro para sus miembros o terceros.
+
+**B. Constitución:**
+
+Deben ser creadas por instrumento público y ser inscriptas en el registro correspondiente una vez otorgada la autorización estatal para funcionar.
+
+**C. Denominación:**
+
+El nombre de la asociación con el aditamento "Asociación Civil" antepuesto o pospuesto.
+
+**D. Características:**
+
+Las Asociaciones Civiles poseen patrimonio propio; son capaces por sus Estatutos de adquirir bienes; no subsisten exclusivamente de subsidios estatales.
+
+Pueden integrarlas todas las personas físicas mayores de edad que, como socios, tienen derecho a integrar una Comisión Directiva (conformada como mínimo con cargos de: Presidente, Secretario, Tesorero, Vocales titulares y suplente), Comisión Revisora de Cuenta y su órgano más soberano: la Asamblea de Socios.
+
+**Asamblea:**
+
+Esta Asamblea es la que decide los destinos de la Asociación: elige a los miembros y controla las actividades del órgano administrativo que es la Comisión Directiva.
+
+Además, también decide sobre las modificaciones estatutarias, aprueba o no la Memoria, Inventario y Balance, puede solicitar al órgano de contralor estatal que intervenga cada vez que lo estime necesario.
+
+**Beneficios de constituir una Asociación Civil:**
+
+1. Su reconocimiento legal como organización
+2. Coordinar colaboración con otras entidades
+3. Capacidad para gestionar donaciones y recibir legados
+4. Acceso a sitios web propios
+5. Exenciones impositivas
+
+#### 2. Simples Asociaciones
+
+El Código Civil y Comercial de la Nación ha considerado de modo expreso a las simples asociaciones reconociéndolas como personas jurídicas, regulando su constitución y funcionamiento.
+
+**A. Constitución:**
+
+El acto constitutivo de la simple asociación debe ser otorgado por instrumento público o por instrumento privado con firma certificada por escribano público. La simple asociación comienza su existencia como persona jurídica a partir de la fecha del acto constitutivo.
+
+**B. Denominación:**
+
+Al nombre debe agregársele, antepuesto o pospuesto, el aditamento "simple asociación" o "asociación simple".
+
+**C. Otras características:**
+
+En cuanto a las normas de aplicación, se aplica lo dispuesto en materia de asociaciones civiles respecto a su acto constitutivo, gobierno, administración, socios, órgano de fiscalización y funcionamiento.
+
+No se les exigirá el órgano de fiscalización si no superan de los veinte asociados.
+
+La responsabilidad civil es casi igual que la de asociaciones civiles donde sus administradores y miembros responden por sus bienes personales sobre las obligaciones que genere la simple asociación.
+
+Se le ordena llevar la contabilidad con la documentación semejante a una asociación civil, todo en forma documentada.
+
+#### 3. Fundaciones
+
+**Definición:** Son entidades sin fines de lucro, conformada por un grupo de personas con un propósito compartido, dirigido al cumplimiento de un objeto de bien común destinado a terceros.
+
+Los objetivos de la Fundación pueden ser de diversa índole: educativos, o de formación; de trabajo; alimentación, ecológicos, de salud entre muchos otros.
+
+El Código Civil y Comercial de la Nación Argentina, establece en el artículo 193 que "Las fundaciones son personas jurídicas que se constituyen con una finalidad de bien común, sin propósito de lucro, mediante el aporte patrimonial de una o más personas, destinado a hacer posibles sus fines. Para existir como tales requieren necesariamente constituirse mediante instrumento público y solicitar y obtener autorización del Estado para funcionar".
+
+**DIFERENCIAS CON LAS ASOCIACIONES CIVILES**
+
+Aunque tienen semejanza con la Asociación Civil en cuanto a la finalidad de sus actividades como es el bien común, presentan importantes diferencias:
+
+1. En las Fundaciones existe un "patrimonio de afectación" que es el dinero mínimo indispensable exigido para su constitución legal. Este monto está determinado teniendo en cuenta los objetivos propuestos, desarrollados en un Plan Trienal. Este dinero puede provenir directamente de los fundadores, de donaciones o de legados.
+
+2. La Fundación no tiene asociados, sino miembros fundadores, no lleva un Registro de Asociados como las Asociaciones Civiles.
+
+3. Tampoco tiene Comisión Directiva ni Asambleas. Cuentan con un Consejo de Administración (integrado por Presidente, Secretario y Tesorero como mínimo). Los fundadores pueden reservarse los cargos del Consejo de Administración o determinar quienes se desempeñaran en esos cargos.
+
+4. Deben solicitar la Personería Jurídica para funcionar.
+
+### Análisis de Cuentas
+
+**SOCIO "Z" CUENTA APORTE**
+
+**Clasificación:** Patrimonial del Activo
+
+**Representa:** Un crédito a favor de la sociedad por el monto del aporte que el Socio "Z" se comprometió a integrar según el Contrato Social y que aún no integró.
+
+**Se Debita:** Por el importe que se comprometió a aportar según Contrato Social.
+
+**Se Acredita:** Por los valores que integra el Socio.
+
+**Saldo Deudor:** Representa los valores que el Socio aún no integró.
+
+---
+
+**SOCIO "Z" CUENTA PARTICULAR**
+
+**Clasificación:** Patrimonial del Activo o del Pasivo
+
+**Representa:** Lo que la Sociedad debe al Socio "Z" o viceversa, por conceptos como anticipos, sueldos, préstamos, etc.
+
+**a) Como cuenta Patrimonial del Activo**
+
+**Se Debita:** En el caso que el Socio efectúe retiros de fondos u otros valores y cuando la sociedad distribuye las pérdidas por la parte que le corresponde reintegrar de la misma según el Contrato Social.
+
+**Se Acredita:** Cuando el Socio paga a la sociedad lo adeudado.
+
+**Saldo Deudor:** Representa lo que el Socio debe a la Sociedad.
+
+**b) Como cuenta Patrimonial del Pasivo**
+
+**Se Acredita:** Cuando el Socio integra más de lo comprometido en el Contrato Social y también por la parte que le corresponde recibir de las ganancias al efectuar la distribución según el Contrato Social.
+
+**Se Debita:** Cuando la Sociedad abona al Socio lo que le debe.
+
+**Saldo Acreedor:** Representa lo que la Sociedad debe al Socio.
+
+---
+
+**CAPITAL**
+
+**Clasificación:** Cuenta de Patrimonio Neto
+
+**Representa:** El Capital de la Sociedad.
+
+**Se Acredita:** Por el monto del Capital Social que se comprometieron a aportar los socios, por todo aporte posterior de los socios o el integrado por los nuevos socios, y por las utilidades destinadas a aumentar el Capital.
+
+**Se Debita:** Por la devolución del aporte realizado por los socios, cuando se retiran de la Sociedad, o si se produce disminución del Capital. Además, por toda pérdida resultante de la actividad comercial.
+
+**Saldo Acreedor:** Representar el Capital de la Sociedad.
+
+---
+
+## Unidad 7: Estados Contables Básicos
+
+### ESTADOS CONTABLES
+
+**Definición:** Los Estados Contables son un tipo de informe contable, destinado principalmente a los usuarios externos, por medio de los cuales la empresa da a conocer públicamente su situación.
+
+Los Estados Contables muestran aspectos patrimoniales, económicos y financieros de la organización. Existe la obligación legal de emitir Estados Contables en forma periódica. Existen normas especiales con respecto a la forma de presentación de los mismos y a la veracidad de su contenido.
+
+Los Estados contables son utilizados también por los usuarios internos en la toma de decisiones acerca del curso a seguir y para control de la gestión de la empresa.
+
+#### 1. Los Estados Contables Básicos
+
+**Estados Contables Básicos:**
+
+A. Estado de Situación Patrimonial
+B. Estado de Resultados
+C. Estado de Evolución del Patrimonio Neto
+D. Estado de Origen y Aplicación de Fondos
+
+**A. Estado de Situación Patrimonial**
+
+Expone la situación patrimonial de la empresa. Muestra la composición del patrimonio de la organización en un momento determinado: la fecha de cierre del ejercicio económico (31/12/...).
+
+Para su exposición, el patrimonio se ordena de una manera especial para facilitar su comprensión. Ese ordenamiento se hace agrupando las cuentas que son utilizadas por la empresa para una finalidad similar, creando así los grupos funcionales de cuentas: Caja y Bancos, Bienes de Cambio, Créditos, Bienes de Uso, Deudas, etc.
+
+**B. Estado de Resultados**
+
+Expone la situación económica de la empresa. Refleja los resultados obtenidos durante un determinado periodo y las causas que generaron esos resultados.
+
+**C. Estado de Evolución del Patrimonio Neto**
+
+Permite ver con más detalle una porción de la situación patrimonial de la empresa.
+
+**D. Estado de Origen y Aplicación de Fondos**
+
+Expone la situación financiera de la organización. Da a conocer cómo se ha obtenidos fondos y de qué manera se los ha utilizado en las distintas actividades que desarrolla la empresa.
+
+**LA OBTENCIÓN DE FONDOS PUEDE PROVENIR DE:**
+- Cobros de ventas en efectivo
+- Cobros a clientes por ventas a créditos
+- Aportes de los propietarios
+- Etc.
+
+**LA APLICACIÓN DE FONDOS PUEDE HACERSE PARA:**
+- Pago de compras al contado
+- Pago de deudas
+- Retiro de dinero para gastos personales
+- Etc.
+
+**El Balance General nos permite conocer la situación:**
+
+**A. Situación Patrimonial:** Describe la formación del Activo, Pasivo y Patrimonio Neto.
+
+**B. Situación Económica:** Expone el resultado del ejercicio (Pérdida o Ganancia), permitiendo una correcta distribución del mismo.
+
+**C. Situación Financiera:** Muestra la solvencia de la empresa y permite una correcta toma de decisiones.
+
+### BALANCE GENERAL
+
+**Definición:** El Balance General es un estado contable que nos permite conocer la situación patrimonial de una empresa y sus resultados. Nos permite conocer la situación patrimonial, económica y financiera de un comerciante o empresa a una fecha determinada (Ejercicio Económico).
+
+Cabe destacar que el balance general también se conoce como estado de situación patrimonial.
+
+#### 1. Ejercicio Económico
+
+**Definición:** Se llama ejercicio económico al período de tiempo por el cual se exponen la información en los Estados Contables.
+
+Tanto la duración de este período como las fechas en que se inicia y se cierra, estará determinado por el contrato social o estatuto, o en su defecto durará un año y coincidirá con el año calendario, iniciándose el 1° de Enero y finalizando el 31 de Diciembre.
+
+Así, la Información Patrimonial, Económica y Financiera de la empresa mostrada en sus Estados Contables, estará ceñida a este período de tiempo.
+
+El Código de Comercio establece que los comerciantes deberán realizar anualmente el Balance General, disponiendo que los comerciantes al por menor no tienen obligación de hacerlo sino cada tres años.
+
+Por disposiciones de las leyes impositivas, todos los comerciantes (contribuyentes) deben presentarlos en los plazos establecidos por la Administración Federal de Ingresos Públicos (A.F.I.P.).
+
+#### 2. Operaciones Previas al Balance General
+
+**Definición:** Son todas las operaciones necesarias que se deben realizar con anterioridad, para la confección del Balance General.
+
+**A. Balance de comprobación de Sumas y Saldos**
+**B. Inventario General**
+**C. Ajustes al Balance**
+**D. Planilla de Trabajo (prebalance)**
+**E. Refundición de Cuentas**
+
+**A. Balance de comprobación de Sumas y Saldos**
+
+**Definición:** Es un estado que muestra todas las cuentas abiertas en el Libro Mayor desde que comenzó el ejercicio económico.
+
+La confección del Balance de Comprobación de Sumas y Saldos es el punto de partida del Balance General. A él se traslada el total de débitos, el total de créditos y saldo de cada una de las cuentas del Libro Mayor utilizadas durante el ejercicio económico.
+
+**B. Inventario General**
+
+**Definición:** Es el recuento y valuación de todos los bienes, derechos y obligaciones que tiene un ente (empresa o sociedad) a una fecha determinada.
+
+Los datos para su confección se obtienen en base a la realidad, no de los Registros Contables. Es obligatorio registrar el Inventario General Anual dentro de los 3 primeros meses de cada año.
+
+**C. Ajustes al Balance**
+
+**Definición:** Son asientos que se realizan porque con frecuencia no coinciden los saldos contables (Balance de Comprobación de Sumas y Saldos o Libro Mayor), con los saldos reales (Inventario General).
+
+```
+Saldos Contables ≠ Saldos Reales
+(Libro Mayor o        (Inventario General)
+Balance de Sumas y Saldos)
+```
+
+Las operaciones citadas como ajustes se contabilizan frecuentemente en la Empresa durante la actividad normal y ordinaria y obviamente, también al finalizar el ejercicio económico como operaciones previas al Balance General Anual.
+
+**Clases de ajustes:**
+
+1. Arqueo de Fondos y Valores
+2. Inventario de Mercaderías
+3. Depuración de Deudores
+4. Amortización de Bienes de Uso
+5. Documentos Protestados o en Gestión Judicial
+6. Gastos Pendientes de Pago
+7. Gastos Pagados por Adelantado
+8. Ingresos Pendientes de Cobro
+9. Ingresos Cobrados por Adelantado
+10. Omisión de Gastos Bancarios
+
+**1. ARQUEO DE FONDOS Y VALORES**
+
+**Definición:** Es el recuento de dinero, cheques y giros a nuestro favor, existentes en caja. El arqueo de la cuenta Caja puede indicar una diferencia mayor o menor que el saldo contable.
+
+**Ejemplo 1: Saldo Real MAYOR que el Saldo Contable**
+
+```
+Saldo Contable: $ 3.000
+Saldo Real:     $ 3.100
+Diferencia:     $ 100 (Sobrante)
+```
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Caja (+A)                     100,00
+a Sobrante de Caja (+R.P.)                  100,00
+s/ Arqueo realizado a la fecha
+```
+
+**Ejemplo 2: Saldo Real MENOR que el Saldo Contable**
+
+```
+Saldo Contable: $ 3.000
+Saldo Real:     $ 2.800
+Diferencia:     $ 200 (Faltante)
+```
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Faltante de Caja (+R.N.)      200,00
+a Caja(-A)                                  200,00
+s/ Arqueo realizado a la fecha
+```
+
+**Ejemplo 3: Saldo Real IGUAL que el Saldo Contable**
+
+```
+Saldo Contable: $ 3.000
+Saldo Real:     $ 3.000
+Diferencia:     $ 0
+```
+
+No debe registrarse ningún asiento ya que coincide el saldo de la cuenta Caja con el importe encontrado al realizar el arqueo.
+
+**2. INVENTARIO DE MERCADERÍAS**
+
+**Definición:** Es el recuento y valuación de las mercaderías a la fecha de cierre del balance.
+
+El inventario de mercaderías no siempre coincide con los saldos contables. Esto puede deberse a la existencia de roturas, extravíos, etc., que no fueron contabilizados o por diferencias en la valuación de las mismas.
+
+**Ejemplo 1: Saldo Real MAYOR que el Saldo Contable**
+
+```
+Saldo Contable: $ 9.400
+Saldo Real:     $ 9.500
+Diferencia:     $ 100 (Sobrante)
+```
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Mercaderías (+A)              100,00
+a Sobrante de Mercaderías (+R.P.)           100,00
+s/ Inventario de Mercaderías
+```
+
+**Ejemplo 2: Saldo Real MENOR que el Saldo Contable**
+
+```
+Saldo Contable: $ 1.200
+Saldo Real:     $ 1.150
+Diferencia:     $ 50 (Faltante)
+```
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Faltante de Mercaderías (+R.N.) 50,00
+a Mercaderías (-A)                          50,00
+s/ Inventario de Mercaderías
+```
+
+**Nota:** Cuando coincida el saldo de la cuenta Mercaderías con el inventario no se realiza ajuste.
+
+**Registración y Cálculo del Costo de Mercaderías**
+
+Si durante el ejercicio económico no se contabilizó la salida de mercaderías (no se registró el costo en el momento de la venta), se deberá efectuar el siguiente asiento de Ajuste.
+
+**Ejemplo:**
+
+La empresa "Mitre" S.C. inició su actividad con $5.000 en mercaderías; durante el ejercicio, compró mercaderías por $1.500 y el inventario final (general) de las mismas arroja un saldo deudor de $3.500. Para determinar su costo debemos aplicar la siguiente fórmula y realizar el asiento correspondiente.
+
+**Fórmula:**
+
+```
+Costo de Mercaderías Vendidas = Existencia Inicial + Compras - Existencia Final
+C.M.V. = 5.000 + 1.500 - 3.500
+C.M.V. = $3.000
+```
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Costo de Mercaderías Vendidas (+R.N.) 3.000,00
+a Mercaderías (-A)                          3.000,00
+Por el Costo de Mercaderías Vendidas
+```
+
+**Análisis en el Mayor:**
+
+```
+MERCADERÍAS
+D                              H
+Ex. Inicial 5.000
+Compras     1.500              C.M.V. 3.000
+SALDO DEUDOR: $3.500
+```
+
+**Nota:** En el caso que las compras de mercaderías realizadas por la empresa se hubieren contabilizado en la cuenta de movimiento "Compras" en lugar de "Mercaderías", registraremos antes del costo el siguiente asiento de ajuste:
+
+```
+DEBE                                        HABER
+Mercaderías (+A)              1.500,00
+a Compras (-MOV)                            1.500,00
+Por cancelar el saldo de la cuenta "Compras"
+```
+
+**3. DEPURACIÓN DE DEUDORES**
+
+**Definición:** Se llama así a la tarea de analizar los saldos individuales de cada deudor con el motivo de dejar en la cuenta "Deudores por Ventas" o "Deudores Varios", sólo aquellos que pagan regularmente y sacar de ella a los clientes que no están en esa situación.
+
+De este análisis pueden surgir cuatro clases de deudores:
+
+**A. DEUDORES VARIOS O POR VENTAS:** Los que tienen su pago al día.
+
+**B. DEUDORES MOROSOS:** Aquellos que están atrasados en el pago, pero se estima que pagarán.
+
+**C. DEUDORES EN GESTIÓN:** Son los que se les ha iniciado juicio para el cobro de sus deudas.
+
+**D. DEUDORES INCOBRABLES:** Se consideran así a quienes por determinados motivos se estima que no pagarán y se dan por perdidos.
+
+**Ejemplo:**
+
+La depuración de la cuenta "Deudores por Ventas" nos permite comprobar la existencia de:
+- Deudores atrasados en sus pagos $230
+- Deudores que se les ha iniciado juicio $140
+- Deudores que se estima que no pagarán $100
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Deudores Morosos (+A)         230,00
+Deudores en Gestión Judicial (+A) 140,00
+Deudores Incobrables (+R.N.)  100,00
+a Deudores por Ventas (-A)                  470,00
+Por depuración de la cuenta Deudores por Ventas
+```
+
+**Créditos a Cobrar Vencidos**
+
+**Definición:** Se llaman así a los documentos a cobrar que no han sido abonados por los clientes a su fecha de vencimiento y cuyo cobro debe iniciarse mediante el protesto y/o juicio ejecutivo.
+
+**Ejemplo:**
+
+Hay pagarés vencidos por $400.
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Documentos a Cobrar Vencidos (+A) 400,00
+a Documentos a Cobrar (-A)                  400,00
+Por atraso en el cobro de Pagarés a su vto.
+```
+
+**Créditos a Cobrar en Gestión Judicial**
+
+**Definición:** Son pagarés en cartera a los que se inició juicio ejecutivo para intentar su cobro.
+
+**Ejemplo:**
+
+Del análisis de cuenta Documentos a Cobrar surge que se inició el cobro de un documento por vía judicial de $180.
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Documentos a Cobrar en Gestión Judicial (+A) 180,00
+a Documentos a Cobrar (-A)                  180,00
+Por inicio de juicio por cobro de un documento
+```
+
+**Ejemplo:**
+
+Se inicia el juicio ejecutivo por la cobranza de un documento de $100 ya registrado como vencido.
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Documentos a Cobrar en Gestión Judicial (+A) 100,00
+a Documentos a Cobrar Vencidos (-A)         100,00
+Por inicio de juicio por cobro de un Pagaré vencido
+```
+
+**4. OMISIÓN DE GASTOS BANCARIOS**
+
+**Definición:** Son aquellos gastos bancarios (gastos de mantenimiento de cuenta, Intereses, Sellados, etc.), que la empresa omitió en su registración contable.
+
+**Ejemplo:**
+
+La empresa omitió registrar una Nota de Débito Nº438 del Banco Río por $20, que corresponde a gastos de mantenimiento de cuenta.
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Gastos Bancarios(+R.N.)       20,00
+a Banco Río Cta. Cte. (-A)                  20,00
+Por omitir la Nota de Déb. N° 438 de fecha «ZZ».
+```
+
+**5. AMORTIZACIÓN DE BIENES DE USO**
+
+**Definición:** Los "Bienes de Uso" son aquellos destinados al uso exclusivo de la empresa y no a la venta, ya que son necesarios para llevar a cabo su fin y prestar un buen servicio a sus clientes.
+
+Al ser utilizados, estos bienes sufren un desgaste, que sin duda alguna disminuye su valor. En consecuencia, esta merma año tras año, es cada vez mayor y debe registrarse contablemente.
+
+Este desgaste se conoce con el nombre de "depreciación", "desvalorización" o "amortización". El porcentaje de amortización dependerá de la cantidad de años de vida útil que tenga el "Bien de Uso".
+
+**Los porcentajes máximos de Amortización anual establecidos por la A.F.I.P. son:**
+
+```
+CONCEPTO                        Vida Útil    Porcentaje
+Muebles y Útiles                10 Años      10%
+Instalaciones                   10 Años      10%
+Maquinarias                     10 Años      10%
+Rodados                         5 Años       20%
+Equipos de Computación          5 Años       20%
+Inmuebles (valor edificado)     50 Años      2%
+```
+
+**Ejemplo:**
+
+Se amortizan los siguientes Bienes de Uso de la empresa "Castro Hnos. & Cía" S.C.
+
+```
+Bien de Uso         Valor de     Vida    Porcentaje   Amortización
+                    Compra       Útil    Anual        Anual
+Rodados             18.000       5 años  20%          3.600
+Muebles y Útiles    12.000       10 años 10%          1.200
+TOTALES                                               4.800
+```
+
+**Registración de la Amortización:**
+
+```
+DEBE                                        HABER
+Amortizaciones (+R.N.)        4.800,00
+a Amort. Acumuladas de Rodados (+R.A.)      3.600,00
+a Amortizaciones Acumuladas M. y Ú. (+R.A.) 1.200,00
+Por la amortización anual de los Bienes de Uso.
+```
+
+**6. PRINCIPIO O CRITERIO DE LO DEVENGADO**
+
+**Definición:** Significa que se adquirió un derecho/obligación a percibir/abonar un importe determinado por un trabajo, servicio u otro motivo sin importar si se cobró/pagó o está pendiente de cobro/pago. Es importante recordar que todo derecho de una parte significa en otra una obligación.
+
+Cuando se adquiere un derecho que represente un aumento del patrimonio o se contrae una obligación que corresponda a una disminución del mismo, a pesar de que no se hayan efectivizado (cobrado o pagado), es necesario registrar estas operaciones, por las siguientes razones:
+
+1. Las pérdidas o ganancias deben afectar el ejercicio que corresponde sin importar el momento en que se cobren o paguen.
+
+2. En el caso de no registrarse los asientos correspondientes, se está ocultando un Activo (derecho a cobrar) o un Pasivo (obligación de pagar).
+
+El objeto de los asientos de ajustes, que se realizan durante todo el año y en especial en la época de cierre del Balance General, es que cada ejercicio económico muestre únicamente los ingresos y egresos que le correspondan. De acuerdo con este principio o criterio, realizaremos el siguiente cuadro:
+
+```
+RESULTADOS                  ACTIVO      PASIVO     R+      R-
+
+Cobrados y Devengados       ACTIVO               R+
+(Ganados)
+
+Cobrados y No Devengados    PASIVO
+(Cobrados por adelantado)
+
+Devengados y Pendientes     ACTIVO
+de Cobro (A Cobrar)
+
+Pagados y Devengados                             R-
+(Perdidos)
+
+Pagados y No Devengados     ACTIVO
+(Pagados por adelantado)
+
+Devengados y Pendientes                PASIVO
+de Pago (A Pagar)
+```
+
+**A. Ganancias**
+
+**1. Ganancias Cobradas y Devengadas**
+
+**Ejemplo:**
+
+30-06-....Cobramos alquileres del mes de Junio por $100 en efectivo, s/ Recibo Nº 226.
+
+```
+DEBE                                        HABER
+Caja (+A)                     100,00
+a Alquileres Ganados (+R.P.)                100,00
+s/ Recibo Nº 226
+```
+
+**2. Ganancias Cobradas y No Devengadas**
+
+**Ejemplo:**
+
+01-06-....Cobramos el alquiler del mes de Junio por $180 en efectivo, s/ Recibo Nº 240.
+
+```
+DEBE                                        HABER
+Caja (+A)                     180,00
+a Alquileres Cobrados por adelantado (+P.)  180,00
+Por cobro de alquileres por adelantado, según Recibo Nº 240
+```
+
+30-06-....Al producirse el devengamiento del alquiler del mes de junio.
+
+```
+DEBE                                        HABER
+Alquileres Cobrados por adelantado (+P) 180,00
+a Alquileres Ganados (+R.P.)                180,00
+Por devengamiento de los alquil. (finaliza el mes) cobrados el 01/06 en Op. 1
+```
+
+**3. Ganancias Devengadas y Pendientes de Cobro**
+
+**Ejemplo:**
+
+30-06-.....Todavía no cobramos alquileres que corresponden al mes de Junio por $150.
+
+```
+DEBE                                        HABER
+Alquileres a Cobrar (+A)      150,00
+a Alquileres Ganados (+R.P.)                150,00
+Por der. deveng. del mes que finaliza que no percibimos hasta la fecha
+```
+
+10-07-....Supongamos que se cobra el alquiler del mes de junio de $150 en efectivo y que se encontraba pendiente su cobro hasta la fecha según operación anterior, s/ Recibo Nº 340.
+
+```
+DEBE                                        HABER
+Caja (+A)                     150,00
+a Alquiler a Cobrar (-A)                    150,00
+Por alquil. impagos y deveng. al 30/06, s/ Recibo Nº 340
+```
+
+**B. Pérdidas**
+
+**1. Pérdidas Pagadas y Devengadas**
+
+**Ejemplo:**
+
+31-08-.....Pagamos alquileres del mes de Agosto por $200 en efectivo, s/ Recibo Nº 314.
+
+```
+DEBE                                        HABER
+Alquileres Perdidos (+R.N.)   200,00
+a Caja (-A)                                 200,00
+s/ Recibo Nº 314
+```
+
+**2. Pérdidas Pagadas y No Devengadas**
+
+**Ejemplo:**
+
+01-08-....Pagamos el alquiler del mes de Agosto por $260 en efectivo, s/ Recibo Nº 501.
+
+```
+DEBE                                        HABER
+Alquileres Pagados por Adelantados (+A) 260,00
+a Caja (-A)                                 260,00
+Por pago adelantado del alquiler, según Recibo Nº 501
+```
+
+31-08-....Al producirse el devengamiento (finaliza el mes) de los alquileres pagados en la operación anterior.
+
+```
+DEBE                                        HABER
+Alquileres Perdidos (+R.N.)   260,00
+a Alquileres Pagados por Adelantado (-A)    260,00
+Por devengamiento de Alquil. Pagados por Adelantados
+```
+
+**3. Pérdidas Devengadas y Pendientes de Pago**
+
+**Ejemplo:**
+
+31-08-.....Todavía no pagamos alquileres que corresponden al mes de Agosto por $180.
+
+```
+DEBE                                        HABER
+Alquileres Perdidos (+R.N.)   180,00
+a Alquileres a Pagar (+P)                   180,00
+Por alquil. deveng. del mes que finaliza que adeudamos
+```
+
+20-09-.....Supongamos que se paga el alquiler del mes de agosto en efectivo por $180, que se encontraba pendiente de pago hasta la fecha según la operación anterior, s/ Recibo Nº 715.
+
+```
+DEBE                                        HABER
+Alquileres a Pagar (-P)       180,00
+a Caja (-A)                                 180,00
+Por pago del Alquil. del mes de Agosto, según Rbo. Nº 715
+```
+
+**RECUERDE:** En cursos superiores ampliaremos el proceso de aprendizaje sobre el criterio de lo devengado.
+
+**7. GASTOS PENDIENTES DE PAGO**
+
+**Definición:** Son aquellos gastos (sueldos, seguros, impuestos, etc.) producidos durante el ejercicio económico que finaliza y aún no han sido pagados.
+
+Estos gastos deben ser contabilizados, porque las pérdidas y las ganancias deben incidir en el resultado del ejercicio en que se producen; si no se realiza el ajuste, serán considerados pérdidas en el ejercicio siguiente, al pagarlos.
+
+**Ejemplo:**
+
+Al cierre del ejercicio (31/12) se encuentran impagos los siguientes gastos:
+- Impuestos $270
+- Sueldos $900
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Impuestos (+R.N.)             270,00
+Sueldos y Jornales (+R.N.)    900,00
+a Impuestos a Pagar (+P)                    270,00
+a Sueldos y Jornales a pagar (+P)           900,00
+Por gastos impagos al cierre del ejercicio.
+```
+
+En el próximo ejercicio (10/01) supongamos que se efectúa el pago en efectivo de estos gastos, se realizará el siguiente asiento:
+
+```
+DEBE                                        HABER
+Impuestos a Pagar (-P)        270,00
+Sueldos y Jornales a Pagar (-P) 900,00
+a Caja (-A)                                 1.170,00
+Por pago de gastos del ejercicio anterior, s/ Recibos........
+```
+
+**Nota:** Existen varias cuentas que tienen igual movimiento que Gastos a Pagar o Pendientes de Pago, como por ejemplo: Intereses a Pagar, Alquileres a Pagar, Impuestos a Pagar y todo otro concepto que represente una pérdida o gasto pendiente de pago al cierre del ejercicio económico.
+
+**8. INGRESOS PENDIENTES DE COBRO**
+
+**Definición:** Son aquellas ganancias (Intereses, Comisiones, etc.) que se han producido durante el ejercicio económico que finaliza y aún no se han cobrado.
+
+Estos ingresos deben ser contabilizados, porque las pérdidas y las ganancias deben incidir en el resultado del ejercicio en que se originan, si no se realiza el ajuste, serán considerados ganancias en el ejercicio siguiente, al cobrarlos.
+
+**Ejemplo:**
+
+La empresa "ZZ" S.A. al 31/12, ganó comisiones durante el mes de diciembre que aún no se cobraron por $ 180.
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Comisiones a Cobrar (+A)      180,00
+a Comisiones Ganadas (+R.P.)                180,00
+Por comisiones ganadas pendientes de cobro al cierre del ej.
+```
+
+En el próximo ejercicio, cuando se cobren realmente las comisiones del ejercicio anterior, se realizará el siguiente asiento:
+
+```
+DEBE                                        HABER
+Caja (+A)                     180,00
+a Comisiones a Cobrar (-A)                  180,00
+Por cobro de comisiones del ej. anterior. Recibo "XX".
+```
+
+**Nota:** Existen varias cuentas que tienen igual movimiento que Intereses a Cobrar, como por ejemplo: Alquileres a Cobrar, Rentas a Cobrar y todo otro concepto que represente una ganancia pendiente de cobro en el ejercicio.
+
+**D. Planilla de Trabajo de 12 columnas (Prebalance)**
+
+Las primeras 4 columnas corresponden al Balance de Comprobación de sumas y Saldos. En las 2 columnas siguientes (5 y 6) se pasan únicamente los asientos de Ajustes que se efectuaron al cierre del ejercicio. Las sumas del Debe y el Haber deben ser iguales.
+
+Los Saldos Ajustados (columnas 7 y 8) son los que resultan de sumar o restar a los saldos contables, los ajustes registrados en las 2 columnas anteriores (5 y 6). Los totales de los Saldos Deudores y Acreedores deben coincidir entre sí y son los saldos del Inventario General.
+
+Posteriormente se pasan los Saldos Ajustados al Estado Patrimonial: Activo, Pasivo y Patrimonio Neto (columnas 9 y 10) o al Estado de Resultados, Negativos (Pérdidas) y Positivos (Ganancias) (columnas 11 y 12) según corresponda.
+
+El total de estas 4 columnas difieren entre sí, pero si restamos al total de ganancias el total de las Pérdidas, se obtiene un resultado que será igual a la diferencia entre el total del Activo y el total del Pasivo y Patrimonio Neto.
+
+Esta diferencia se denomina "Resultado del Ejercicio".
+
+**Si:**
+- GANANCIA Mayor (>) PÉRDIDA = RESULTADO POSITIVO (+) Beneficio
+- GANANCIA Menor (<) PÉRDIDA = RESULTADO NEGATIVO (-) Quebranto
+
+Si el Resultado del Ejercicio es positivo, éste se coloca en las columnas del Pasivo y Pérdidas; en caso de ser negativo, este resultado se coloca en las columnas del Activo y Ganancias de esta manera quedan balanceadas las columnas del Estado Patrimonial (Activo con Pasivo) y del Estado de Resultados (Pérdidas con Ganancias).
+
+**Ejemplo de Planilla de Trabajo:**
+
+(Ver tabla en el documento original con todas las cuentas y sus movimientos)
+
+**E. Cierre de Cuentas**
+
+**1. Cierre de cuentas de resultados**
+
+Al finalizar el ejercicio se deben cancelar las cuentas de resultado en forma definitiva mediante dos asientos en el Libro Diario.
+
+En el primer asiento, se debita la cuenta Resultado del Ejercicio y se acreditan todas las cuentas de Resultado Negativo, Pérdidas (Refundición de Pérdidas).
+
+En el segundo asiento se debitan todas las cuentas de Resultado Positivo, Ganancias y se acredita la cuenta Resultado del Ejercicio (Refundición de Ganancias).
+
+**Ejemplo:**
+
+Teniendo en cuenta los datos de la Planilla de Trabajo del punto d.
+
+**1. Cierre de Cuentas de Resultado Negativo (Pérdidas)**
+
+```
+DEBE                                        HABER
+Resultado del Ejercicio (-P.N.) 2.555,00
+a Costo de Mercaderías Vendidas (-R.N.)     2.400,00
+a Gastos Generales (-R.N.)                  115,00
+a Faltante de Mercaderías (-R.N.)           40,00
+Por Cierre de Cuentas de Resultado Negativo (Pérdidas)
+```
+
+**2. Cierre de Cuentas de Resultado Positivo (Ganancias)**
+
+```
+DEBE                                        HABER
+Ventas (-R.P.)                6.000,00
+Intereses Ganados (-R.P)      150,00
+Sobrante de Caja (-R.P.)      80,00
+a Resultado del Ejercicio (+P.N.)           6.230,00
+Por cierre de cuentas de Resultado Positivo (Ganancias)
+```
+
+**Nota:** También el cierre de cuentas de resultados se puede realizar en un solo asiento, por ejemplo:
+
+```
+DEBE                                        HABER
+Ventas (-R.P.)                6.000,00
+Intereses Ganados (-R.P.)     150,00
+Sobrante de Caja (-R.P.)      80,00
+a Costo de Mercaderías Vendidas (-R.N.)     2.400,00
+a Gastos Generales (-R.N.)                  115,00
+a Faltante de Mercaderías (-R.N.)           40,00
+a Resultado del Ejercicio (+P.N.) (6.230 - 2.555) 3.675,00
+Por cierre de Cuentas de Resultado Negativo y Positivo
+```
+
+**2. Cierre de cuentas patrimoniales**
+
+Al cierre del ejercicio, se deben cancelar en forma provisoria las Cuentas Patrimoniales (Activo, Pasivo y Patrimonio Neto), mediante un asiento en el Libro Diario.
+
+Se debitan las cuentas con saldo acreedor (Pasivo, Patrimonio Neto y Regularizadoras del Activo), y se acreditan las cuentas con saldo deudor (Activo y Regularizadoras del Pasivo).
+
+**Ejemplo:**
+
+Teniendo en cuenta los datos de la Planilla de Trabajo del punto d.
+
+```
+DEBE                                        HABER
+Documentos a Pagar (-P)       600,00
+Proveedores (-P)              1.500,00
+Capital (-P.N.)               12.850,00
+Gastos a Pagar (-P)           15,00
+Resultado del Ejercicio (-P.N.) 3.675,00
+a Caja (-A)                                 5.080,00
+a Mercaderías (-A)                          2.560,00
+a Banco Río cta. cte. (-A)                  11.000,00
+Por cierre de Cuentas Patrimoniales
+```
+
+**F. Apertura de Cuentas**
+
+**1. Apertura de cuentas patrimoniales**
+
+Es el primer asiento que se realiza en el Libro Diario al comienzo del nuevo ejercicio económico, se efectúa en forma inversa al cierre de Cuentas Patrimoniales.
+
+**Ejemplo:**
+
+Teniendo en cuenta los datos de la Planilla de Trabajo del punto d.
+
+```
+DEBE                                        HABER
+Caja (+A)                     5.080,00
+Mercaderías (+A)              2.560,00
+Banco Río Cta. Cte. (+A)      11.000,00
+a Documentos a Pagar (+P)                   600,00
+a Proveedores (+P)                          1.500,00
+a Capital (+P.N.)                           12.850,00
+a Gastos a Pagar (+P)                       15,00
+a Resultado del Ejercicio (+P.N.)           3.675,00
+Por apertura de Cuentas Patrimoniales
+```
+
+**Nota:** Algunas empresas no realizan el cierre y apertura de cuentas patrimoniales, ya que consideran que no es necesario, esto se fundamenta en el hecho de no ser exigida por ninguna norma legal ni profesional.
+
+**G. Distribución de los Resultados**
+
+**Resultado positivo (+)**
+
+Cuando la cuenta Resultado del Ejercicio tiene saldo acreedor significa que se obtuvo una ganancia. Este beneficio puede tener 3 destinos:
+
+A. Incorporarlo al Capital
+B. Destinarlo a formar una Reserva
+C. Distribuirlo entre los Socios
+
+**Ejemplo:**
+
+La empresa "SUR" S.C. decide distribuir su ganancia neta del ejercicio económico del año anterior de $2.000 de la siguiente forma:
+
+- Socio "J.C." $1.200
+- Socio "R.A." $ 600
+- Reserva Futura $ 200
+- TOTAL $2.000
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Resultado del Ejercicio (-P.N.) 2.000,00
+a Socio "J.C." Cta. Particular(+P)          1.200,00
+a Socio "R.A.", Cta. Particular (+P)        600,00
+a Reserva Futura (+P.N.)                    200,00
+Por distribución de utilidades del Ejercicio Anterior.
+```
+
+**Resultado negativo (-)**
+
+Cuando la cuenta Resultado del Ejercicio tiene saldo deudor significa que se obtuvo una pérdida neta en el ejercicio. Este déficit se puede absorber de 3 formas:
+
+A. Utilizar las Reservas
+B. Distribuirlo entre los Socios
+C. Deducirlo del Capital
+
+**Ejemplo:**
+
+La empresa "GIOL" S.C. que obtuvo una pérdida en el ejercicio anterior de $800, decide absorberla de la siguiente manera: Los Socios "J.P." y "S.M." se comprometen a entregar $300 c/u y por el saldo $200 se utilizará la Reserva Futura de la Empresa.
+
+**Asiento:**
+
+```
+DEBE                                        HABER
+Socio "J.P." Cta. Particular(+A) 300,00
+Socio "S.M." Cta. Particular(+A) 300,00
+Reserva Futura (-P.N.)        200,00
+a Resultado del ejercicio (+P.N.)           800,00
+Por distribución del déficit del ejercicio anterior
+```
+
+### Análisis de Cuentas
+
+**FALTANTE DE MERCADERÍAS**
+
+**Clasificación:** De Resultado Negativo
+
+**Representa:** El déficit provocado por la falta de Mercaderías.
+
+**Se Debita:** Por el importe que falta de mercaderías al realizar el inventario, por roturas, extravíos, etc.
+
+**Se Acredita:** Cuando, al finalizar el ejercicio económico, se refunde su saldo en la cuenta Pérdidas y Ganancias o Resultado del Ejercicio.
+
+**Saldo Deudor:** Indica la pérdida causada por el faltante de mercaderías.
+
+---
+
+**SOBRANTE DE MERCADERÍAS**
+
+**Clasificación:** De Resultado Positivo
+
+**Representa:** Una ganancia provocada por el sobrante de Mercaderías.
+
+**Se Acredita:** Por el importe sobrante de Mercaderías al realizar el inventario.
+
+**Se Debita:** Cuando al finalizar el ejercicio económico se refunde su saldo en la cuenta Pérdidas y Ganancias o Resultado del Ejercicio.
+
+**Saldo Acreedor:** Representa la ganancia causada por el sobrante de mercaderías.
+
+---
+
+**FALTANTES DE CAJA**
+
+**Clasificación:** De Resultado Negativo
+
+**Representa:** El déficit provocado por la falta de dinero.
+
+**Se Debita:** Por el importe que falta cuando se practica el arqueo de caja.
+
+**Se Acredita:** Cuando al finalizar el ejercicio económico se refunde su saldo en la cuenta de Pérdidas y Ganancias o Resultado del Ejercicio.
+
+**Saldo Deudor:** Representa la pérdida causada por el faltante de dinero.
+
+---
+
+**SOBRANTES DE CAJA**
+
+**Clasificación:** De Resultado Positivo
+
+**Representa:** Una ganancia por el sobrante de dinero.
+
+**Se Acredita:** Por el importe que sobra cuando se practica el arqueo de Caja.
+
+**Se Debita:** Cuando al finalizar el ejercicio económico se refunde su saldo en la cuenta de Pérdidas y Ganancias o Resultado del Ejercicio.
+
+**Saldo Acreedor:** Indica la ganancia por el sobrante de dinero.
+
+---
+
+**DEUDORES MOROSOS**
+
+**Clasificación:** Patrimonial Del Activo
+
+**Representa:** A todas aquellas personas que nos deben y que se atrasan en el pago sobre las condiciones convenidas.
+
+**Se Debita:** Cuando se producen atrasos en los pagos.
+
+**Se Acredita:** Cuando nos pagan lo que nos deben; cuando promovemos un juicio para tratar de recuperar lo que nos deben o al pasar al deudor a la condición de "incobrable".
+
+**Saldo Deudor:** Representa el importe que nos deben estos deudores morosos.
+
+---
+
+**DEUDORES EN LITIGIO O GESTIÓN JUDICIAL**
+
+**Clasificación:** Patrimonial del Activo
+
+**Representa:** A todos aquellos deudores comunes o morosos a quienes les hemos iniciado acción judicial para el cobro.
+
+**Se Debita:** Por el importe de los montos adeudados que se encuentran en vías de cobro judicial.
+
+**Se Acredita:** Cuando nos abonan lo que nos adeudan o al declarar "incobrables" a esos deudores.
+
+**Saldo Deudor:** Representa el importe que nos deben estos deudores en juicio.
+
+---
+
+**DEUDORES INCOBRABLES**
+
+**Clasificación:** De Resultado Negativo
+
+**Representa:** A todos aquellos deudores (comunes, morosos o en litigio) cuya imposibilidad de cobro se encuentra comprobada a raíz de haber agotado las instancias correspondientes.
+
+**Se Debita:** Por el importe de los montos adeudados que se consideran incobrables.
+
+**Se Acredita:** Cuando al finalizar el ejercicio económico se refunde su saldo en la cuenta de Pérdidas y Ganancias o Resultado del Ejercicio.
+
+**Saldo Deudor:** Representa la pérdida ocasionada por los créditos incobrables.
+
+---
+
+**COMPRAS**
+
+**Clasificación:** Cuenta de Movimiento
+
+**Representa:** Las compras de artículos destinados a la venta.
+
+**Se Debita:** Por la compra de mercaderías.
+
+**Se Acredita:** Por las devoluciones que efectuamos a nuestros proveedores y cuando transferimos su saldo a la cuenta mercaderías.
+
+**Saldo Deudor:** Indica las compras de mercaderías realizadas.
+
+---
+
+**GASTOS BANCARIOS**
+
+**Clasificación:** De Resultado Negativo
+
+**Representa:** La pérdida ocasionada en concepto de gastos.
+
+**Se Debita:** Cuando el Banco nos cobra el mantenimiento de la cuenta, intereses y comisiones a su favor.
+
+**Se Acredita:** Cuando al finalizar el ejercicio económico se refunde su saldo en la cuenta de Pérdidas y Ganancias o Resultado del Ejercicio.
+
+**Saldo Deudor:** Indica la pérdida sufrida en concepto de estos gastos.
+
+---
+
+**AMORTIZACIONES**
+
+**Clasificación:** De Resultado Negativo
+
+**Representa:** La pérdida o desvalorización de los bienes de uso.
+
+**Se Debita:** Para contabilizar la pérdida o desvalorización sufrida por los bienes de uso a causa del uso y el transcurso del tiempo.
+
+**Se Acredita:** Cuando al finalizar el ejercicio económico, se refunde su saldo en la cuenta de Pérdidas y Ganancias o resultado del Ejercicio.
+
+**Saldo Deudor:** Representa la pérdida causada por la desvalorización de los bienes de uso.
+
+---
+
+**AMORTIZACIONES ACUMULADAS**
+
+**Clasificación:** Reguladora del Activo
+
+**Representa:** El desgaste acumulado de los bienes de uso.
+
+**Se Acredita:** Cuando se contabiliza la desvalorización que van experimentando los bienes de uso a través del tiempo.
+
+**Se Debita:** Cuando el bien deja de pertenecer a la empresa, porque se lo vende o se lo permuta, o se lo da de baja; de este modo recupero la amortización.
+
+**Saldo Acreedor:** Representa el desgaste acumulado por el bien en el transcurso de su vida útil.
+
+---
+
+**GASTOS A PAGAR, O GASTOS PENDIENTES DE PAGO**
+
+**Clasificación:** Patrimonial del Pasivo
+
+**Representa:** Los gastos devengados pero no pagados.
+
+**Se Acredita:** Cuando nace la obligación de pagar ciertos conceptos que se devengaron durante el ejercicio pero su pago será efectuado en el próximo.
+
+**Se Debita:** Cuando se abona el gasto adeudado.
+
+**Saldo Acreedor:** Representa los gastos que se encuentran impagos.
+
+**Nota:** Existen varias cuentas que tienen igual movimiento que Gastos a Pagar o Pendientes de Pago, como por ejemplo: Intereses a Pagar, Alquileres a Pagar, Impuestos a Pagar y todo otro concepto que represente una pérdida o gasto pendiente de pago al cierre del ejercicio económico.
+
+---
+
+**DOCUMENTOS A COBRAR EN GESTIÓN JUDICIAL**
+
+**Clasificación:** Patrimonial del Activo
+
+**Representa:** Los pagarés vencidos a cobrar, los cuales han sido protestado o iniciado juicio.
+
+**Se Debita:** Cuando un documento a nuestro favor no es pagado a su vencimiento por el firmante, y se inicia el protesto y/o juicio ejecutivo.
+
+**Se Acredita:** Cuando cobramos el documento o cuando se lo declara incobrable.
+
+**Saldo Deudor:** Representa el monto de documentos vencidos a cobrar, que han sido protestados o iniciado juicio.
+
+---
+
+**ALQUILERES COBRADOS POR ADELANTADO**
+
+**Clasificación:** Patrimonial del Pasivo
+
+**Representa:** La obligación contraída por cobrar alquileres anticipadamente.
+
+**Se Acredita:** Cuando cobramos por adelantado el alquiler de un bien de nuestra propiedad, contraemos una obligación con la persona que lo pagó; el monto de los pagos que nos han hecho en este ejercicio, pero que corresponden al próximo, es el monto que debe acreditarse.
+
+**Se Debita:** Cuando llegado el ejercicio correspondiente deja de ser una obligación para transformarse en una ganancia.
+
+**Saldo Acreedor:** Representa la deuda contraída por los alquileres cobrados por adelantado.
+
+**Nota:** Existen varias cuentas que tienen igual movimiento que Alquileres Cobrados (Ganados) por Adelantado, como por ejemplo: Intereses Cobrados (Ganados) por Adelantado, Comisiones Cobrados (Ganadas) por Adelantado y todo otro concepto que represente una ganancia cobrada en el ejercicio que se cierra y correspondiente al próximo.
+
+---
+
+**RESULTADO DEL EJERCICIO O PERDIDAS Y GANANCIAS**
+
+**Clasificación:** Patrimonio Neto
+
+**Representa:** El resultado del ejercicio económico.
+
+**Se Debita:** Cuando al finalizar el ejercicio se refunden contra esta cuenta todas las pérdidas y al realizarse la distribución de Utilidades.
+
+**Se Acredita:** Cuando al finalizar el ejercicio se refunden contra esta cuenta todas las ganancias y al realizarse la absorción de las pérdida.
+
+**Saldo Deudor:** Indica que en el ejercicio económico se obtuvo una Pérdida.
+
+**Saldo Acreedor:** Indica que en el ejercicio económico se obtuvo una Ganancia.
+
+---
+
+**SEGUROS PAGADOS POR ADELANTADO**
+
+**Clasificación:** Patrimonial del Activo
+
+**Representa:** El derecho a recibir el servicio de seguro.
+
+**Se Debita:** Cuando se ha pagado en este ejercicio un seguro que cubre parte del próximo ejercicio, la parte correspondiente al próximo es un pago por adelantado; ese es el monto que debe debitarse.
+
+**Se Acredita:** Durante el siguiente ejercicio, a medida que lo pagado por adelantado deja de ser un crédito a mi favor para convertirse en pérdida.
+
+**Saldo Deudor:** Representa lo que se abonó por adelantado en concepto de seguros.
+
+**Nota:** Existen varias cuentas que tienen igual movimiento que Seguros Pagados (Perdidos) por Adelantado, como por ejemplo: Intereses Pagados (Perdidos) por Adelantado, Alquileres Pagados (Perdidos) por Adelantado y todo otro concepto que represente una pérdida pagada en este ejercicio y que corresponde al próximo.
+
+---
+
+**INTERESES A COBRAR**
+
+**Clasificación:** Patrimonial del Activo
+
+**Representa:** El derecho a cobrar intereses devengados.
+
+**Se Debita:** Cuando nace el derecho de cobrar intereses que corresponden al presente ejercicio, pero su cobro se efectuará en el próximo.
+
+**Se Acredita:** Cuando se cobran los intereses.
+
+**Saldo Deudor:** Representa los intereses que se encuentran pendientes de cobro al cierre del ejercicio.
+
+**Nota:** Existen varias cuentas que tienen igual movimiento que Intereses a Cobrar, como por ejemplo: Alquileres a Cobrar, Rentas a Cobrar y todo otro concepto que represente una ganancia pendiente de cobro en el ejercicio.
