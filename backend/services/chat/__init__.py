@@ -1,23 +1,6 @@
-"""
-Servicio RAG modular para Django REST Framework.
-Proporciona búsqueda semántica y generación aumentada con retrieval.
-"""
+from .rag_service import rag_service
+from .vector_store import vector_store
+from .llm_client import llm_client
+from .embedder import embedder
 
-from .embedder import Embedder
-from .vector_store import VectorStore
-from .llm_client import LLMClient
-from .rag_service import RAGService
-from .config import RAGConfig, setup_rag_service, prepare_embeddings, DEFAULT_CONFIG
-
-__version__ = "1.0.0"
-
-__all__ = [
-    'Embedder',
-    'VectorStore',
-    'LLMClient',
-    'RAGService',
-    'RAGConfig',
-    'setup_rag_service',
-    'prepare_embeddings',
-    'DEFAULT_CONFIG'
-]
+__all__ = ['rag_service', 'vector_store', 'llm_client', 'embedder']

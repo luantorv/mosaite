@@ -1,135 +1,157 @@
-"""
-Cliente para interactuar con LLM local usando llama-cpp-python.
-Maneja la generación de respuestas basadas en contexto.
-"""
-import logging
-from typing import Optional, Dict, Any
 from llama_cpp import Llama
-
-logger = logging.getLogger(__name__)
+from typing import Optional, Generator
+import threading
+from .config import (
+    LLM_MODEL_PATH,
+    LLM_CONTEXT_SIZE,
+    LLM_MAX_TOKENS,
+    LLM_TEMPERATURE,
+    LLM_TOP_P
+)
 
 
 class LLMClient:
-    """
-    Cliente para ejecutar un LLM local con llama.cpp.
-    """
+    """Cliente para interactuar con el modelo LLM local usando llama.cpp"""
     
-    def __init__(
-        self,
-        model_path: str,
-        n_ctx: int = 2048,
-        n_threads: Optional[int] = None,
-        n_gpu_layers: int = 0,
-        **kwargs
-    ):
-        """
-        Inicializa el cliente LLM.
+    def __init__(self):
+        self.model: Optional[Llama] = None
+        self.is_loaded = False
+        self._lock = threading.Lock()
+        self._stop_generation = False
+    
+    def load_model(self):
+        """Carga el modelo LLM"""
+        if self.is_loaded:
+            return
         
-        Args:
-            model_path: Ruta al archivo .gguf del modelo
-            n_ctx: Tamaño del contexto (tokens)
-            n_threads: Número de threads CPU (None = auto)
-            n_gpu_layers: Número de capas a cargar en GPU (0 = solo CPU)
-            **kwargs: Argumentos adicionales para Llama()
-        """
-        logger.info(f"Cargando modelo LLM desde: {model_path}")
-        
-        self.llm = Llama(
-            model_path=model_path,
-            n_ctx=n_ctx,
-            n_threads=n_threads,
-            n_gpu_layers=n_gpu_layers,
-            verbose=False,
-            **kwargs
-        )
-        
-        self.model_path = model_path
-        logger.info("Modelo LLM cargado exitosamente")
+        with self._lock:
+            if self.is_loaded:
+                return
+            
+            try:
+                print(f"Cargando modelo LLM desde: {LLM_MODEL_PATH}")
+                self.model = Llama(
+                    model_path=LLM_MODEL_PATH,
+                    n_ctx=LLM_CONTEXT_SIZE,
+                    n_threads=4,
+                    verbose=False,
+                    n_batch=512,  # Agregar batch size
+                    use_mlock=True,  # Evitar swap
+                )
+                self.is_loaded = True
+                print("Modelo LLM cargado exitosamente")
+            except Exception as e:
+                print(f"Error al cargar modelo LLM: {e}")
+                raise
+    
+    def _truncate_prompt(self, prompt: str, max_length: int = 1500) -> str:
+        """Trunca el prompt si es muy largo para evitar problemas"""
+        if len(prompt) > max_length:
+            print(f"Prompt truncado de {len(prompt)} a {max_length} caracteres")
+            return prompt[:max_length] + "\n\nRespuesta:"
+        return prompt
     
     def generate(
         self,
         prompt: str,
-        max_tokens: int = 512,
-        temperature: float = 0.7,
-        top_p: float = 0.95,
-        stop: Optional[list] = None,
-        **kwargs
+        max_tokens: int = LLM_MAX_TOKENS,
+        temperature: float = LLM_TEMPERATURE,
+        top_p: float = LLM_TOP_P,
+        stream: bool = False
     ) -> str:
         """
-        Genera una respuesta del LLM.
+        Genera una respuesta del modelo
         
         Args:
-            prompt: El prompt completo para el modelo
-            max_tokens: Máximo de tokens a generar
-            temperature: Temperatura de generación (0-1, menor = más determinístico)
-            top_p: Nucleus sampling parameter
-            stop: Lista de strings donde detener la generación
-            **kwargs: Argumentos adicionales para la generación
+            prompt: El prompt a enviar al modelo
+            max_tokens: Número máximo de tokens a generar
+            temperature: Temperatura para la generación
+            top_p: Top-p sampling
+            stream: Si True, retorna un generador para streaming
         
         Returns:
-            Texto generado por el modelo
+            La respuesta generada o un generador
         """
+        if not self.is_loaded:
+            self.load_model()
+        
+        self._stop_generation = False
+        
+        # Truncar prompt si es muy largo
+        prompt = self._truncate_prompt(prompt)
+        
         try:
-            response = self.llm(
+            if stream:
+                return self._generate_stream(prompt, max_tokens, temperature, top_p)
+            else:
+                output = self.model(
+                    prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    stop=["Usuario:", "Pregunta:", "\n\n\n"],
+                    echo=False,
+                    repeat_penalty=1.1,  # Evitar repeticiones
+                )
+                
+                response = output['choices'][0]['text'].strip()
+                
+                # Validar que la respuesta no esté vacía
+                if not response or len(response) < 10:
+                    return "Lo siento, no pude generar una respuesta apropiada. Por favor, intenta reformular tu pregunta."
+                
+                return response
+                
+        except Exception as e:
+            print(f"Error en generación del LLM: {e}")
+            # Retornar un mensaje de error en lugar de propagar la excepción
+            return f"Error al generar respuesta: {str(e)}"
+    
+    def _generate_stream(
+        self,
+        prompt: str,
+        max_tokens: int,
+        temperature: float,
+        top_p: float
+    ) -> Generator[str, None, None]:
+        """Genera respuesta en modo streaming"""
+        try:
+            stream = self.model(
                 prompt,
                 max_tokens=max_tokens,
                 temperature=temperature,
                 top_p=top_p,
-                stop=stop,
+                stop=["Usuario:", "Pregunta:", "\n\n\n"],
                 echo=False,
-                **kwargs
+                stream=True,
+                repeat_penalty=1.1,
             )
             
-            # Extraer el texto generado
-            generated_text = response['choices'][0]['text']
-            return generated_text.strip()
-            
+            for output in stream:
+                if self._stop_generation:
+                    break
+                
+                text = output['choices'][0]['text']
+                if text:
+                    yield text
+                    
         except Exception as e:
-            logger.error(f"Error al generar respuesta: {e}")
-            raise
+            print(f"Error en streaming: {e}")
+            yield f"Error en streaming: {str(e)}"
     
-    def generate_with_context(
-        self,
-        query: str,
-        context: str,
-        system_prompt: Optional[str] = None,
-        max_tokens: int = 512,
-        **kwargs
-    ) -> str:
-        """
-        Genera una respuesta usando contexto RAG.
-        
-        Args:
-            query: Pregunta del usuario
-            context: Contexto recuperado del vector store
-            system_prompt: Prompt de sistema opcional
-            max_tokens: Máximo de tokens a generar
-            **kwargs: Argumentos adicionales para generate()
-        
-        Returns:
-            Respuesta generada basada en el contexto
-        """
-        # Construir el prompt
-        if system_prompt is None:
-            system_prompt = (
-                "Eres un asistente útil. Responde la pregunta del usuario "
-                "basándote únicamente en el contexto proporcionado. "
-                "Si no puedes responder con la información del contexto, "
-                "indícalo claramente."
-            )
-        
-        prompt = f"""{system_prompt}
-
-Contexto:
-{context}
-
-Pregunta: {query}
-
-Respuesta:"""
-        
-        return self.generate(prompt, max_tokens=max_tokens, **kwargs)
+    def stop_generation(self):
+        """Detiene la generación actual"""
+        self._stop_generation = True
     
-    def __del__(self):
-        """Limpia recursos al destruir el objeto."""
-        if hasattr(self, 'llm'):
-            del self.llm
+    def unload_model(self):
+        """Descarga el modelo de memoria"""
+        with self._lock:
+            if self.model is not None:
+                del self.model
+                self.model = None
+                self.is_loaded = False
+                print("Modelo LLM descargado")
+
+
+# Instancia global del cliente
+llm_client = LLMClient()

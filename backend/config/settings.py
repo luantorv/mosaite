@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-r119&l&01#m7k0^ttrf!fus=@_x&)!=_xc*lb39)2(s0_wtf=_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.*.*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
 
 # Application definition
@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist', # Para logout
     'corsheaders',
     'apps.users',
-    'apps.config'
+    'apps.config',
+    'apps.chat'
 ]
 
 MIDDLEWARE = [

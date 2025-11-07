@@ -1,19 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 function SidebarMenu({ onPanelChange, activePanel, closeMenuTrigger }) {
   const { theme } = useTheme();
+  const { user } = useAuth();
   
-  // Tu menuData para el sistema contable
-  const menuData = {
-    "Transacciones" : ["Crear", "Recientes", "Buscar"],
-    "Libros Diarios" : ["Crear","Recientes"],
-    "Plan de Cuentas": null,
-    "Usuarios" : null,
-    "Configuración": null,
-    "Ayuda": null
-  };
-
   // Estado para controlar qué menú está abierto (solo uno a la vez)
   const [openMenu, setOpenMenu] = useState(null);
 
@@ -21,6 +13,40 @@ function SidebarMenu({ onPanelChange, activePanel, closeMenuTrigger }) {
   useEffect(() => {
     setOpenMenu(null);
   }, [closeMenuTrigger]);
+
+  // Función para obtener el menú filtrado según el rol del usuario
+  const getFilteredMenuData = () => {
+    const userRole = user?.rol ?? 4; // Por defecto rol 4 (menor acceso)
+
+    const baseMenu = {
+      "Transacciones": ["Recientes", "Buscar"],
+      "Libros Diarios": ["Recientes"],
+      "Plan de Cuentas": null,
+      "Ayuda": null
+    };
+
+    // Agregar "Crear" a Transacciones si rol NO es 4 (Viewer)
+    if (userRole !== 4) {
+      baseMenu["Transacciones"].unshift("Crear");
+    }
+
+    // Agregar "Crear" a Libros Diarios si rol es 0 (Admin) o 2 (Accountant)
+    if (userRole === 0 || userRole === 2) {
+      baseMenu["Libros Diarios"].unshift("Crear");
+    }
+
+    // Agregar "Usuarios" si rol es 0 (Admin) o 1 (Manager)
+    if (userRole === 0 || userRole === 1) {
+      baseMenu["Usuarios"] = null;
+    }
+
+    // Agregar "Configuración" solo si rol es 0 (Admin)
+    if (userRole === 0) {
+      baseMenu["Configuración"] = null;
+    }
+
+    return baseMenu;
+  };
 
   const toggleMenu = (menuKey) => {
     // Si el menú que se va a abrir es diferente al actual, cierra el anterior
@@ -48,6 +74,9 @@ function SidebarMenu({ onPanelChange, activePanel, closeMenuTrigger }) {
   const isDirectMenuActive = (mainCategory) => {
     return activePanel === mainCategory;
   };
+
+  // Obtener el menú filtrado según el rol
+  const menuData = getFilteredMenuData();
 
   return (
     <div style={{ padding: "20px 10px" }}>
@@ -236,7 +265,7 @@ function getMenuIcon(category) {
     "Plan de Cuentas": "",
     "Usuarios": "",
     "Configuración": "",
-    "Estadísticas": ""
+    "Ayuda": ""
   };
   return icons[category] || "";
 }

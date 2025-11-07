@@ -260,6 +260,23 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 mosaite/
 |   backend/
 |   |   apps/
+|   |   |   chat/
+|   |   |   |   management/
+|   |   |   |   |   commands/
+|   |   |   |   |   |   __init__.py
+|   |   |   |   |   |   init_chat.py
+|   |   |   |   |   |   rebuild_chat_index.py
+|   |   |   |   |   __init__.py
+|   |   |   |   __init__.py
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   permissions.py
+|   |   |   |   serializers.py
+|   |   |   |   tasks.py
+|   |   |   |   tests.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
 |   |   |   config/
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
@@ -290,9 +307,11 @@ mosaite/
 |   |   |   chat/
 |   |   |   |   data/
 |   |   |   |   |   manual_cuentas.md
+|   |   |   |   |   SIC1.md
 |   |   |   |   __init__.py
 |   |   |   |   config.py
 |   |   |   |   embedder.py
+|   |   |   |   init_index.py
 |   |   |   |   llm.client.py
 |   |   |   |   rag_service.py
 |   |   |   |   vector_store.py
@@ -353,6 +372,7 @@ mosaite/
 |   |   |   |   services/
 |   |   |   |   |   api.js
 |   |   |   |   |   AuthService.js
+|   |   |   |   |   ChatService.js
 |   |   |   |   |   ConfigService.js
 |   |   |   |   |   UserService.js
 |   |   |   |   App.css

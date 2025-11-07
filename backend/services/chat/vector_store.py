@@ -1,216 +1,207 @@
-"""
-Vector Store para almacenamiento y búsqueda de embeddings.
-Utiliza FAISS para indexación eficiente y pickle para persistencia.
-"""
-import os
-import pickle
+import faiss
 import numpy as np
-from typing import List, Tuple, Optional, Dict, Any
-import logging
-
-try:
-    import faiss
-except ImportError:
-    # Si FAISS no está disponible, usar búsqueda por fuerza bruta
-    faiss = None
-
-logger = logging.getLogger(__name__)
+import json
+from pathlib import Path
+from typing import List, Dict, Tuple
+from .config import (
+    FAISS_INDEX_FILE,
+    FAISS_METADATA_FILE,
+    EMBEDDING_DIMENSION,
+    DATA_DIR,
+    CHUNK_SIZE,
+    CHUNK_OVERLAP
+)
+from .embedder import embedder
 
 
 class VectorStore:
-    """
-    Almacén de vectores con búsqueda de similitud.
-    Soporta FAISS para búsqueda eficiente o fallback a búsqueda por fuerza bruta.
-    """
+    """Almacén de vectores usando FAISS"""
     
-    def __init__(self, dimension: int, use_faiss: bool = True):
-        """
-        Inicializa el vector store.
-        
-        Args:
-            dimension: Dimensión de los vectores de embedding
-            use_faiss: Si True y FAISS está disponible, lo usa. Sino, usa fuerza bruta
-        """
-        self.dimension = dimension
-        self.use_faiss = use_faiss and faiss is not None
-        
-        # Almacenamiento de documentos y metadatos
-        self.documents: List[str] = []
-        self.metadata: List[Dict[str, Any]] = []
-        self.embeddings: List[np.ndarray] = []
-        
-        # Índice FAISS si está disponible
+    def __init__(self):
         self.index = None
-        if self.use_faiss:
-            self.index = faiss.IndexFlatL2(dimension)
-            logger.info("VectorStore inicializado con FAISS")
+        self.metadata: List[Dict] = []
+        self.is_initialized = False
+    
+    def initialize(self):
+        """Inicializa el índice FAISS"""
+        if self.is_initialized:
+            return
+    
+        # Cargar índice existente o crear uno nuevo
+        if FAISS_INDEX_FILE.exists() and FAISS_METADATA_FILE.exists():
+            print("Cargando índice existente...")
+            self.load()
         else:
-            logger.info("VectorStore inicializado con búsqueda por fuerza bruta")
+            print("No se encontró índice existente, creando uno nuevo...")
+            self._create_new_index()
+            # Cargar documentos automáticamente si el índice está vacío
+            if self.index.ntotal == 0:
+                print("Índice vacío, cargando documentos automáticamente...")
+                self.load_documents_from_directory()
     
-    def add_documents(
-        self,
-        documents: List[str],
-        embeddings: List[np.ndarray],
-        metadata: Optional[List[Dict[str, Any]]] = None
-    ) -> None:
+        self.is_initialized = True
+    
+    def _create_new_index(self):
+        """Crea un nuevo índice FAISS"""
+        print("Creando nuevo índice FAISS")
+        # Usar IndexFlatL2 para búsqueda exacta con distancia L2
+        self.index = faiss.IndexFlatL2(EMBEDDING_DIMENSION)
+        self.metadata = []
+    
+    def _chunk_text(self, text: str, chunk_size: int, overlap: int) -> List[str]:
+        """Divide el texto en chunks con superposición"""
+        chunks = []
+        start = 0
+        text_length = len(text)
+        
+        while start < text_length:
+            end = start + chunk_size
+            chunk = text[start:end]
+            
+            # Solo agregar chunks que tengan contenido significativo
+            if len(chunk.strip()) > 50:  # Mínimo 50 caracteres
+                chunks.append(chunk.strip())
+            
+            start += chunk_size - overlap
+        
+        return chunks
+    
+    def load_documents_from_directory(self):
+        """Carga y procesa todos los documentos del directorio data"""
+        print(f"Cargando documentos desde: {DATA_DIR}")
+        
+        all_chunks = []
+        all_metadata = []
+        
+        # Buscar todos los archivos .md y .txt
+        for file_path in DATA_DIR.glob("**/*"):
+            if file_path.suffix.lower() in ['.md', '.txt']:
+                print(f"Procesando: {file_path.name}")
+                
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # Dividir en chunks
+                    chunks = self._chunk_text(content, CHUNK_SIZE, CHUNK_OVERLAP)
+                    
+                    # Crear metadata para cada chunk
+                    for i, chunk in enumerate(chunks):
+                        all_chunks.append(chunk)
+                        all_metadata.append({
+                            'source': file_path.name,
+                            'chunk_id': i,
+                            'total_chunks': len(chunks),
+                            'text': chunk
+                        })
+                    
+                    print(f"  - Generados {len(chunks)} chunks")
+                
+                except Exception as e:
+                    print(f"Error procesando {file_path.name}: {e}")
+        
+        if not all_chunks:
+            print("ADVERTENCIA: No se encontraron documentos para indexar")
+            return
+        
+        print(f"\nTotal de chunks a indexar: {len(all_chunks)}")
+        
+        # Generar embeddings
+        print("Generando embeddings...")
+        embeddings = embedder.embed_texts(all_chunks)
+        
+        # Agregar al índice
+        self.index.add(embeddings)
+        self.metadata = all_metadata
+        
+        # Guardar
+        self.save()
+        
+        print(f"Índice creado con {len(all_chunks)} chunks")
+    
+    def search(self, query: str, k: int = 3) -> List[Dict]:
         """
-        Añade documentos con sus embeddings al store.
+        Busca en el vector store
         
         Args:
-            documents: Lista de textos/documentos
-            embeddings: Lista de vectores de embedding
-            metadata: Lista opcional de diccionarios con metadatos
-        """
-        if len(documents) != len(embeddings):
-            raise ValueError("La cantidad de documentos debe coincidir con la de embeddings")
-        
-        # Validar dimensión
-        for emb in embeddings:
-            if emb.shape[0] != self.dimension:
-                raise ValueError(f"Dimensión incorrecta: esperado {self.dimension}, recibido {emb.shape[0]}")
-        
-        # Preparar metadatos
-        if metadata is None:
-            metadata = [{} for _ in documents]
-        elif len(metadata) != len(documents):
-            raise ValueError("La cantidad de metadatos debe coincidir con la de documentos")
-        
-        # Agregar a almacenamiento
-        self.documents.extend(documents)
-        self.embeddings.extend(embeddings)
-        self.metadata.extend(metadata)
-        
-        # Agregar al índice FAISS
-        if self.use_faiss:
-            embeddings_array = np.array(embeddings).astype('float32')
-            self.index.add(embeddings_array)
-        
-        logger.info(f"Añadidos {len(documents)} documentos al vector store")
-    
-    def search(
-        self,
-        query_embedding: np.ndarray,
-        k: int = 5
-    ) -> List[Tuple[str, float, Dict[str, Any]]]:
-        """
-        Busca los k documentos más similares al query.
-        
-        Args:
-            query_embedding: Vector de embedding de la consulta
-            k: Número de resultados a devolver
+            query: Query de búsqueda
+            k: Número de resultados a retornar
         
         Returns:
-            Lista de tuplas (documento, distancia, metadata)
+            Lista de documentos relevantes con metadata
         """
-        if len(self.documents) == 0:
-            logger.warning("Vector store vacío, no hay documentos para buscar")
-            return []
+        if not self.is_initialized:
+            self.initialize()
         
-        # Limitar k al número de documentos disponibles
-        k = min(k, len(self.documents))
+        if self.index.ntotal == 0:
+            print("Índice vacío, cargando documentos...")
+            self.load_documents_from_directory()
         
-        # Validar dimensión
-        if query_embedding.shape[0] != self.dimension:
-            raise ValueError(f"Dimensión incorrecta: esperado {self.dimension}, recibido {query_embedding.shape[0]}")
+        # Generar embedding de la query
+        query_embedding = embedder.embed_text(query)
+        query_embedding = np.array([query_embedding])
         
-        if self.use_faiss:
-            # Búsqueda con FAISS
-            query_array = np.array([query_embedding]).astype('float32')
-            distances, indices = self.index.search(query_array, k)
-            
-            results = []
-            for dist, idx in zip(distances[0], indices[0]):
-                results.append((
-                    self.documents[idx],
-                    float(dist),
-                    self.metadata[idx]
-                ))
-        else:
-            # Búsqueda por fuerza bruta (distancia L2)
-            embeddings_array = np.array(self.embeddings)
-            distances = np.linalg.norm(embeddings_array - query_embedding, axis=1)
-            
-            # Obtener índices de los k más cercanos
-            indices = np.argsort(distances)[:k]
-            
-            results = []
-            for idx in indices:
-                results.append((
-                    self.documents[idx],
-                    float(distances[idx]),
-                    self.metadata[idx]
-                ))
+        # Buscar en el índice
+        distances, indices = self.index.search(query_embedding, k)
+        
+        # Construir resultados
+        results = []
+        for i, idx in enumerate(indices[0]):
+            if idx < len(self.metadata):
+                result = self.metadata[idx].copy()
+                result['distance'] = float(distances[0][i])
+                result['similarity'] = 1 / (1 + result['distance'])  # Convertir a similarity
+                results.append(result)
         
         return results
     
-    def save(self, filepath: str) -> None:
-        """
-        Guarda el vector store en disco.
+    def save(self):
+        """Guarda el índice y metadata en disco"""
+        try:
+            # Guardar índice FAISS
+            faiss.write_index(self.index, str(FAISS_INDEX_FILE))
+            
+            # Guardar metadata
+            with open(FAISS_METADATA_FILE, 'w', encoding='utf-8') as f:
+                json.dump(self.metadata, f, ensure_ascii=False, indent=2)
+            
+            print(f"Índice guardado en: {FAISS_INDEX_FILE}")
+        except Exception as e:
+            print(f"Error guardando índice: {e}")
+            raise
+    
+    def load(self):
+        """Carga el índice y metadata desde disco"""
+        try:
+            # Cargar índice FAISS
+            self.index = faiss.read_index(str(FAISS_INDEX_FILE))
+            
+            # Cargar metadata
+            with open(FAISS_METADATA_FILE, 'r', encoding='utf-8') as f:
+                self.metadata = json.load(f)
+            
+            print(f"Índice cargado: {self.index.ntotal} vectores")
+        except Exception as e:
+            print(f"Error cargando índice: {e}")
+            self._create_new_index()
+    
+    def rebuild(self):
+        """Reconstruye el índice desde cero"""
+        print("Reconstruyendo índice...")
+        self._create_new_index()
+        self.load_documents_from_directory()
+    
+    def get_stats(self) -> Dict:
+        """Retorna estadísticas del índice"""
+        if not self.is_initialized:
+            self.initialize()
         
-        Args:
-            filepath: Ruta donde guardar el store
-        """
-        os.makedirs(os.path.dirname(filepath) if os.path.dirname(filepath) else '.', exist_ok=True)
-        
-        data = {
-            'dimension': self.dimension,
-            'documents': self.documents,
-            'embeddings': self.embeddings,
-            'metadata': self.metadata,
-            'use_faiss': self.use_faiss
+        return {
+            'total_vectors': self.index.ntotal if self.index else 0,
+            'total_documents': len(set(m['source'] for m in self.metadata)),
+            'embedding_dimension': EMBEDDING_DIMENSION
         }
-        
-        # Guardar índice FAISS por separado si existe
-        if self.use_faiss and self.index is not None:
-            faiss_path = f"{filepath}.faiss"
-            faiss.write_index(self.index, faiss_path)
-            data['has_faiss_index'] = True
-        
-        with open(filepath, 'wb') as f:
-            pickle.dump(data, f)
-        
-        logger.info(f"Vector store guardado en {filepath}")
-    
-    @classmethod
-    def load(cls, filepath: str) -> 'VectorStore':
-        """
-        Carga un vector store desde disco.
-        
-        Args:
-            filepath: Ruta del archivo a cargar
-        
-        Returns:
-            Instancia de VectorStore cargada
-        """
-        with open(filepath, 'rb') as f:
-            data = pickle.load(f)
-        
-        # Crear instancia
-        store = cls(dimension=data['dimension'], use_faiss=data.get('use_faiss', True))
-        
-        # Restaurar datos
-        store.documents = data['documents']
-        store.embeddings = data['embeddings']
-        store.metadata = data['metadata']
-        
-        # Cargar índice FAISS si existe
-        if data.get('has_faiss_index') and store.use_faiss:
-            faiss_path = f"{filepath}.faiss"
-            if os.path.exists(faiss_path):
-                store.index = faiss.read_index(faiss_path)
-        
-        logger.info(f"Vector store cargado desde {filepath} con {len(store.documents)} documentos")
-        return store
-    
-    def clear(self) -> None:
-        """Limpia todo el contenido del vector store."""
-        self.documents = []
-        self.embeddings = []
-        self.metadata = []
-        if self.use_faiss:
-            self.index = faiss.IndexFlatL2(self.dimension)
-        logger.info("Vector store limpiado")
-    
-    def __len__(self) -> int:
-        """Retorna el número de documentos en el store."""
-        return len(self.documents)
+
+
+# Instancia global del vector store
+vector_store = VectorStore()

@@ -1,60 +1,71 @@
-"""
-Módulo de embeddings usando sentence-transformers.
-Proporciona una interfaz simple para generar embeddings de textos.
-"""
-import numpy as np
-from typing import List, Union
-import logging
 from sentence_transformers import SentenceTransformer
-
-logger = logging.getLogger(__name__)
+from typing import List, Union
+import numpy as np
+from .config import EMBEDDING_MODEL, EMBEDDING_DIMENSION
 
 
 class Embedder:
-    """
-    Clase para generar embeddings de texto usando sentence-transformers.
-    """
+    """Clase para generar embeddings de texto usando sentence-transformers"""
     
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+    def __init__(self):
+        self.model = None
+        self.is_loaded = False
+    
+    def load_model(self):
+        """Carga el modelo de embeddings"""
+        if self.is_loaded:
+            return
+        
+        try:
+            print(f"Cargando modelo de embeddings: {EMBEDDING_MODEL}")
+            self.model = SentenceTransformer(EMBEDDING_MODEL)
+            self.is_loaded = True
+            print("Modelo de embeddings cargado exitosamente")
+        except Exception as e:
+            print(f"Error al cargar modelo de embeddings: {e}")
+            raise
+    
+    def embed_text(self, text: str) -> np.ndarray:
         """
-        Inicializa el embedder con un modelo específico.
+        Genera embedding para un texto
         
         Args:
-            model_name: Nombre del modelo de sentence-transformers a usar.
-                       Por defecto usa 'all-MiniLM-L6-v2' (ligero y eficiente).
-        """
-        logger.info(f"Cargando modelo de embeddings: {model_name}")
-        self.model = SentenceTransformer(model_name)
-        self.model_name = model_name
-        self.dimension = self.model.get_sentence_embedding_dimension()
-        logger.info(f"Modelo cargado. Dimensión de embeddings: {self.dimension}")
-    
-    def embed(self, text: Union[str, List[str]]) -> Union[np.ndarray, List[np.ndarray]]:
-        """
-        Genera embeddings para uno o más textos.
-        
-        Args:
-            text: Un texto o lista de textos para embedear
+            text: Texto a embedear
         
         Returns:
-            Un array numpy o lista de arrays con los embeddings
+            Embedding como numpy array
         """
-        is_single = isinstance(text, str)
-        texts = [text] if is_single else text
+        if not self.is_loaded:
+            self.load_model()
         
-        # Generar embeddings
+        embedding = self.model.encode(text, convert_to_numpy=True)
+        return embedding
+    
+    def embed_texts(self, texts: List[str]) -> np.ndarray:
+        """
+        Genera embeddings para múltiples textos
+        
+        Args:
+            texts: Lista de textos
+        
+        Returns:
+            Array de embeddings
+        """
+        if not self.is_loaded:
+            self.load_model()
+        
         embeddings = self.model.encode(
             texts,
             convert_to_numpy=True,
-            show_progress_bar=len(texts) > 10  # Mostrar barra solo para lotes grandes
+            show_progress_bar=True,
+            batch_size=32
         )
-        
-        # Retornar formato apropiado
-        if is_single:
-            return embeddings[0]
-        else:
-            return [emb for emb in embeddings]
+        return embeddings
     
-    def get_dimension(self) -> int:
-        """Retorna la dimensión de los embeddings del modelo."""
-        return self.dimension
+    def get_embedding_dimension(self) -> int:
+        """Retorna la dimensión del embedding"""
+        return EMBEDDING_DIMENSION
+
+
+# Instancia global del embedder
+embedder = Embedder()
