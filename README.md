@@ -222,6 +222,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - ConsultarIA _(el módulo de IA)_ ya funciona, falta implementarlo.
 - Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
 - Hay un POC para experimentar el flujo de uso del proyecto.
+- Hay un Ayudante basado en LLM/RAG para consultar información contable.
 - Ya hay algo del frontend hecho (No terminado).
 - El login funciona y hay manejo de usuarios mediante el componente UsuariosLista.js.
 
@@ -249,8 +250,6 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 - Complementar la integración de back y front _(en progreso)_.
 
 - Terminar el manual de usuario.
-
-- Implementar un RAG para el uso del sistema y cuestiones contables _(en progreso)_.
 
 ---
 
