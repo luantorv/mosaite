@@ -113,7 +113,7 @@ function Dashboard() {
                     height: "45px",
                     borderRadius: "10px",
                     background: theme.background,
-                    boxShadow: theme.cardShadowOut,
+                    boxShadow: theme.buttonShadowOut,
                     transition: "all 0.3s ease",
                     border: "none",
                     display: "flex",
@@ -123,10 +123,10 @@ function Dashboard() {
                     color: theme.textColor,
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.boxShadow = theme.cardShadowOut
+                    e.target.style.boxShadow = theme.buttonShadowIn
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.boxShadow = theme.cardShadowOut
+                    e.target.style.boxShadow = theme.buttonShadowOut
                   }}
                 >
                   {isOpen ? "←" : "→"}
@@ -155,6 +155,7 @@ function Dashboard() {
               className="row flex-grow-1"
               style={{
                 minHeight: 0,
+                marginTop: "10px",
                 overflow: "hidden",
               }}
             >
@@ -163,7 +164,6 @@ function Dashboard() {
                 className="col"
                 style={{
                   padding: "3px, 0, 0, 0",
-                  marginTop: "5px",
                   height: "100%",
                   overflow: "hidden",
                 }}

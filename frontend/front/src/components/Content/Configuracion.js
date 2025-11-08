@@ -1,216 +1,582 @@
-import { useState } from "react"
-import { useTheme } from "../../context/ThemeContext"
+import { useState, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
+import configService from "../../services/ConfigService";
 
 function Configuracion() {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
+  const { user, systemConfig, loadConfig } = useAuth();
 
-  const [config, setConfig] = useState({
-    system_mode: true,
-    date_format: "en-CA",
-    currency: "ARS",
-  })
+  const [config, setConfig] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [editField, setEditField] = useState(null);
+  const [tempValue, setTempValue] = useState("");
 
-  const [showModal, setShowModal] = useState(false)
-  const [editField, setEditField] = useState(null)
-  const [tempValue, setTempValue] = useState("")
+  // Cargar configuración al montar
+  useEffect(() => {
+    loadConfiguration();
+  }, []);
+
+  const loadConfiguration = async () => {
+    setLoading(true);
+    setError("");
+    
+    const result = await configService.getCurrentConfig();
+    
+    if (result.success) {
+      setConfig(result.config);
+    } else {
+      setError(result.error);
+    }
+    
+    setLoading(false);
+  };
 
   const handleEdit = (field) => {
-    setEditField(field)
-    setTempValue(config[field])
-    setShowModal(true)
-  }
+    if (!config) return;
+    
+    setEditField(field);
+    setTempValue(config[field]);
+    setShowModal(true);
+  };
 
-  const handleSave = () => {
-    setConfig({
-      ...config,
+  const handleSave = async () => {
+    if (!config) return;
+
+    setSaving(true);
+    setError("");
+
+    const updateData = {
       [editField]: tempValue,
-    })
-    setShowModal(false)
-    setEditField(null)
-    setTempValue("")
-  }
+    };
+
+    const result = await configService.updateConfig(config.config_id, updateData);
+
+    if (result.success) {
+      setConfig(result.config);
+      setShowModal(false);
+      setEditField(null);
+      setTempValue("");
+      
+      // Recargar configuración en el contexto global
+      loadConfig();
+    } else {
+      if (typeof result.error === 'object') {
+        const errorMessages = Object.entries(result.error)
+          .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+          .join('\n');
+        setError(errorMessages);
+      } else {
+        setError(result.error || "Error al actualizar configuración");
+      }
+    }
+
+    setSaving(false);
+  };
 
   const handleCancel = () => {
-    setShowModal(false)
-    setEditField(null)
-    setTempValue("")
-  }
+    setShowModal(false);
+    setEditField(null);
+    setTempValue("");
+    setError("");
+  };
 
   const dateFormatOptions = [
-    { value: "en-CA", label: "en-CA (YYYY-MM-DD)" },
-    { value: "en-US", label: "en-US (MM/DD/YYYY)" },
-    { value: "es-AR", label: "es-AR (DD/MM/YYYY)" },
-  ]
+    { value: "DD/MM/YYYY", label: "DD/MM/YYYY (Español)" },
+    { value: "MM/DD/YYYY", label: "MM/DD/YYYY (Inglés US)" },
+    { value: "YYYY-MM-DD", label: "YYYY-MM-DD (ISO)" },
+    { value: "DD-MM-YYYY", label: "DD-MM-YYYY" },
+  ];
 
   const currencyOptions = [
-    { value: "ARS", label: "ARS (Peso Argentino)" },
-    { value: "USD", label: "USD (Dólar)" },
-    { value: "EUR", label: "EUR (Euro)" },
-    { value: "BRL", label: "BRL (Real)" },
-  ]
+    { value: "ARS", label: "ARS - Peso Argentino" },
+    { value: "USD", label: "USD - Dólar Estadounidense" },
+    { value: "EUR", label: "EUR - Euro" },
+    { value: "BRL", label: "BRL - Real Brasileño" },
+    { value: "CLP", label: "CLP - Peso Chileno" },
+    { value: "UYU", label: "UYU - Peso Uruguayo" },
+    { value: "MXN", label: "MXN - Peso Mexicano" },
+  ];
+
+  const getSystemModeLabel = (mode) => {
+    return mode ? "Empresarial" : "Educativo";
+  };
+
+  const getSystemModeDescription = (mode) => {
+    return mode 
+      ? "Acceso completo a todas las funcionalidades (5 roles)" 
+      : "Modo simplificado para educación (2 roles: Profesor y Alumno)";
+  };
+
+  if (loading) {
+    return (
+      <div className="container-fluid p-4">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "400px",
+            color: theme.textColor,
+          }}
+        >
+          <div className="text-center">
+            <div className="spinner-border mb-3" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </div>
+            <p>Cargando configuración...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!config) {
+    return (
+      <div className="container-fluid p-4">
+        <div
+          className="alert alert-danger"
+          role="alert"
+        >
+          Error al cargar la configuración. Por favor, recarga la página.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-fluid p-4">
       <div
-        className="card"
         style={{
           backgroundColor: theme.background,
+          borderRadius: "16px",
+          //boxShadow: theme.cardShadowOut,
+          padding: "24px",
         }}
       >
-        <div className="card-header">
-          <h4 className="mb-0" style={{ color: theme.textColor }}>
-            Configuración
+        <div style={{ marginBottom: "24px" }}>
+          <h4
+            style={{
+              color: theme.textColor,
+              fontSize: "20px",
+              fontWeight: "600",
+              margin: 0,
+            }}
+          >
+            Configuración del Sistema
           </h4>
+          <p
+            style={{
+              color: theme.textColorMuted,
+              fontSize: "14px",
+              marginTop: "8px",
+              marginBottom: 0,
+            }}
+          >
+            Administra la configuración global de la aplicación
+          </p>
         </div>
 
-        <div className="card-body">
-          <div className="mb-4 d-flex align-items-center justify-content-between">
-            <label className="form-label mb-0" style={{ color: theme.textColor }}>
+        {error && (
+          <div
+            style={{
+              backgroundColor: "#ffebee",
+              color: "#c62828",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              marginBottom: "20px",
+              fontSize: "14px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {/* Modo del Sistema */}
+        <div
+          style={{
+            marginBottom: "24px",
+            padding: "20px",
+            backgroundColor: theme.background,
+            borderRadius: "12px",
+            boxShadow: theme.cardShadowIn,
+          }}
+        >
+          <div style={{ marginBottom: "12px" }}>
+            <label
+              style={{
+                color: theme.textColor,
+                fontSize: "15px",
+                fontWeight: "600",
+                display: "block",
+                marginBottom: "8px",
+              }}
+            >
               Modo del Sistema
             </label>
-            <div className="btn-group" role="group">
-              <button
-                type="button"
-                className={`btn ${config.system_mode ? "btn-secondary" : "btn-outline-secondary"}`}
-                disabled
-                style={{
-                  cursor: "not-allowed",
-                  opacity: 0.6,
-                }}
-              >
-                Education
-              </button>
-              <button
-                type="button"
-                className={`btn ${!config.system_mode ? "btn-secondary" : "btn-outline-secondary"}`}
-                disabled
-                style={{
-                  cursor: "not-allowed",
-                  opacity: 0.6,
-                }}
-              >
-                Business
-              </button>
+            <p
+              style={{
+                color: theme.textColorMuted,
+                fontSize: "13px",
+                marginBottom: "12px",
+              }}
+            >
+              {getSystemModeDescription(config.system_mode)}
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "inline-flex",
+              gap: "8px",
+              padding: "4px",
+              backgroundColor: theme.background,
+              borderRadius: "10px",
+              boxShadow: theme.smallButtonShadowIn,
+            }}
+          >
+            <div
+              style={{
+                padding: "8px 20px",
+                borderRadius: "8px",
+                backgroundColor: !config.system_mode ? theme.primaryColor : "transparent",
+                color: !config.system_mode ? "white" : theme.textColor,
+                fontWeight: "500",
+                fontSize: "14px",
+                boxShadow: !config.system_mode ? theme.smallButtonShadowOut : "none",
+              }}
+            >
+              Educativo
+            </div>
+            <div
+              style={{
+                padding: "8px 20px",
+                borderRadius: "8px",
+                backgroundColor: config.system_mode ? theme.primaryColor : "transparent",
+                color: config.system_mode ? "white" : theme.textColor,
+                fontWeight: "500",
+                fontSize: "14px",
+                boxShadow: config.system_mode ? theme.smallButtonShadowOut : "none",
+              }}
+            >
+              Empresarial
             </div>
           </div>
 
-          <div className="mb-4 d-flex align-items-center justify-content-between">
-            <label className="form-label mb-0" style={{ color: theme.textColor }}>
-              Formato de Fechas
-            </label>
-            <div
-              className="d-flex align-items-center justify-content-between p-2 border rounded"
-              onClick={() => handleEdit("date_format")}
-              style={{
-                backgroundColor: theme.buttonShadowOut,
-                cursor: "pointer",
-                minWidth: "250px",
-              }}
-            >
-              <span style={{ color: theme.textColor }}>
-                {dateFormatOptions.find((opt) => opt.value === config.date_format)?.label}
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "10px 12px",
+              backgroundColor: "#fff3cd",
+              color: "#856404",
+              borderRadius: "6px",
+              fontSize: "12px",
+            }}
+          >
+            <strong>⚠️ Nota:</strong> El modo del sistema no se puede cambiar después de la instalación inicial.
+          </div>
+        </div>
+
+        {/* Formato de Fechas */}
+        <div
+          style={{
+            marginBottom: "24px",
+            padding: "20px",
+            backgroundColor: theme.background,
+            borderRadius: "12px",
+            boxShadow: theme.cardShadowIn,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <label
+                style={{
+                  color: theme.textColor,
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  display: "block",
+                  marginBottom: "4px",
+                }}
+              >
+                Formato de Fechas
+              </label>
+              <p
+                style={{
+                  color: theme.textColorMuted,
+                  fontSize: "13px",
+                  margin: 0,
+                }}
+              >
+                Formato utilizado para mostrar fechas en el sistema
+              </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span
+                style={{
+                  color: theme.textColor,
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  padding: "8px 16px",
+                  backgroundColor: theme.background,
+                  borderRadius: "8px",
+                  boxShadow: theme.smallButtonShadowOut,
+                }}
+              >
+                {config.date_format || "DD/MM/YYYY"}
               </span>
-              <i className="bi bi-chevron-down" style={{ color: theme.textColor }}></i>
+              <button
+                onClick={() => handleEdit("date_format")}
+                disabled={saving}
+                style={{
+                  backgroundColor: theme.background,
+                  color: theme.textColor,
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  cursor: saving ? "not-allowed" : "pointer",
+                  boxShadow: theme.smallButtonShadowOut,
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  opacity: saving ? 0.5 : 1,
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (!saving) e.target.style.boxShadow = theme.smallButtonShadowIn;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.boxShadow = theme.smallButtonShadowOut;
+                }}
+              >
+                ✎ Editar
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="mb-4 d-flex align-items-center justify-content-between">
-            <label className="form-label mb-0" style={{ color: theme.textColor }}>
-              Moneda
-            </label>
-            <div
-              className="d-flex align-items-center justify-content-between p-2 border rounded"
-              onClick={() => handleEdit("currency")}
-              style={{
-                backgroundColor: theme.buttonShadowOut,
-                cursor: "pointer",
-                minWidth: "250px",
-              }}
-            >
-              <span style={{ color: theme.textColor }}>{config.currency}</span>
-              <i className="bi bi-chevron-down" style={{ color: theme.textColor }}></i>
+        {/* Moneda */}
+        <div
+          style={{
+            marginBottom: "24px",
+            padding: "20px",
+            backgroundColor: theme.background,
+            borderRadius: "12px",
+            boxShadow: theme.cardShadowIn,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <label
+                style={{
+                  color: theme.textColor,
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  display: "block",
+                  marginBottom: "4px",
+                }}
+              >
+                Moneda
+              </label>
+              <p
+                style={{
+                  color: theme.textColorMuted,
+                  fontSize: "13px",
+                  margin: 0,
+                }}
+              >
+                Moneda utilizada en transacciones y reportes
+              </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span
+                style={{
+                  color: theme.textColor,
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  padding: "8px 16px",
+                  backgroundColor: theme.background,
+                  borderRadius: "8px",
+                  boxShadow: theme.smallButtonShadowOut,
+                }}
+              >
+                {config.currency || "ARS"}
+              </span>
+              <button
+                onClick={() => handleEdit("currency")}
+                disabled={saving}
+                style={{
+                  backgroundColor: theme.background,
+                  color: theme.textColor,
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  cursor: saving ? "not-allowed" : "pointer",
+                  boxShadow: theme.smallButtonShadowOut,
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  opacity: saving ? 0.5 : 1,
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (!saving) e.target.style.boxShadow = theme.smallButtonShadowIn;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.boxShadow = theme.smallButtonShadowOut;
+                }}
+              >
+                ✎ Editar
+              </button>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Modal de edición */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div
-              className="modal-content"
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            padding: "20px",
+          }}
+          onClick={handleCancel}
+        >
+          <div
+            style={{
+              background: theme.background,
+              borderRadius: "16px",
+              padding: "24px",
+              maxWidth: "500px",
+              width: "100%",
+              boxShadow: theme.cardShadowOut,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h5
               style={{
-                backgroundColor: theme.cardBackground,
                 color: theme.textColor,
+                fontSize: "18px",
+                fontWeight: "600",
+                marginBottom: "20px",
               }}
             >
-              <div className="modal-header" style={{ borderColor: theme.borderColor }}>
-                <h5 className="modal-title">Editar {editField === "date_format" ? "Formato de Fecha" : "Moneda"}</h5>
-                <button type="button" className="btn-close" onClick={handleCancel} aria-label="Close"></button>
-              </div>
+              Editar {editField === "date_format" ? "Formato de Fecha" : "Moneda"}
+            </h5>
 
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">Seleccione el nuevo valor:</label>
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  display: "block",
+                  color: theme.textColor,
+                  fontSize: "14px",
+                  marginBottom: "8px",
+                  fontWeight: "500",
+                }}
+              >
+                Seleccione el nuevo valor:
+              </label>
 
-                  {editField === "date_format" ? (
-                    <select
-                      className="form-select"
-                      value={tempValue}
-                      onChange={(e) => setTempValue(e.target.value)}
-                      style={{
-                        backgroundColor: theme.inputBackground,
-                        color: theme.textColor,
-                        borderColor: theme.borderColor,
-                      }}
-                    >
-                      {dateFormatOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <select
-                      className="form-select"
-                      value={tempValue}
-                      onChange={(e) => setTempValue(e.target.value)}
-                      style={{
-                        backgroundColor: theme.inputBackground,
-                        color: theme.textColor,
-                        borderColor: theme.borderColor,
-                      }}
-                    >
-                      {currencyOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </div>
+              <select
+                value={tempValue}
+                onChange={(e) => setTempValue(e.target.value)}
+                disabled={saving}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: theme.background,
+                  color: theme.textColor,
+                  boxShadow: `inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.1)`,
+                  fontSize: "14px",
+                  cursor: saving ? "not-allowed" : "pointer",
+                }}
+              >
+                {editField === "date_format"
+                  ? dateFormatOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))
+                  : currencyOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+              </select>
+            </div>
 
-                <div className="alert alert-warning" role="alert">
-                  <small>
-                    <strong>POC:</strong> Este cambio es temporal y no se guardará permanentemente.
-                  </small>
-                </div>
-              </div>
-
-              <div className="modal-footer" style={{ borderColor: theme.borderColor }}>
-                <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                  Cancelar
-                </button>
-                <button type="button" className="btn btn-primary" onClick={handleSave}>
-                  Guardar
-                </button>
-              </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "12px",
+                justifyContent: "flex-end",
+              }}
+            >
+              <button
+                onClick={handleCancel}
+                disabled={saving}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: theme.background,
+                  color: theme.textColor,
+                  boxShadow: theme.cardShadowOut,
+                  cursor: saving ? "not-allowed" : "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  opacity: saving ? 0.5 : 1,
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: "#4CAF50",
+                  color: "#fff",
+                  boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                  cursor: saving ? "not-allowed" : "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  opacity: saving ? 0.5 : 1,
+                }}
+              >
+                {saving ? "Guardando..." : "Guardar"}
+              </button>
             </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default Configuracion
+export default Configuracion;

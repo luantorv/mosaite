@@ -477,7 +477,7 @@ function ChatLLM() {
           style={{
             backgroundColor: theme.background,
             boxShadow: theme.cardShadowIn,
-            borderRadius: "0 0 16px 16px",
+            borderRadius: "16px",
             padding: "16px",
             flexShrink: 0,
           }}
