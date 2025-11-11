@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer, util
 
 # Crear variable con la ruta del modelo grande
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "core", "gemma-3n-E4B-it-Q4_K_M.gguf")
+MODEL_PATH = os.path.join(BASE_DIR, "core", "Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf")
 
 # Crear variable con la ruta al JSON de ejemplos
 JSON_PATH = os.path.join(BASE_DIR, "examples.json")

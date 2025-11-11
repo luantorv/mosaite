@@ -44,7 +44,7 @@ class LLMClient:
                 print(f"Error al cargar modelo LLM: {e}")
                 raise
     
-    def _truncate_prompt(self, prompt: str, max_length: int = 1500) -> str:
+    def _truncate_prompt(self, prompt: str, max_length: int = 2000) -> str:
         """Trunca el prompt si es muy largo para evitar problemas"""
         if len(prompt) > max_length:
             print(f"Prompt truncado de {len(prompt)} a {max_length} caracteres")

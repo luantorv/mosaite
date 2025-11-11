@@ -10,6 +10,8 @@ Mosaite está diseñado para su uso tanto individual como en entornos educativos
 
 <img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto>
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/luantorv/mosaite)
+
 ---
 
 >[!IMPORTANT]
@@ -197,7 +199,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - llama-cpp-python (0.3.16)
 - sentence-transformers (5.1.0)
 - faiss-cpu (1.12.0)
-- Gemma-3n-E4B-it-Q4_K_M
+- Meta Llama 3.1 8B
 
 ### FrontEnd:
 
@@ -223,7 +225,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
 - Hay un POC para experimentar el flujo de uso del proyecto.
 - Hay un Ayudante basado en LLM/RAG para consultar información contable.
-- Ya hay algo del frontend hecho (No terminado).
+- El frontend está hecho (Falta terminar la integración con el backend).
 - El login funciona y hay manejo de usuarios mediante el componente UsuariosLista.js.
 
 ---
@@ -243,12 +245,11 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 
 ## Por hacer
 
-- Terminar el backend, hacer el testing y realizar su documentación _(en progreso)_.
-
+- Terminar el backend _(en progreso)_.
+- Hacer el testing _(en progreso)_.
+- Realizar la documentación _(en progreso)_
 - Terminar el frontend _(en progreso)_.
-
 - Complementar la integración de back y front _(en progreso)_.
-
 - Terminar el manual de usuario.
 
 ---
@@ -259,6 +260,23 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 mosaite/
 |   backend/
 |   |   apps/
+|   |   |   accounts/
+|   |   |   |   data/
+|   |   |   |   |   __init__.py
+|   |   |   |   |   plan_cuentas_inicial.py
+|   |   |   |   management/
+|   |   |   |   |   commands/
+|   |   |   |   |   |   __init__.py
+|   |   |   |   |   |   init_plan_cuentas.py
+|   |   |   |   |   __init__.py
+|   |   |   |   __init__.py
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   serializers.py
+|   |   |   |   tests.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
 |   |   |   chat/
 |   |   |   |   management/
 |   |   |   |   |   commands/
@@ -266,6 +284,11 @@ mosaite/
 |   |   |   |   |   |   init_chat.py
 |   |   |   |   |   |   rebuild_chat_index.py
 |   |   |   |   |   __init__.py
+|   |   |   |   tests/
+|   |   |   |   |   test_chat_models.py
+|   |   |   |   |   test_chat_permissions.py
+|   |   |   |   |   test_chat_serializers.py
+|   |   |   |   |   test_chat_views.py
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
 |   |   |   |   apps.py
@@ -273,26 +296,41 @@ mosaite/
 |   |   |   |   permissions.py
 |   |   |   |   serializers.py
 |   |   |   |   tasks.py
-|   |   |   |   tests.py
 |   |   |   |   urls.py
 |   |   |   |   views.py
 |   |   |   config/
+|   |   |   |   tests/
+|   |   |   |   |   test_config_middleware.py
+|   |   |   |   |   test_config_models.py
+|   |   |   |   |   test_config_serializers.py
+|   |   |   |   |   test_config_views.py
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
 |   |   |   |   apps.py
 |   |   |   |   middleware.py
 |   |   |   |   models.py
 |   |   |   |   serializers.py
-|   |   |   |   tests.py
 |   |   |   |   urls.py
 |   |   |   |   views.py
-|   |   |   users/
+|   |   |   trans/
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
 |   |   |   |   apps.py
 |   |   |   |   models.py
 |   |   |   |   permissions.py
-|   |   |   |   tests.py
+|   |   |   |   serializers.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   users/
+|   |   |   |   tests/
+|   |   |   |   |   test_users_models.py
+|   |   |   |   |   test_users_serializers.py
+|   |   |   |   |   test_users_views.py
+|   |   |   |   __init__.py
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   permissions.py
 |   |   |   |   urls.py
 |   |   |   |   utils.py
 |   |   |   |   views.py
@@ -316,7 +354,7 @@ mosaite/
 |   |   |   |   vector_store.py
 |   |   |   consultorIA/
 |   |   |   |   core/
-|   |   |   |   |   gemma-3n-E4B-it-Q4_K_M.gguf
+|   |   |   |   |   Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
 |   |   |   |   __init__.py
 |   |   |   |   example.py
 |   |   |   |   examples.json
@@ -369,6 +407,7 @@ mosaite/
 |   |   |   |   |   AuthContext.js
 |   |   |   |   |   ThemeContext.js
 |   |   |   |   services/
+|   |   |   |   |   AccountService.js
 |   |   |   |   |   api.js
 |   |   |   |   |   AuthService.js
 |   |   |   |   |   ChatService.js

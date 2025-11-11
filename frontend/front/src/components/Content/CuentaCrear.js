@@ -1,17 +1,73 @@
-import { useState } from "react"
-import { useTheme } from "../../context/ThemeContext"
-import { Modal, Button, Form } from "react-bootstrap"
+import { useState, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
+import { Modal, Button, Form } from "react-bootstrap";
+import accountService from "../../services/AccountService";
 
-function CuentaCrear({ plan }) {
-  const { theme } = useTheme()
-  const [planLocal, setPlanLocal] = useState(plan)
-  const [codigo, setCodigo] = useState("")
-  const [nombre, setNombre] = useState("")
-  const [nature, setNature] = useState(0)
-  const [state, setState] = useState(1)
-  const [showInactive, setShowInactive] = useState(false)
-  const [showModal, setShowModal] = useState(false)
-  const [error, setError] = useState("")
+function CuentaCrear() {
+  const { theme } = useTheme();
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [codigo, setCodigo] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [nature, setNature] = useState(true);
+  const [state, setState] = useState(true);
+  const [showInactive, setShowInactive] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [error, setError] = useState("");
+
+  // Cargar cuentas al montar
+  useEffect(() => {
+    loadAccounts();
+  }, []);
+
+  const loadAccounts = async () => {
+    setLoading(true);
+    const result = await accountService.getAccounts();
+    
+    if (result.success) {
+      setAccounts(result.accounts);
+    } else {
+      setError(result.error);
+    }
+    
+    setLoading(false);
+  };
+
+  // Abrir modal de detalles
+  const handleAccountClick = (cuenta) => {
+    setSelectedAccount(cuenta);
+    setShowDetailModal(true);
+  };
+
+  // Cerrar modal de detalles
+  const handleCloseDetailModal = () => {
+    setShowDetailModal(false);
+    setSelectedAccount(null);
+  };
+
+  // Toggle estado de cuenta
+  const handleToggleStatus = async () => {
+    if (!selectedAccount) return;
+
+    setSaving(true);
+    const result = await accountService.toggleAccountStatus(
+      selectedAccount.acc_id,
+      selectedAccount.status
+    );
+
+    if (result.success) {
+      await loadAccounts();
+      setShowDetailModal(false);
+      setSelectedAccount(null);
+    } else {
+      alert(result.error || "Error al cambiar estado de la cuenta");
+    }
+
+    setSaving(false);
+  };
 
   // Función para obtener el nombre de la partida
   const getNombrePartida = (digito) => {
@@ -21,9 +77,9 @@ function CuentaCrear({ plan }) {
       3: "Patrimonio Neto",
       4: "Ingresos",
       5: "Egresos",
-    }
-    return partidas[digito] || digito
-  }
+    };
+    return partidas[digito] || digito;
+  };
 
   // Función para obtener el nombre del grupo
   const getNombreGrupo = (partida, grupo) => {
@@ -40,9 +96,9 @@ function CuentaCrear({ plan }) {
       53: "Gastos de Administración",
       54: "Gastos Financieros",
       55: "Otros Egresos",
-    }
-    return grupos[`${partida}${grupo}`] || `${partida}${grupo}`
-  }
+    };
+    return grupos[`${partida}${grupo}`] || `${partida}${grupo}`;
+  };
 
   // Función para obtener el nombre del rubro
   const getNombreRubro = (partida, grupo, rubro) => {
@@ -82,109 +138,146 @@ function CuentaCrear({ plan }) {
       534: "Alquileres y Arrendamientos",
       535: "Impuestos y Tasas",
       536: "Seguros",
-      537: "Depreiaciones y Amortizaciones",
+      537: "Depreciaciones y Amortizaciones",
       538: "Gastos Generales",
       539: "Otros Gastos Administrativos",
       541: "Resultados Financieros",
       551: "Egresos Extraordinarios",
-    }
-    return rubros[`${partida}${grupo}${rubro}`] || `${partida}${grupo}${rubro}`
-  }
+    };
+    return rubros[`${partida}${grupo}${rubro}`] || `${partida}${grupo}${rubro}`;
+  };
 
   // Organizar el plan en estructura jerárquica
   const organizarPlan = () => {
-    const estructura = {}
+    const estructura = {};
 
-    const cuentasFiltradas = showInactive ? planLocal : planLocal.filter(([, , , estado]) => estado === 1)
+    const cuentasFiltradas = showInactive 
+      ? accounts 
+      : accounts.filter(cuenta => cuenta.status);
 
-    cuentasFiltradas.forEach(([codigo, nombre, naturaleza, estado]) => {
-      const codigoStr = codigo.toString().padStart(5, "0")
-      const partida = codigoStr[0]
-      const grupo = codigoStr[1]
-      const rubro = codigoStr[2]
+    cuentasFiltradas.forEach((cuenta) => {
+      const codigoStr = cuenta.code.padStart(5, "0");
+      const partida = codigoStr[0];
+      const grupo = codigoStr[1];
+      const rubro = codigoStr[2];
 
       if (!estructura[partida]) {
-        estructura[partida] = {}
+        estructura[partida] = {};
       }
       if (!estructura[partida][grupo]) {
-        estructura[partida][grupo] = {}
+        estructura[partida][grupo] = {};
       }
       if (!estructura[partida][grupo][rubro]) {
-        estructura[partida][grupo][rubro] = []
+        estructura[partida][grupo][rubro] = [];
       }
 
-      estructura[partida][grupo][rubro].push({
-        codigo,
-        nombre,
-        nature: naturaleza,
-        state: estado,
-      })
-    })
+      estructura[partida][grupo][rubro].push(cuenta);
+    });
 
-    return estructura
-  }
+    return estructura;
+  };
 
-  const estructuraJerarquica = organizarPlan()
+  const estructuraJerarquica = organizarPlan();
 
   // Validar código
   const validarCodigo = (cod) => {
     if (!/^\d{5}$/.test(cod)) {
-      return "El código debe tener exactamente 5 dígitos"
+      return "El código debe tener exactamente 5 dígitos";
     }
 
     if (cod.endsWith("000") || (cod.endsWith("00") && !cod.endsWith("000"))) {
-      return "No se pueden crear partidas, grupos o rubros. Solo cuentas específicas"
+      return "No se pueden crear partidas, grupos o rubros. Solo cuentas específicas";
     }
 
-    const existe = planLocal.some(([codigoExistente]) => codigoExistente.toString() === cod)
+    const existe = accounts.some((cuenta) => cuenta.code === cod);
     if (existe) {
-      return "Este código ya existe en el plan de cuentas"
+      return "Este código ya existe en el plan de cuentas";
     }
 
-    return null
-  }
+    return null;
+  };
 
   // Manejar creación de cuenta
   const handleCrear = () => {
-    setError("")
+    setError("");
 
     if (!codigo || !nombre) {
-      setError("Todos los campos son obligatorios")
-      return
+      setError("Todos los campos son obligatorios");
+      return;
     }
 
-    const errorValidacion = validarCodigo(codigo)
+    const errorValidacion = validarCodigo(codigo);
     if (errorValidacion) {
-      setError(errorValidacion)
-      return
+      setError(errorValidacion);
+      return;
     }
 
-    setShowModal(true)
-  }
+    setShowCreateModal(true);
+  };
 
   // Confirmar creación
-  const confirmarCreacion = () => {
-    console.log("Cuenta creada:", { codigo, nombre, nature, state })
-    const nuevaCuenta = [Number.parseInt(codigo), nombre, nature, state]
-    setPlanLocal([...planLocal, nuevaCuenta])
+  const confirmarCreacion = async () => {
+    setSaving(true);
+    setError("");
 
-    setCodigo("")
-    setNombre("")
-    setNature(0)
-    setState(1)
-    setShowModal(false)
-    setError("")
+    const accountData = {
+      code: codigo,
+      name: nombre,
+      nature: nature,
+      status: state,
+    };
 
-    alert(
-      `Cuenta creada exitosamente: ${codigo} - ${nombre} (${nature === 0 ? "Deudor" : "Acreedor"}, ${state === 1 ? "Activa" : "Inactiva"})`,
-    )
+    const result = await accountService.createAccount(accountData);
+
+    if (result.success) {
+      await loadAccounts();
+      setCodigo("");
+      setNombre("");
+      setNature(true);
+      setState(true);
+      setShowCreateModal(false);
+      alert(`Cuenta creada exitosamente: ${codigo} - ${nombre}`);
+    } else {
+      if (typeof result.error === 'object') {
+        const errorMessages = Object.entries(result.error)
+          .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+          .join('\n');
+        setError(errorMessages);
+      } else {
+        setError(result.error || "Error al crear cuenta");
+      }
+      setShowCreateModal(false);
+    }
+
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "400px",
+        color: theme.textColor,
+      }}>
+        <div className="text-center">
+          <div className="spinner-border mb-3" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p>Cargando plan de cuentas...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "20px" }}>
       {/* Título y Switch */}
       <div style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h4 style={{ color: theme.textColor, fontWeight: "600", margin: 0 }}>Plan de Cuentas</h4>
+        <h4 style={{ color: theme.textColor, fontWeight: "600", margin: 0 }}>
+          Plan de Cuentas ({accounts.length} cuentas)
+        </h4>
 
         <div
           style={{
@@ -197,7 +290,9 @@ function CuentaCrear({ plan }) {
             boxShadow: theme.cardShadowOut,
           }}
         >
-          <span style={{ color: theme.textColor, fontSize: "14px", fontWeight: "500" }}>Mostrar cuentas inactivas</span>
+          <span style={{ color: theme.textColor, fontSize: "14px", fontWeight: "500" }}>
+            Mostrar cuentas inactivas
+          </span>
           <Form.Check
             type="switch"
             id="show-inactive-switch"
@@ -219,6 +314,7 @@ function CuentaCrear({ plan }) {
           padding: "20px",
           overflowY: "auto",
           marginBottom: "20px",
+          //boxShadow: theme.cardShadowOut,
         }}
       >
         <div
@@ -232,8 +328,12 @@ function CuentaCrear({ plan }) {
           }}
         >
           <div style={{ color: theme.textColor, fontWeight: "700", fontSize: "15px" }}>Cuenta</div>
-          <div style={{ color: theme.textColor, fontWeight: "700", fontSize: "15px", textAlign: "center" }}>Debe</div>
-          <div style={{ color: theme.textColor, fontWeight: "700", fontSize: "15px", textAlign: "center" }}>Haber</div>
+          <div style={{ color: theme.textColor, fontWeight: "700", fontSize: "15px", textAlign: "center" }}>
+            Debe
+          </div>
+          <div style={{ color: theme.textColor, fontWeight: "700", fontSize: "15px", textAlign: "center" }}>
+            Haber
+          </div>
         </div>
 
         {Object.entries(estructuraJerarquica).map(([partida, grupos]) => (
@@ -278,8 +378,7 @@ function CuentaCrear({ plan }) {
                       fontSize: "15px",
                     }}
                   >
-                    └─ {partida}
-                    {grupo}000 {getNombreGrupo(partida, grupo)}
+                    └─ {partida}{grupo}000 {getNombreGrupo(partida, grupo)}
                   </div>
                   <div></div>
                   <div></div>
@@ -303,17 +402,16 @@ function CuentaCrear({ plan }) {
                           fontSize: "14px",
                         }}
                       >
-                        └─ {partida}
-                        {grupo}
-                        {rubro}00 {getNombreRubro(partida, grupo, rubro)}
+                        └─ {partida}{grupo}{rubro}00 {getNombreRubro(partida, grupo, rubro)}
                       </div>
                       <div></div>
                       <div></div>
                     </div>
 
-                    {cuentas.map(({ codigo, nombre, nature, state }) => (
+                    {cuentas.map((cuenta) => (
                       <div
-                        key={codigo}
+                        key={cuenta.acc_id}
+                        onClick={() => handleAccountClick(cuenta)}
                         style={{
                           display: "grid",
                           gridTemplateColumns: "1fr 80px 80px",
@@ -322,7 +420,15 @@ function CuentaCrear({ plan }) {
                           marginBottom: "2px",
                           padding: "4px 8px",
                           borderRadius: "4px",
-                          opacity: state === 0 ? 0.5 : 1,
+                          opacity: !cuenta.status ? 0.5 : 1,
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = theme.hoverBackground || "rgba(0,0,0,0.05)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent";
                         }}
                       >
                         <div
@@ -331,8 +437,8 @@ function CuentaCrear({ plan }) {
                             fontSize: "13px",
                           }}
                         >
-                          └─ {codigo.toString().padStart(5, "0")} {nombre}
-                          {state === 0 && (
+                          └─ {cuenta.code.padStart(5, "0")} {cuenta.name}
+                          {!cuenta.status && (
                             <span
                               style={{
                                 marginLeft: "8px",
@@ -351,10 +457,10 @@ function CuentaCrear({ plan }) {
                             fontSize: "20px",
                             fontWeight: "bold",
                             textShadow: "0 0 3px currentColor, 0 0 1px currentColor",
-                            color: nature === 0 ? "#52c41a" : "#ff4d4f",
+                            color: cuenta.nature ? "#52c41a" : "#ff4d4f",
                           }}
                         >
-                          {nature === 0 ? "↑" : "↓"}
+                          {cuenta.nature ? "↑" : "↓"}
                         </div>
                         <div
                           style={{
@@ -362,10 +468,10 @@ function CuentaCrear({ plan }) {
                             fontSize: "20px",
                             fontWeight: "bold",
                             textShadow: "0 0 3px currentColor, 0 0 1px currentColor",
-                            color: nature === 1 ? "#52c41a" : "#ff4d4f",
+                            color: !cuenta.nature ? "#52c41a" : "#ff4d4f",
                           }}
                         >
-                          {nature === 1 ? "↑" : "↓"}
+                          {!cuenta.nature ? "↑" : "↓"}
                         </div>
                       </div>
                     ))}
@@ -409,6 +515,7 @@ function CuentaCrear({ plan }) {
               onChange={(e) => setCodigo(e.target.value)}
               placeholder="11101"
               maxLength="5"
+              disabled={saving}
               style={{
                 background: theme.background,
                 color: theme.textColor,
@@ -440,6 +547,7 @@ function CuentaCrear({ plan }) {
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               placeholder="Nombre de la cuenta"
+              disabled={saving}
               style={{
                 background: theme.background,
                 color: theme.textColor,
@@ -467,7 +575,8 @@ function CuentaCrear({ plan }) {
               id="nature"
               className="form-select"
               value={nature}
-              onChange={(e) => setNature(Number.parseInt(e.target.value))}
+              onChange={(e) => setNature(e.target.value === 'true')}
+              disabled={saving}
               style={{
                 background: theme.background,
                 color: theme.textColor,
@@ -476,8 +585,8 @@ function CuentaCrear({ plan }) {
                 padding: "10px",
               }}
             >
-              <option value={0}>Deudor</option>
-              <option value={1}>Acreedor</option>
+              <option value={true}>Deudora</option>
+              <option value={false}>Acreedora</option>
             </select>
           </div>
 
@@ -498,7 +607,8 @@ function CuentaCrear({ plan }) {
               id="state"
               className="form-select"
               value={state}
-              onChange={(e) => setState(Number.parseInt(e.target.value))}
+              onChange={(e) => setState(e.target.value === 'true')}
+              disabled={saving}
               style={{
                 background: theme.background,
                 color: theme.textColor,
@@ -507,8 +617,8 @@ function CuentaCrear({ plan }) {
                 padding: "10px",
               }}
             >
-              <option value={1}>Activa</option>
-              <option value={0}>Inactiva</option>
+              <option value={true}>Activa</option>
+              <option value={false}>Inactiva</option>
             </select>
           </div>
 
@@ -517,6 +627,7 @@ function CuentaCrear({ plan }) {
             <button
               className="btn w-100"
               onClick={handleCrear}
+              disabled={saving}
               style={{
                 background: theme.primaryColor,
                 color: "white",
@@ -526,17 +637,21 @@ function CuentaCrear({ plan }) {
                 fontWeight: "600",
                 boxShadow: theme.smallButtonShadowOut,
                 transition: "all 0.3s ease",
+                opacity: saving ? 0.5 : 1,
+                cursor: saving ? 'not-allowed' : 'pointer',
               }}
               onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-2px)"
-                e.target.style.boxShadow = "0 6px 12px rgba(0,0,0,0.15)"
+                if (!saving) {
+                  e.target.style.transform = "translateY(-2px)";
+                  e.target.style.boxShadow = "0 6px 12px rgba(0,0,0,0.15)";
+                }
               }}
               onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)"
-                e.target.style.boxShadow = theme.smallButtonShadowOut
+                e.target.style.transform = "translateY(0)";
+                e.target.style.boxShadow = theme.smallButtonShadowOut;
               }}
             >
-              Crear
+              {saving ? 'Creando...' : 'Crear Cuenta'}
             </button>
           </div>
         </div>
@@ -552,6 +667,7 @@ function CuentaCrear({ plan }) {
               borderRadius: "8px",
               color: "#ff4d4f",
               fontSize: "14px",
+              whiteSpace: "pre-line",
             }}
           >
             {error}
@@ -559,23 +675,22 @@ function CuentaCrear({ plan }) {
         )}
       </div>
 
-      {/* Modal de confirmación */}
+      {/* Modal de creación */}
       <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
+        show={showCreateModal}
+        onHide={() => !saving && setShowCreateModal(false)}
         centered
-        style={{
-          backdropFilter: "blur(5px)",
-        }}
       >
         <Modal.Header
-          closeButton
+          closeButton={!saving}
           style={{
             background: theme.background,
             borderBottom: `1px solid ${theme.textColorSecondary}20`,
           }}
         >
-          <Modal.Title style={{ color: theme.textColor, fontSize: "18px" }}>Confirmar Creación</Modal.Title>
+          <Modal.Title style={{ color: theme.textColor, fontSize: "18px" }}>
+            Confirmar Creación
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -584,9 +699,8 @@ function CuentaCrear({ plan }) {
           }}
         >
           <p style={{ marginBottom: "15px" }}>
-            <strong>Este cambio es permanente. Corroborá la información antes de confirmar.</strong>
+            <strong>Estás por crear la siguiente cuenta:</strong>
           </p>
-          <p style={{ marginBottom: "5px" }}>Estás por crear la siguiente cuenta:</p>
           <div
             style={{
               background: theme.background,
@@ -596,17 +710,17 @@ function CuentaCrear({ plan }) {
               marginTop: "10px",
             }}
           >
-            <p style={{ margin: 0 }}>
+            <p style={{ margin: "4px 0" }}>
               <strong>Código:</strong> {codigo}
             </p>
-            <p style={{ margin: 0 }}>
+            <p style={{ margin: "4px 0" }}>
               <strong>Nombre:</strong> {nombre}
             </p>
-            <p style={{ margin: 0 }}>
-              <strong>Naturaleza:</strong> {nature === 0 ? "Deudor" : "Acreedor"}
+            <p style={{ margin: "4px 0" }}>
+              <strong>Naturaleza:</strong> {nature ? "Deudora" : "Acreedora"}
             </p>
-            <p style={{ margin: 0 }}>
-              <strong>Estado:</strong> {state === 1 ? "Activa" : "Inactiva"}
+            <p style={{ margin: "4px 0" }}>
+              <strong>Estado:</strong> {state ? "Activa" : "Inactiva"}
             </p>
           </div>
         </Modal.Body>
@@ -618,12 +732,14 @@ function CuentaCrear({ plan }) {
         >
           <Button
             variant="secondary"
-            onClick={() => setShowModal(false)}
+            onClick={() => setShowCreateModal(false)}
+            disabled={saving}
             style={{
               background: theme.background,
               color: theme.textColor,
               border: `1px solid ${theme.textColorSecondary}40`,
               boxShadow: theme.smallButtonShadowOut,
+              opacity: saving ? 0.5 : 1,
             }}
           >
             Cancelar
@@ -631,18 +747,143 @@ function CuentaCrear({ plan }) {
           <Button
             variant="primary"
             onClick={confirmarCreacion}
+            disabled={saving}
             style={{
               background: theme.primaryColor,
               border: "none",
               boxShadow: theme.smallButtonShadowOut,
+              opacity: saving ? 0.5 : 1,
             }}
           >
-            Confirmar
+            {saving ? 'Guardando...' : 'Confirmar'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de detalles de cuenta */}
+      <Modal
+        show={showDetailModal}
+        onHide={handleCloseDetailModal}
+        centered
+      >
+        <Modal.Header
+          closeButton={!saving}
+          style={{
+            background: theme.background,
+            borderBottom: `1px solid ${theme.textColorSecondary}20`,
+          }}
+        >
+          <Modal.Title style={{ color: theme.textColor, fontSize: "18px" }}>
+            Detalles de la Cuenta
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{
+            background: theme.background,
+            color: theme.textColor,
+          }}
+        >
+          {selectedAccount && (
+            <div
+              style={{
+                background: theme.background,
+                padding: "15px",
+                borderRadius: "8px",
+                //boxShadow: theme.cardShadowIn,
+              }}
+            >
+              <div style={{ marginBottom: "12px" }}>
+                <strong style={{ color: theme.textColor }}>Código:</strong>
+                <div style={{ fontSize: "16px", marginTop: "4px" }}>
+                  {selectedAccount.code.padStart(5, "0")}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "12px" }}>
+                <strong style={{ color: theme.textColor }}>Nombre:</strong>
+                <div style={{ fontSize: "16px", marginTop: "4px" }}>
+                  {selectedAccount.name}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "12px" }}>
+                <strong style={{ color: theme.textColor }}>Naturaleza:</strong>
+                <div style={{ fontSize: "16px", marginTop: "4px" }}>
+                  {selectedAccount.nature ? "Deudora" : "Acreedora"}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "12px" }}>
+                <strong style={{ color: theme.textColor }}>Saldo:</strong>
+                <div style={{ fontSize: "16px", marginTop: "4px" }}>
+                  ${selectedAccount.saldo.toLocaleString()}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "12px" }}>
+                <strong style={{ color: theme.textColor }}>Estado:</strong>
+                <div style={{ fontSize: "16px", marginTop: "4px" }}>
+                  <span
+                    style={{
+                      color: selectedAccount.status ? "#52c41a" : "#ff4d4f",
+                      fontWeight: "600",
+                    }}
+                  >
+                    {selectedAccount.status ? "Activa" : "Inactiva"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer
+          style={{
+            background: theme.background,
+            borderTop: `1px solid ${theme.textColorSecondary}20`,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            variant="warning"
+            onClick={handleToggleStatus}
+            disabled={saving}
+            style={{
+              background: selectedAccount?.status ? "#ff4d4f" : "#52c41a",
+              border: "none",
+              color: "white",
+              boxShadow: theme.smallButtonShadowOut,
+              opacity: saving ? 0.5 : 1,
+            }}
+          >
+            {saving ? (
+              <span>
+                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                Procesando...
+              </span>
+            ) : (
+              selectedAccount?.status ? "Inactivar Cuenta" : "Activar Cuenta"
+            )}
+          </Button>
+
+          <Button
+            variant="secondary"
+            onClick={handleCloseDetailModal}
+            disabled={saving}
+            style={{
+              background: theme.background,
+              color: theme.textColor,
+              border: `1px solid ${theme.textColorSecondary}40`,
+              boxShadow: theme.smallButtonShadowOut,
+              opacity: saving ? 0.5 : 1,
+            }}
+          >
+            Cerrar
           </Button>
         </Modal.Footer>
       </Modal>
     </div>
-  )
+  );
 }
 
-export default CuentaCrear
+export default CuentaCrear;

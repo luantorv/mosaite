@@ -24,8 +24,8 @@ REQUIRED_VERSIONS = {
 }
 
 # Configuración de descarga del modelo LLM
-LLM_DOWNLOAD_URL = "https://huggingface.co/unsloth/gemma-3n-E4B-it-GGUF/resolve/main/gemma-3n-E4B-it-Q4_K_M.gguf"
-LLM_FILE_NAME = "gemma-3n-E4B-it-Q4_K_M.gguf"
+LLM_DOWNLOAD_URL = "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
+LLM_FILE_NAME = "Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
 LLM_DEST_DIR = BACKEND_DIR / "services" / "consultorIA" / "core"
 LLM_DEST_PATH = LLM_DEST_DIR / LLM_FILE_NAME
 

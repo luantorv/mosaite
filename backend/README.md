@@ -390,9 +390,9 @@ Sistema de asistente conversacional con inteligencia artificial para consultas c
 ### Arquitectura del Sistema
 
 **Componentes:**
-- **Embedder**: sentence-transformers (paraphrase-multilingual-MiniLM-L12-v2)
+- **Embedder**: sentence-transformers (all-MiniLM-L6-v2)
 - **Vector Store**: FAISS (Facebook AI Similarity Search)
-- **LLM**: Gemma 3 (local, usando llama-cpp-python)
+- **LLM**: Llama 3 (local, usando llama-cpp-python)
 - **Documentos**: Archivos .md y .txt en `services/chat/data/`
 
 ### Proceso de RAG
@@ -585,7 +585,7 @@ EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 EMBEDDING_DIMENSION = 384
 
 # Modelo LLM local
-LLM_MODEL_PATH = "services/consultorIA/core/gemma-3n-E4B-it-Q4_K_M.gguf"
+LLM_MODEL_PATH = "services/consultorIA/core/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
 LLM_CONTEXT_SIZE = 2048
 LLM_MAX_TOKENS = 512
 LLM_TEMPERATURE = 0.7

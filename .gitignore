@@ -1,5 +1,5 @@
 Notas/
-backend/*/*/core/gemma-3n-E4B-it-Q4_K_M.gguf
+backend/*/*/core/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
 backend/db.sqlite3
 .env
 frontend/front/.env
@@ -9,6 +9,8 @@ backend/*/*/*/__pycache__
 backend/*/*/*/*/__pycache__
 backend/apps/*/migrations/
 backend/services/chat/vector_store/
+backend/.pytest_cache
+backend/.coverage
 
 */__pycache__
 manual/*.out

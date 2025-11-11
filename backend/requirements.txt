@@ -19,6 +19,7 @@ fsspec==2025.9.0
 hf-xet==1.1.10
 huggingface-hub==0.35.3
 idna==3.10
+iniconfig==2.3.0
 Jinja2==3.1.6
 joblib==1.5.2
 linkify-it-py==2.0.3
@@ -50,9 +51,12 @@ ordered-set==4.1.0
 packaging==25.0
 pillow==11.3.0
 platformdirs==4.5.0
+pluggy==1.6.0
 propcache==0.4.1
 Pygments==2.19.2
 PyJWT==2.10.1
+pytest==9.0.0
+pytest-django==4.11.1
 PyYAML==6.0.3
 regex==2025.9.18
 requests==2.32.5
