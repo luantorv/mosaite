@@ -53,21 +53,20 @@ class LLMClient:
     
     def generate(
         self,
-        prompt: str,
+        user_prompt: str,
+        system_prompt: str,
         max_tokens: int = LLM_MAX_TOKENS,
         temperature: float = LLM_TEMPERATURE,
         top_p: float = LLM_TOP_P,
         stream: bool = False
     ) -> str:
         """
-        Genera una respuesta del modelo
+        Genera una respuesta del modelo usando la API de Chat.
         
         Args:
-            prompt: El prompt a enviar al modelo
-            max_tokens: Número máximo de tokens a generar
-            temperature: Temperatura para la generación
-            top_p: Top-p sampling
-            stream: Si True, retorna un generador para streaming
+            user_prompt: El prompt del usuario (contexto + pregunta)
+            system_prompt: Las instrucciones del sistema (reglas)
+            ...
         
         Returns:
             La respuesta generada o un generador
@@ -77,24 +76,26 @@ class LLMClient:
         
         self._stop_generation = False
         
-        # Truncar prompt si es muy largo
-        prompt = self._truncate_prompt(prompt)
+        # Construir el formato de mensajes que espera Llama 3.1
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
         
         try:
             if stream:
-                return self._generate_stream(prompt, max_tokens, temperature, top_p)
+                return self._generate_stream(messages, max_tokens, temperature, top_p)
             else:
-                output = self.model(
-                    prompt,
+                output = self.model.create_chat_completion(
+                    messages=messages,
                     max_tokens=max_tokens,
                     temperature=temperature,
                     top_p=top_p,
-                    stop=["Usuario:", "Pregunta:", "\n\n\n"],
-                    echo=False,
-                    repeat_penalty=1.1,  # Evitar repeticiones
+                    stop=["<|eot_id|>"], # <|eot_id|> es el token de parada oficial de Llama 3
+                    repeat_penalty=1.1,
                 )
                 
-                response = output['choices'][0]['text'].strip()
+                response = output['choices'][0]['message']['content'].strip()
                 
                 # Validar que la respuesta no esté vacía
                 if not response or len(response) < 10:
@@ -104,25 +105,23 @@ class LLMClient:
                 
         except Exception as e:
             print(f"Error en generación del LLM: {e}")
-            # Retornar un mensaje de error en lugar de propagar la excepción
             return f"Error al generar respuesta: {str(e)}"
-    
+
     def _generate_stream(
         self,
-        prompt: str,
+        messages: list,
         max_tokens: int,
         temperature: float,
         top_p: float
     ) -> Generator[str, None, None]:
-        """Genera respuesta en modo streaming"""
+        """Genera respuesta en modo streaming usando API de Chat"""
         try:
-            stream = self.model(
-                prompt,
+            stream = self.model.create_chat_completion(
+                messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
                 top_p=top_p,
-                stop=["Usuario:", "Pregunta:", "\n\n\n"],
-                echo=False,
+                stop=["<|eot_id|>"],
                 stream=True,
                 repeat_penalty=1.1,
             )
@@ -131,9 +130,11 @@ class LLMClient:
                 if self._stop_generation:
                     break
                 
-                text = output['choices'][0]['text']
-                if text:
-                    yield text
+                delta = output['choices'][0].get('delta', {})
+                if 'content' in delta:
+                    text = delta['content']
+                    if text:
+                        yield text
                     
         except Exception as e:
             print(f"Error en streaming: {e}")

@@ -42,11 +42,12 @@ class TransactionSerializer(serializers.ModelSerializer):
     total_debit = serializers.SerializerMethodField()
     total_credit = serializers.SerializerMethodField()
     is_balanced = serializers.SerializerMethodField()
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
     
     class Meta:
         model = Transaction
         fields = [
-            'trans_id', 'user', 'user_name', 'status', 'date', 
+            'trans_id', 'user', 'user_name', 'status', 'status_display', 'date', 
             'legend', 'created_at', 'updated_at', 'entries',
             'total_debit', 'total_credit', 'is_balanced'
         ]
@@ -71,6 +72,14 @@ class TransactionSerializer(serializers.ModelSerializer):
             )
         return entries
     
+    def validate_status(self, value):
+        """Validar que el status sea válido"""
+        if value not in [0, 1, 2]:
+            raise serializers.ValidationError(
+                'El estado debe ser 0 (Por verificar), 1 (Verificado) o 2 (Cerrado)'
+            )
+        return value
+    
     def validate(self, data):
         """Validar que la transacción esté balanceada"""
         entries = data.get('entries', [])
@@ -94,6 +103,10 @@ class TransactionSerializer(serializers.ModelSerializer):
         validated_data['created_at'] = now
         validated_data['updated_at'] = now
         
+        # Si no se especifica status, usar STATUS_TO_CHECK (0) por defecto
+        if 'status' not in validated_data:
+            validated_data['status'] = Transaction.STATUS_TO_CHECK
+        
         # Crear transacción
         transaction = Transaction.objects.create(**validated_data)
         
@@ -106,6 +119,12 @@ class TransactionSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         """Actualizar transacción y sus entradas"""
         entries_data = validated_data.pop('entries', None)
+        
+        # No permitir editar transacciones cerradas
+        if instance.status == Transaction.STATUS_CLOSED:
+            raise serializers.ValidationError(
+                'No se puede editar una transacción cerrada'
+            )
         
         # Actualizar timestamp
         validated_data['updated_at'] = datetime.now().isoformat()
@@ -125,16 +144,18 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class TransactionListSerializer(serializers.ModelSerializer):
-    """Serializer ligero para listados"""
+    """Serializer ligero para listados pero con entries completos"""
     user_name = serializers.CharField(source='user.name', read_only=True)
     entries_count = serializers.SerializerMethodField()
     total_amount = serializers.SerializerMethodField()
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    entries = TransactionEntrySerializer(many=True, read_only=True)  # Agregado para incluir entries
     
     class Meta:
         model = Transaction
         fields = [
-            'trans_id', 'user_name', 'status', 'date', 
-            'legend', 'created_at', 'entries_count', 'total_amount'
+            'trans_id', 'user_name', 'status', 'status_display', 'date', 
+            'legend', 'created_at', 'entries_count', 'total_amount', 'entries'
         ]
     
     def get_entries_count(self, obj):

@@ -199,6 +199,9 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 - llama-cpp-python (0.3.16)
 - sentence-transformers (5.1.0)
 - faiss-cpu (1.12.0)
+- PyTest (9.0.0)
+- PyTest-Cov (7.0.0)
+- PyTest-Django (4.11.1)
 - Meta Llama 3.1 8B
 
 ### FrontEnd:
@@ -412,6 +415,7 @@ mosaite/
 |   |   |   |   |   AuthService.js
 |   |   |   |   |   ChatService.js
 |   |   |   |   |   ConfigService.js
+|   |   |   |   |   TransactionService.js
 |   |   |   |   |   UserService.js
 |   |   |   |   App.css
 |   |   |   |   App.js

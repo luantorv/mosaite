@@ -1,143 +1,250 @@
-import React from "react"
-import { useTheme } from "../../context/ThemeContext"
-import { useAuth } from "../../context/AuthContext"
+import React, { useState, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
+import accountService from "../../services/AccountService";
+import transactionService from "../../services/TransactionService";
 
-function TransaccionCrear({ plan, onCrearTransaccion }) {
-  const { theme } = useTheme()
-  const { user } = useAuth()
-  const hoy = new Date()
-  const [fecha, setFecha] = React.useState(
-    hoy.toLocaleDateString("en-CA"), // formato YYYY-MM-DD
-  )
+function TransaccionCrear({ onTransaccionCreada }) {
+  const { theme } = useTheme();
+  const { user } = useAuth();
+  
+  const [accounts, setAccounts] = useState([]);
+  const [loadingAccounts, setLoadingAccounts] = useState(true);
+  const [saving, setSaving] = useState(false);
+  
+  const hoy = new Date();
+  const [fecha, setFecha] = useState(hoy.toISOString().split('T')[0]);
+  
+  const [lines, setLines] = useState([
+    { acc_id: null, debe: 0, haber: 0 },
+  ]);
+  const [leyenda, setLeyenda] = useState("");
+  const [showAccountMenu, setShowAccountMenu] = useState(null);
+  const [showUnbalancedModal, setShowUnbalancedModal] = useState(false);
+  const [diferencia, setDiferencia] = useState(0);
+  const [error, setError] = useState("");
 
-  const [lines, setLines] = React.useState([
-    { code: "", debe: 0, haber: 0 }, // Siempre empezamos con una línea vacía
-  ])
-  const [leyenda, setLeyenda] = React.useState("")
-  const [showAccountMenu, setShowAccountMenu] = React.useState(null) // índice de la línea que está mostrando el menú
-  const [showUnbalancedModal, setShowUnbalancedModal] = React.useState(false)
-  const [diferencia, setDiferencia] = React.useState(0)
+  // Cargar cuentas activas al montar
+  useEffect(() => {
+    loadAccounts();
+  }, []);
 
-  // Filtrar solo cuentas activas (state === 1)
-  const cuentasActivas = React.useMemo(() => {
-    return plan.filter(([code, name, nature, state]) => state === 1)
-  }, [plan])
+  const loadAccounts = async () => {
+    setLoadingAccounts(true);
+    const result = await accountService.getActiveAccounts();
+    
+    if (result.success) {
+      setAccounts(result.accounts);
+      console.log("✅ Cuentas cargadas:", result.accounts.length);
+    } else {
+      setError(result.error);
+      console.error("❌ Error cargando cuentas:", result.error);
+    }
+    
+    setLoadingAccounts(false);
+  };
 
-  const getNombreCuenta = (codigo) => {
-    const cuenta = plan.find(([code]) => code === codigo)
-    return cuenta ? cuenta[1] : ""
-  }
+  const getAccountById = (accId) => {
+    return accounts.find(acc => acc.acc_id === accId);
+  };
+
+  const getNombreCuenta = (accId) => {
+    const cuenta = getAccountById(accId);
+    return cuenta ? cuenta.name : "";
+  };
+
+  const getCodigoCuenta = (accId) => {
+    const cuenta = getAccountById(accId);
+    return cuenta ? cuenta.code : "";
+  };
 
   const agregarLinea = () => {
-    setLines([...lines, { code: "", debe: 0, haber: 0 }])
-  }
+    setLines([...lines, { acc_id: null, debe: 0, haber: 0 }]);
+  };
 
-  const seleccionarCuenta = (index, codigo) => {
-    const newLines = [...lines]
-    newLines[index].code = codigo
-    setLines(newLines)
-    setShowAccountMenu(null)
-  }
+  const seleccionarCuenta = (index, accId) => {
+    const newLines = [...lines];
+    newLines[index].acc_id = accId;
+    setLines(newLines);
+    setShowAccountMenu(null);
+  };
 
   const actualizarMonto = (index, campo, valor) => {
-    const newLines = [...lines]
-    const nuevoValor = Number.parseFloat(valor) || 0
+    const newLines = [...lines];
+    const nuevoValor = parseFloat(valor) || 0;
 
     if (campo === "debe") {
-      newLines[index].debe = nuevoValor
+      newLines[index].debe = nuevoValor;
       if (nuevoValor > 0) {
-        newLines[index].haber = 0
+        newLines[index].haber = 0;
       }
     } else {
-      newLines[index].haber = nuevoValor
+      newLines[index].haber = nuevoValor;
       if (nuevoValor > 0) {
-        newLines[index].debe = 0
+        newLines[index].debe = 0;
       }
     }
 
-    setLines(newLines)
-  }
+    setLines(newLines);
+  };
 
   const eliminarLinea = (index) => {
     if (lines.length > 1) {
-      setLines(lines.filter((_, i) => i !== index))
+      setLines(lines.filter((_, i) => i !== index));
     }
-  }
+  };
 
   const limpiarFormulario = () => {
-    setFecha(new Date().toISOString().split("T")[0])
-    setLines([{ code: "", debe: 0, haber: 0 }])
-    setLeyenda("")
-  }
+    setFecha(new Date().toISOString().split('T')[0]);
+    setLines([{ acc_id: null, debe: 0, haber: 0 }]);
+    setLeyenda("");
+    setError("");
+  };
 
   const crearTransaccion = () => {
-    const lineasValidas = lines.filter((line) => line.code && (line.debe > 0 || line.haber > 0))
+    setError("");
+
+    const lineasValidas = lines.filter((line) => line.acc_id && (line.debe > 0 || line.haber > 0));
 
     if (lineasValidas.length === 0) {
-      alert("Error: Debe haber al menos una línea con cuenta y monto")
-      return
+      setError("Debe haber al menos una línea con cuenta y monto");
+      return;
     }
 
-    const totalDebe = lineasValidas.reduce((sum, line) => sum + line.debe, 0)
-    const totalHaber = lineasValidas.reduce((sum, line) => sum + line.haber, 0)
+    if (lineasValidas.length < 2) {
+      setError("Una transacción debe tener al menos 2 entradas");
+      return;
+    }
 
-    const diff = Math.abs(totalDebe - totalHaber)
+    const totalDebe = lineasValidas.reduce((sum, line) => sum + line.debe, 0);
+    const totalHaber = lineasValidas.reduce((sum, line) => sum + line.haber, 0);
+
+    const diff = Math.abs(totalDebe - totalHaber);
     if (diff > 0.01) {
-      setDiferencia(diff)
-      setShowUnbalancedModal(true)
-      return
+      setDiferencia(diff);
+      setShowUnbalancedModal(true);
+      return;
     }
 
-    const lineaInvalida = lineasValidas.find((line) => line.debe > 0 && line.haber > 0)
+    const lineaInvalida = lineasValidas.find((line) => line.debe > 0 && line.haber > 0);
     if (lineaInvalida) {
-      alert("Error: Una línea no puede tener valores en Debe y Haber al mismo tiempo")
-      return
+      setError("Una línea no puede tener valores en Debe y Haber al mismo tiempo");
+      return;
     }
 
-    guardarTransaccion(lineasValidas)
-  }
+    guardarTransaccion(lineasValidas);
+  };
 
-  const guardarTransaccion = (lineasValidas) => {
-    const transaccion = {
-      id: Date.now(),
-      fecha: fecha,
-      lines: lineasValidas.map((line) => [line.code, line.debe, line.haber]),
-      leyenda: leyenda,
-      autor: user?.name || user?.email,
-      estado: 0, // 0 = Para verificar, 1 = Verificada
-    }
+  const guardarTransaccion = async (lineasValidas) => {
+    setSaving(true);
+    setError("");
 
-    if (onCrearTransaccion) {
-      const transaccionCreada = onCrearTransaccion(transaccion)
-      console.log("Transacción creada:", transaccionCreada)
-      alert("Transacción creada exitosamente")
-      limpiarFormulario()
-      setShowUnbalancedModal(false)
+    const transactionData = {
+      date: fecha,
+      legend: leyenda.trim() || null,
+      status: 0, // 0 = Por verificar (to check)
+      entries: lineasValidas.map((line) => ({
+        acc_id: line.acc_id,
+        debit: Math.round(line.debe * 100),
+        credit: Math.round(line.haber * 100),
+      })),
+    };
+
+    console.log("📤 Enviando transacción:", transactionData);
+
+    const result = await transactionService.createTransaction(transactionData);
+
+    console.log("📥 Respuesta del servidor:", result);
+
+    if (result.success) {
+      console.log("✅ Transacción creada exitosamente:", result.transaction);
+      alert("Transacción creada exitosamente");
+      
+      // Notificar al componente padre
+      if (onTransaccionCreada) {
+        onTransaccionCreada(result.transaction);
+      }
+      
+      limpiarFormulario();
+      setShowUnbalancedModal(false);
     } else {
-      console.warn("No se proporcionó onCrearTransaccion prop")
-      alert("Error: No se pudo guardar la transacción")
+      console.error("❌ Error al crear transacción:", result.error);
+      
+      // Manejo mejorado de errores
+      if (typeof result.error === 'object' && result.error !== null) {
+        const errorMessages = [];
+        
+        // Manejar errores de entradas
+        if (result.error.entries) {
+          if (Array.isArray(result.error.entries)) {
+            result.error.entries.forEach((entryError, index) => {
+              if (typeof entryError === 'object') {
+                Object.entries(entryError).forEach(([field, messages]) => {
+                  const msgArray = Array.isArray(messages) ? messages : [messages];
+                  errorMessages.push(`Entrada ${index + 1} - ${field}: ${msgArray.join(', ')}`);
+                });
+              }
+            });
+          } else {
+            errorMessages.push(`Entradas: ${JSON.stringify(result.error.entries)}`);
+          }
+        }
+        
+        // Manejar otros errores
+        Object.entries(result.error).forEach(([field, messages]) => {
+          if (field !== 'entries') {
+            if (Array.isArray(messages)) {
+              errorMessages.push(`${field}: ${messages.join(', ')}`);
+            } else if (typeof messages === 'object') {
+              errorMessages.push(`${field}: ${JSON.stringify(messages)}`);
+            } else {
+              errorMessages.push(`${field}: ${messages}`);
+            }
+          }
+        });
+        
+        setError(errorMessages.join('\n') || 'Error desconocido al crear transacción');
+      } else {
+        setError(result.error || "Error al crear transacción");
+      }
     }
-  }
 
-  const confirmarTransaccionDesbalanceada = () => {
-    const lineasValidas = lines.filter((line) => line.code && (line.debe > 0 || line.haber > 0))
-    guardarTransaccion(lineasValidas)
-  }
+    setSaving(false);
+  };
 
-  const totalDebe = lines.reduce((sum, line) => sum + line.debe, 0)
-  const totalHaber = lines.reduce((sum, line) => sum + line.haber, 0)
-  const estaBalanceado = Math.abs(totalDebe - totalHaber) < 0.01
+  const totalDebe = lines.reduce((sum, line) => sum + line.debe, 0);
+  const totalHaber = lines.reduce((sum, line) => sum + line.haber, 0);
+  const estaBalanceado = Math.abs(totalDebe - totalHaber) < 0.01;
 
   const linesSorted = [...lines].sort((a, b) => {
-    const aEsDebe = a.haber === 0 && a.debe >= 0
-    const bEsDebe = b.haber === 0 && b.debe >= 0
-    if (aEsDebe && !bEsDebe) return -1
-    if (!aEsDebe && bEsDebe) return 1
-    return 0
-  })
+    const aEsDebe = a.haber === 0 && a.debe >= 0;
+    const bEsDebe = b.haber === 0 && b.debe >= 0;
+    if (aEsDebe && !bEsDebe) return -1;
+    if (!aEsDebe && bEsDebe) return 1;
+    return 0;
+  });
+
+  if (loadingAccounts) {
+    return (
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "400px",
+        color: theme.textColor,
+      }}>
+        <div className="text-center">
+          <div className="spinner-border mb-3" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p>Cargando cuentas...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h4 style={{ color: theme.textColor, marginBottom: "25px" }}>Crear Nueva Transacción</h4>
 
       <div style={{ marginBottom: "25px", display: "flex", alignItems: "center", gap: "10px" }}>
@@ -146,6 +253,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
           type="date"
           value={fecha}
           onChange={(e) => setFecha(e.target.value)}
+          disabled={saving}
           style={{
             background: theme.background,
             color: theme.textColor,
@@ -156,6 +264,23 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
           }}
         />
       </div>
+
+      {error && (
+        <div
+          style={{
+            marginBottom: "20px",
+            padding: "12px",
+            background: "#ff4d4f20",
+            border: "1px solid #ff4d4f",
+            borderRadius: "8px",
+            color: "#ff4d4f",
+            fontSize: "14px",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       <div
         style={{
@@ -184,9 +309,10 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
         </div>
 
         {linesSorted.map((line, index) => {
-          const originalIndex = lines.findIndex((l) => l === line)
-          const nombreCuenta = getNombreCuenta(line.code)
-          const esHaber = line.haber > 0 || (line.haber === 0 && line.debe === 0)
+          const originalIndex = lines.findIndex((l) => l === line);
+          const nombreCuenta = getNombreCuenta(line.acc_id);
+          const codigoCuenta = getCodigoCuenta(line.acc_id);
+          const esHaber = line.haber > 0 || (line.haber === 0 && line.debe === 0);
 
           return (
             <div
@@ -206,19 +332,20 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
               <div style={{ position: "relative" }}>
                 <button
                   onClick={() => setShowAccountMenu(showAccountMenu === originalIndex ? null : originalIndex)}
+                  disabled={saving}
                   style={{
                     width: "100%",
                     background: theme.background,
-                    color: line.code ? theme.textColor : theme.textColorSecondary,
+                    color: codigoCuenta ? theme.textColor : theme.textColorSecondary,
                     border: `1px solid ${theme.border || "#ddd"}`,
                     borderRadius: "4px",
                     padding: "8px",
-                    cursor: "pointer",
+                    cursor: saving ? "not-allowed" : "pointer",
                     textAlign: "center",
                     fontSize: "14px",
                   }}
                 >
-                  {line.code || "---"}
+                  {codigoCuenta || "---"}
                 </button>
 
                 {showAccountMenu === originalIndex && (
@@ -227,7 +354,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
                       position: "absolute",
                       top: "100%",
                       left: "0",
-                      minWidth: "300px",
+                      minWidth: "350px",
                       background: theme.background,
                       borderRadius: "8px",
                       boxShadow: theme.cardShadowOut,
@@ -238,10 +365,10 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
                       marginTop: "5px",
                     }}
                   >
-                    {cuentasActivas.map(([codigo, nombre]) => (
+                    {accounts.map((cuenta) => (
                       <div
-                        key={codigo}
-                        onClick={() => seleccionarCuenta(originalIndex, codigo)}
+                        key={cuenta.acc_id}
+                        onClick={() => seleccionarCuenta(originalIndex, cuenta.acc_id)}
                         style={{
                           padding: "10px",
                           cursor: "pointer",
@@ -252,7 +379,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
                         onMouseEnter={(e) => (e.target.style.background = theme.hoverBackground || "rgba(0,0,0,0.05)")}
                         onMouseLeave={(e) => (e.target.style.background = "transparent")}
                       >
-                        {codigo} - {nombre}
+                        {cuenta.code} - {cuenta.name}
                       </div>
                     ))}
                   </div>
@@ -273,10 +400,11 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
 
               <input
                 type="number"
+                step="0.01"
                 value={line.debe || ""}
                 onChange={(e) => actualizarMonto(originalIndex, "debe", e.target.value)}
                 placeholder="0.00"
-                disabled={line.haber > 0}
+                disabled={line.haber > 0 || saving}
                 style={{
                   background: line.haber > 0 ? theme.background : theme.background,
                   color: theme.textColor,
@@ -284,16 +412,17 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
                   borderRadius: "4px",
                   padding: "8px",
                   textAlign: "right",
-                  opacity: line.haber > 0 ? 0.5 : 1,
+                  opacity: line.haber > 0 || saving ? 0.5 : 1,
                 }}
               />
 
               <input
                 type="number"
+                step="0.01"
                 value={line.haber || ""}
                 onChange={(e) => actualizarMonto(originalIndex, "haber", e.target.value)}
                 placeholder="0.00"
-                disabled={line.debe > 0}
+                disabled={line.debe > 0 || saving}
                 style={{
                   background: line.debe > 0 ? theme.background : theme.background,
                   color: theme.textColor,
@@ -301,18 +430,18 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
                   borderRadius: "4px",
                   padding: "8px",
                   textAlign: "right",
-                  opacity: line.debe > 0 ? 0.5 : 1,
+                  opacity: line.debe > 0 || saving ? 0.5 : 1,
                 }}
               />
 
               <button
                 onClick={() => eliminarLinea(originalIndex)}
-                disabled={lines.length === 1}
+                disabled={lines.length === 1 || saving}
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: lines.length === 1 ? "#ccc" : "#dc3545",
-                  cursor: lines.length === 1 ? "not-allowed" : "pointer",
+                  color: lines.length === 1 || saving ? "#ccc" : "#dc3545",
+                  cursor: lines.length === 1 || saving ? "not-allowed" : "pointer",
                   fontSize: "18px",
                   padding: "0",
                 }}
@@ -320,11 +449,12 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
                 ×
               </button>
             </div>
-          )
+          );
         })}
 
         <button
           onClick={agregarLinea}
+          disabled={saving}
           style={{
             width: "100%",
             background: theme.background,
@@ -333,9 +463,10 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
             padding: "15px",
             color: theme.textColorSecondary,
             fontSize: "24px",
-            cursor: "pointer",
+            cursor: saving ? "not-allowed" : "pointer",
             transition: "all 0.3s ease",
             marginTop: "10px",
+            opacity: saving ? 0.5 : 1,
           }}
         >
           +
@@ -388,6 +519,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
           value={leyenda}
           onChange={(e) => setLeyenda(e.target.value)}
           placeholder="Escribe aquí..."
+          disabled={saving}
           style={{
             width: "100%",
             minHeight: "80px",
@@ -399,6 +531,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
             boxShadow: theme.cardShadowIn,
             resize: "vertical",
             fontFamily: "inherit",
+            opacity: saving ? 0.5 : 1,
           }}
         />
       </div>
@@ -406,36 +539,38 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
       <div style={{ display: "flex", gap: "15px", justifyContent: "flex-end" }}>
         <button
           onClick={limpiarFormulario}
+          disabled={saving}
           style={{
             background: theme.background,
             color: theme.textColor,
             border: `2px solid ${theme.border || "#ddd"}`,
             borderRadius: "8px",
             padding: "10px 20px",
-            cursor: "pointer",
+            cursor: saving ? "not-allowed" : "pointer",
             boxShadow: theme.cardShadowOut,
             transition: "all 0.3s ease",
+            opacity: saving ? 0.5 : 1,
           }}
-          onMouseEnter={(e) => (e.target.style.boxShadow = theme.cardShadowIn)}
+          onMouseEnter={(e) => !saving && (e.target.style.boxShadow = theme.cardShadowIn)}
           onMouseLeave={(e) => (e.target.style.boxShadow = theme.cardShadowOut)}
         >
           Limpiar
         </button>
         <button
           onClick={crearTransaccion}
-          disabled={totalDebe === 0}
+          disabled={totalDebe === 0 || saving}
           style={{
-            background: totalDebe > 0 ? theme.primaryColor : "#ccc",
+            background: totalDebe > 0 && !saving ? theme.primaryColor : "#ccc",
             color: "white",
             border: "none",
             borderRadius: "8px",
             padding: "10px 20px",
-            cursor: totalDebe > 0 ? "pointer" : "not-allowed",
+            cursor: totalDebe > 0 && !saving ? "pointer" : "not-allowed",
             boxShadow: theme.cardShadowOut,
             transition: "all 0.3s ease",
           }}
         >
-          Crear
+          {saving ? "Creando..." : "Crear"}
         </button>
       </div>
 
@@ -451,7 +586,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
               background: "rgba(0, 0, 0, 0.5)",
               zIndex: 9998,
             }}
-            onClick={() => setShowUnbalancedModal(false)}
+            onClick={() => !saving && setShowUnbalancedModal(false)}
           />
           <div
             style={{
@@ -475,36 +610,24 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
               La transacción tiene una diferencia de <strong>${diferencia.toFixed(2)}</strong> entre el Debe y el Haber.
             </p>
             <p style={{ color: theme.textColorSecondary, marginBottom: "25px", fontSize: "14px" }}>
-              Podrás crear la transacción, pero deberás hacer las correcciones necesarias posteriormente.
+              No se puede crear una transacción desbalanceada. Por favor, revisa los montos.
             </p>
             <div style={{ display: "flex", gap: "15px", justifyContent: "flex-end" }}>
               <button
                 onClick={() => setShowUnbalancedModal(false)}
+                disabled={saving}
                 style={{
                   background: theme.background,
                   color: theme.textColor,
                   border: `2px solid ${theme.border || "#ddd"}`,
                   borderRadius: "8px",
                   padding: "10px 20px",
-                  cursor: "pointer",
+                  cursor: saving ? "not-allowed" : "pointer",
                   boxShadow: theme.cardShadowOut,
+                  opacity: saving ? 0.5 : 1,
                 }}
               >
-                Cancelar
-              </button>
-              <button
-                onClick={confirmarTransaccionDesbalanceada}
-                style={{
-                  background: "#dc3545",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "10px 20px",
-                  cursor: "pointer",
-                  boxShadow: theme.cardShadowOut,
-                }}
-              >
-                Crear de todas formas
+                Entendido
               </button>
             </div>
           </div>
@@ -526,7 +649,7 @@ function TransaccionCrear({ plan, onCrearTransaccion }) {
         />
       )}
     </div>
-  )
+  );
 }
 
-export default TransaccionCrear
+export default TransaccionCrear;

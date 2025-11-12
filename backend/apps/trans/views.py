@@ -19,7 +19,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         return TransactionSerializer
     
     def get_queryset(self):
-        queryset = Transaction.objects.all().select_related('user').prefetch_related('entries')
+        queryset = Transaction.objects.all().select_related('user').prefetch_related('entries__acc')
         
         # Filtros
         status_filter = self.request.query_params.get('status', None)
@@ -29,7 +29,11 @@ class TransactionViewSet(viewsets.ModelViewSet):
         search = self.request.query_params.get('search', None)
         
         if status_filter is not None:
-            queryset = queryset.filter(status=status_filter == 'true')
+            try:
+                status_value = int(status_filter)
+                queryset = queryset.filter(status=status_value)
+            except ValueError:
+                pass
         
         if user_filter:
             queryset = queryset.filter(user_id=user_filter)
@@ -52,19 +56,81 @@ class TransactionViewSet(viewsets.ModelViewSet):
         """Asignar usuario actual a la transacción"""
         serializer.save(user=self.request.user)
     
+    def perform_update(self, serializer):
+        """Prevenir edición de transacciones cerradas"""
+        if self.get_object().status == Transaction.STATUS_CLOSED:
+            return Response(
+                {'error': 'No se puede editar una transacción cerrada'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer.save()
+    
+    def perform_destroy(self, instance):
+        """Prevenir eliminación de transacciones cerradas"""
+        if instance.status == Transaction.STATUS_CLOSED:
+            return Response(
+                {'error': 'No se puede eliminar una transacción cerrada'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        instance.delete()
+    
     @action(detail=False, methods=['get'])
     def recent(self, request):
         """Obtiene las transacciones más recientes"""
         limit = int(request.query_params.get('limit', 10))
         transactions = self.get_queryset()[:limit]
-        serializer = TransactionListSerializer(transactions, many=True)
+        # Usar el serializer completo en lugar del ligero para incluir entries con accounts
+        serializer = TransactionSerializer(transactions, many=True)
         return Response(serializer.data)
     
     @action(detail=True, methods=['post'])
     def toggle_status(self, request, pk=None):
-        """Cambia el estado de la transacción (borrador/completada)"""
+        """
+        Cambia el estado de la transacción siguiendo el ciclo:
+        0 (Por verificar) -> 1 (Verificado) -> 0 (vuelve al inicio)
+        
+        Estado 2 (Cerrado) solo se puede establecer cuando la transacción
+        se agregue a un libro diario (funcionalidad futura)
+        """
         transaction = self.get_object()
-        transaction.status = not transaction.status
+        
+        # No permitir cambiar estado de transacciones cerradas
+        if transaction.status == Transaction.STATUS_CLOSED:
+            return Response(
+                {
+                    'error': 'No se puede cambiar el estado de una transacción cerrada',
+                    'message': 'Esta transacción está en un libro diario y no puede ser modificada'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Ciclar entre 0 y 1
+        if transaction.status == Transaction.STATUS_TO_CHECK:
+            transaction.status = Transaction.STATUS_CHECKED
+        else:
+            transaction.status = Transaction.STATUS_TO_CHECK
+        
+        transaction.save()
+        
+        serializer = self.get_serializer(transaction)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def close(self, request, pk=None):
+        """
+        Cierra una transacción (estado 2).
+        Esta acción debería ser llamada cuando la transacción
+        se agregue a un libro diario.
+        """
+        transaction = self.get_object()
+        
+        if transaction.status == Transaction.STATUS_CLOSED:
+            return Response(
+                {'error': 'La transacción ya está cerrada'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        transaction.status = Transaction.STATUS_CLOSED
         transaction.save()
         
         serializer = self.get_serializer(transaction)

@@ -1,33 +1,56 @@
 import { useState } from "react"
 import { useTheme } from "../../context/ThemeContext"
 
-const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDelete }) => {
+const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [hoveredButton, setHoveredButton] = useState(null)
   const { theme } = useTheme()
 
   if (!transaction || typeof transaction !== "object") {
-    console.error("[v0] TransactionCard recibió una transacción inválida:", transaction)
+    console.error("TransactionCard recibió una transacción inválida:", transaction)
     return null
   }
 
-  const getCuentaNombre = (codigo) => {
-    const cuenta = plan.find(([cod]) => String(cod) === String(codigo))
-    return cuenta ? cuenta[1] : codigo
+  // Adaptar datos del backend
+  const entries = transaction.entries || []
+  
+  // Validar que entries tenga datos válidos
+  if (entries.length === 0) {
+    console.warn("TransactionCard: No hay entries en la transacción", transaction)
   }
+  
+  // Convertir centavos a pesos y separar en debe/haber
+  const debeLines = entries
+    .filter(entry => entry && entry.debit > 0)
+    .map(entry => {
+      const account = entry.account || {}
+      return {
+        code: account.code || entry.acc_id || "???",
+        name: account.name || "Cuenta no encontrada",
+        debe: entry.debit / 100,
+        haber: 0
+      }
+    })
+  
+  const haberLines = entries
+    .filter(entry => entry && entry.credit > 0)
+    .map(entry => {
+      const account = entry.account || {}
+      return {
+        code: account.code || entry.acc_id || "???",
+        name: account.name || "Cuenta no encontrada",
+        debe: 0,
+        haber: entry.credit / 100
+      }
+    })
 
-  const lines = transaction.lines || []
-
-  // Separar líneas en debe y haber, y ordenar (debe primero)
-  const debeLines = lines.filter(([code, debe, haber]) => debe > 0 && haber === 0)
-  const haberLines = lines.filter(([code, debe, haber]) => haber > 0 && debe === 0)
   const sortedLines = [...debeLines, ...haberLines]
 
-  const totalDebe = debeLines.reduce((sum, [, debe]) => sum + debe, 0)
-  const totalHaber = haberLines.reduce((sum, [, , haber]) => sum + haber, 0)
+  const totalDebe = debeLines.reduce((sum, line) => sum + line.debe, 0)
+  const totalHaber = haberLines.reduce((sum, line) => sum + line.haber, 0)
 
-  const mainDebeAccount = debeLines.length > 0 ? debeLines[0][0] : "N/A"
-  const mainHaberAccount = haberLines.length > 0 ? haberLines[0][0] : "N/A"
+  const mainDebeAccount = debeLines.length > 0 ? debeLines[0].name : "N/A"
+  const mainHaberAccount = haberLines.length > 0 ? haberLines[0].name : "N/A"
 
   // Función para formatear números
   const formatCurrency = (amount) => {
@@ -37,17 +60,28 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
     }).format(amount)
   }
 
-  const autor = transaction.author || transaction.autor || transaction.createdBy || "N/A"
+  const autor = transaction.user_name || "N/A"
+  const fecha = transaction.date || transaction.created_at?.split('T')[0] || "N/A"
+  const leyenda = transaction.legend || ""
 
-  // Configuración de estados
+  // Sistema de 3 estados (como Git)
+  // status: false = 0 (Por verificar / to check)
+  // status: true = 1 (Verificado / checked)
+  // locked: true = 2 (Cerrado / closed - cuando está en un libro diario)
+  
+  // Por ahora usamos solo el campo status del backend
+  // Cuando implementes libros diarios, agregarás el campo 'locked'
+  const estadoActual = transaction.locked ? 2 : (transaction.status ? 1 : 0)
+  
+  // Configuración de estados (estilo Git)
   const estadoConfig = {
-    0: { icon: "🔍", color: "#ffc107", bg: "#fff3cd", label: "to check" },
-    1: { icon: "✓", color: "#17a2b8", bg: "#d1ecf1", label: "checked" },
-    2: { icon: "🔒", color: "#28a745", bg: "#d4edda", label: "closed" },
+    0: { icon: "📋", color: "#ffc107", bg: "#fff3cd", label: "Por verificar", nextLabel: "Marcar como verificado" },
+    1: { icon: "✓", color: "#17a2b8", bg: "#d1ecf1", label: "Verificado", nextLabel: "Marcar como cerrado" },
+    2: { icon: "🔒", color: "#28a745", bg: "#d4edda", label: "Cerrado", nextLabel: "Transacción cerrada" },
   }
 
-  const currentEstado = estadoConfig[transaction.estado] || estadoConfig[0]
-  const isLocked = transaction.estado === 2
+  const currentEstado = estadoConfig[estadoActual] || estadoConfig[0]
+  const isLocked = estadoActual === 2
 
   return (
     <div
@@ -105,10 +139,9 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
                   color: theme.textColor,
                 }}
               >
-                {getCuentaNombre(mainDebeAccount)}/{getCuentaNombre(mainHaberAccount)} || Monto:{" "}
-                {formatCurrency(totalDebe)}
+                {mainDebeAccount} / {mainHaberAccount} || Monto: {formatCurrency(totalDebe)}
               </span>
-              {transaction.leyenda && (
+              {leyenda && (
                 <span
                   style={{
                     fontSize: "14px",
@@ -116,13 +149,13 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
                     fontStyle: "italic",
                   }}
                 >
-                  {transaction.leyenda}
+                  {leyenda}
                 </span>
               )}
             </div>
           ) : (
             <div style={{ width: "100%" }}>
-              {transaction.leyenda && (
+              {leyenda && (
                 <div
                   style={{
                     marginBottom: "20px",
@@ -150,7 +183,7 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
                       lineHeight: "1.4",
                     }}
                   >
-                    {transaction.leyenda}
+                    {leyenda}
                   </p>
                 </div>
               )}
@@ -165,47 +198,51 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
                       <th style={{ padding: "8px", textAlign: "left", color: theme.textColor, width: "45%" }}>
                         Nombre
                       </th>
-                      <th style={{ padding: "8px", textAlign: "right", color: theme.textColor, width: "20%" }}>Debe</th>
+                      <th style={{ padding: "8px", textAlign: "right", color: theme.textColor, width: "20%" }}>
+                        Debe
+                      </th>
                       <th style={{ padding: "8px", textAlign: "right", color: theme.textColor, width: "20%" }}>
                         Haber
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedLines.map(([code, debe, haber], index) => (
+                    {sortedLines.map((line, index) => (
                       <tr key={index} style={{ borderBottom: `1px solid ${theme.textColorSecondary}40` }}>
-                        <td style={{ padding: "8px", color: theme.textColorSecondary, fontSize: "14px" }}>{code}</td>
+                        <td style={{ padding: "8px", color: theme.textColorSecondary, fontSize: "14px" }}>
+                          {line.code}
+                        </td>
                         <td
                           style={{
                             padding: "8px",
                             color: theme.textColorSecondary,
                             fontSize: "14px",
-                            textAlign: debe > 0 ? "left" : "right",
+                            textAlign: line.debe > 0 ? "left" : "right",
                           }}
                         >
-                          {getCuentaNombre(code)}
+                          {line.name}
                         </td>
                         <td
                           style={{
                             padding: "8px",
                             textAlign: "right",
-                            fontWeight: debe > 0 ? "600" : "normal",
-                            color: debe > 0 ? "#28a745" : theme.textColorSecondary,
+                            fontWeight: line.debe > 0 ? "600" : "normal",
+                            color: line.debe > 0 ? "#28a745" : theme.textColorSecondary,
                             fontSize: "14px",
                           }}
                         >
-                          {debe > 0 ? formatCurrency(debe) : "-"}
+                          {line.debe > 0 ? formatCurrency(line.debe) : "-"}
                         </td>
                         <td
                           style={{
                             padding: "8px",
                             textAlign: "right",
-                            fontWeight: haber > 0 ? "600" : "normal",
-                            color: haber > 0 ? "#dc3545" : theme.textColorSecondary,
+                            fontWeight: line.haber > 0 ? "600" : "normal",
+                            color: line.haber > 0 ? "#dc3545" : theme.textColorSecondary,
                             fontSize: "14px",
                           }}
                         >
-                          {haber > 0 ? formatCurrency(haber) : "-"}
+                          {line.haber > 0 ? formatCurrency(line.haber) : "-"}
                         </td>
                       </tr>
                     ))}
@@ -246,17 +283,18 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
           >
             {/* Botón de estado */}
             <button
-              onClick={() => onStatusChange && onStatusChange(transaction)}
+              onClick={() => onStatusChange && !isLocked && onStatusChange(transaction)}
               onMouseEnter={() => setHoveredButton("status")}
               onMouseLeave={() => setHoveredButton(null)}
-              title={`Estado: ${currentEstado.label}`}
+              title={isLocked ? currentEstado.label : currentEstado.nextLabel}
+              disabled={isLocked}
               style={{
                 padding: "8px",
                 borderRadius: "8px",
                 border: "none",
                 background: currentEstado.bg,
-                boxShadow: hoveredButton === "status" ? theme.cardShadowIn : theme.cardShadowOut,
-                cursor: "pointer",
+                boxShadow: hoveredButton === "status" && !isLocked ? theme.cardShadowIn : theme.cardShadowOut,
+                cursor: isLocked ? "not-allowed" : "pointer",
                 transition: "all 0.2s ease",
                 fontSize: "20px",
                 width: "40px",
@@ -264,6 +302,7 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                opacity: isLocked ? 0.6 : 1,
               }}
             >
               {currentEstado.icon}
@@ -271,11 +310,11 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
 
             {/* Botón de editar */}
             <button
-              onClick={() => onEdit && onEdit(transaction)}
+              onClick={() => onEdit && !isLocked && onEdit(transaction)}
               onMouseEnter={() => setHoveredButton("edit")}
               onMouseLeave={() => setHoveredButton(null)}
               disabled={isLocked}
-              title={isLocked ? "No se puede editar (cerrado)" : "Editar transacción"}
+              title={isLocked ? "No se puede editar (cerrada)" : "Editar transacción"}
               style={{
                 padding: "8px",
                 borderRadius: "8px",
@@ -298,11 +337,11 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
 
             {/* Botón de borrar */}
             <button
-              onClick={() => onDelete && onDelete(transaction)}
+              onClick={() => onDelete && !isLocked && onDelete(transaction)}
               onMouseEnter={() => setHoveredButton("delete")}
               onMouseLeave={() => setHoveredButton(null)}
               disabled={isLocked}
-              title={isLocked ? "No se puede eliminar (cerrado)" : "Eliminar transacción"}
+              title={isLocked ? "No se puede eliminar (cerrada)" : "Eliminar transacción"}
               style={{
                 padding: "8px",
                 borderRadius: "8px",
@@ -328,16 +367,33 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
           {isExpanded && (
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "14px",
                 color: theme.textColorSecondary,
-                textAlign: "left",
+                textAlign: "right",
                 display: "flex",
                 flexDirection: "column",
                 gap: "4px",
               }}
             >
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", justifyContent: "flex-end" }}>
+                <span
+                  style={{
+                    background: currentEstado.bg,
+                    color: currentEstado.color,
+                    padding: "4px 8px",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {currentEstado.label}
+                </span>
+              </div>
               <div>Creado por: {autor}</div>
-              <div>Fecha: {transaction.fecha || "N/A"}</div>
+              <div>Fecha: {fecha}</div>
+              <div style={{ fontSize: "12px", marginTop: "4px" }}>
+                ID: {transaction.trans_id}
+              </div>
             </div>
           )}
         </div>
@@ -347,31 +403,31 @@ const TransactionCard = ({ transaction, plan = [], onStatusChange, onEdit, onDel
 }
 
 // Componente principal que maneja la lista de transacciones
-const TransaccionesApp = ({ transacciones = [], plan = [], onEliminar, onActualizarEstado, onEditar }) => {
+const TransaccionesApp = ({ transacciones = [], onEliminar, onActualizarEstado, onEditar }) => {
   const { theme } = useTheme()
 
   // Handlers para los eventos
   const handleStatusChange = (transaction) => {
-    if (onActualizarEstado) {
-      // Ciclar entre estados: 0 -> 1 -> 2 -> 0
-      const nuevoEstado = transaction.estado === 2 ? 0 : (transaction.estado || 0) + 1
-      onActualizarEstado(transaction.id, nuevoEstado)
+    if (onActualizarEstado && !transaction.locked) {
+      // Ciclar entre estados: 0 -> 1 -> 2 (pero 2 solo cuando esté en libro diario)
+      // Por ahora solo toggle entre 0 y 1 hasta que implementes libros diarios
+      onActualizarEstado(transaction.trans_id)
     }
   }
 
   const handleEdit = (transaction) => {
-    if (onEditar) {
+    if (onEditar && !transaction.locked) {
       onEditar(transaction)
     }
   }
 
   const handleDelete = (transaction) => {
-    if (onEliminar && window.confirm("¿Estás seguro de que quieres eliminar esta transacción?")) {
-      onEliminar(transaction.id)
+    if (onEliminar && !transaction.locked && window.confirm("¿Estás seguro de que quieres eliminar esta transacción?")) {
+      onEliminar(transaction.trans_id)
     }
   }
 
-  const transaccionesValidas = transacciones.filter((t) => t && typeof t === "object" && t.id)
+  const transaccionesValidas = transacciones.filter((t) => t && typeof t === "object" && t.trans_id)
 
   if (transaccionesValidas.length === 0) {
     return (
@@ -382,7 +438,7 @@ const TransaccionesApp = ({ transacciones = [], plan = [], onEliminar, onActuali
           color: theme.textColorSecondary,
         }}
       >
-        <p style={{ fontSize: "18px", marginBottom: "10px" }}>No hay transacciones válidas para mostrar</p>
+        <p style={{ fontSize: "18px", marginBottom: "10px" }}>No hay transacciones para mostrar</p>
         <p style={{ fontSize: "14px" }}>Las transacciones creadas aparecerán aquí</p>
       </div>
     )
@@ -390,8 +446,8 @@ const TransaccionesApp = ({ transacciones = [], plan = [], onEliminar, onActuali
 
   // Ordenar transacciones por fecha (más reciente primero)
   const transaccionesOrdenadas = [...transaccionesValidas].sort((a, b) => {
-    const fechaA = new Date(a.fechaCreacion || a.fecha).getTime()
-    const fechaB = new Date(b.fechaCreacion || b.fecha).getTime()
+    const fechaA = new Date(a.created_at || a.date).getTime()
+    const fechaB = new Date(b.created_at || b.date).getTime()
     return fechaB - fechaA
   })
 
@@ -417,9 +473,8 @@ const TransaccionesApp = ({ transacciones = [], plan = [], onEliminar, onActuali
         >
           {transaccionesOrdenadas.map((transaction) => (
             <TransactionCard
-              key={transaction.id}
+              key={transaction.trans_id}
               transaction={transaction}
-              plan={plan}
               onStatusChange={handleStatusChange}
               onEdit={handleEdit}
               onDelete={handleDelete}

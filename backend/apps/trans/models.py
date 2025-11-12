@@ -4,9 +4,21 @@ from apps.users.models import User
 
 class Transaction(models.Model):
     """Modelo para transacciones contables"""
+    
+    # Constantes para estados
+    STATUS_TO_CHECK = 0  # Para verificar
+    STATUS_CHECKED = 1   # Verificado
+    STATUS_CLOSED = 2    # Cerrado (en libro diario)
+    
+    STATUS_CHOICES = [
+        (STATUS_TO_CHECK, 'Para verificar'),
+        (STATUS_CHECKED, 'Verificado'),
+        (STATUS_CLOSED, 'Cerrado'),
+    ]
+    
     trans_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
-    status = models.BooleanField(default=True)  # True: completada, False: borrador
+    status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_TO_CHECK)
     date = models.TextField()  # Fecha de la transacción (ISO)
     legend = models.TextField(null=True, blank=True)  # Descripción/leyenda
     created_at = models.TextField()
@@ -40,7 +52,7 @@ class TransactionEntry(models.Model):
         db_table = 'transaction_entries'
     
     def __str__(self):
-        return f"Entry {self.entr_id} - Trans {self.trans_id}"
+        return f"Entry {self.entr_id} - Trans {self.trans.trans_id}"
     
     def clean(self):
         """Validar que no tenga tanto débito como crédito"""

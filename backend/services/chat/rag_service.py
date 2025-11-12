@@ -2,7 +2,8 @@ from typing import Dict, Optional, Generator
 import threading
 from .vector_store import vector_store
 from .llm_client import llm_client
-from .config import TOP_K_RESULTS, SYSTEM_PROMPT
+# Importar solo TOP_K_RESULTS aquí, los prompts se importarán dentro del método query
+from .config import TOP_K_RESULTS
 
 
 class RAGService:
@@ -36,6 +37,10 @@ class RAGService:
         Returns:
             Diccionario con la respuesta y metadata
         """
+        
+        # Importar las plantillas de prompt aquí, dentro del método
+        from .config import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
+
         try:
             # Buscar contexto relevante
             print(f"Buscando contexto para: {question[:50]}...")
@@ -57,17 +62,17 @@ class RAGService:
                 context = context[:1200] + "..."
                 print(f"Contexto truncado a 1200 caracteres")
             
-            # Crear prompt
-            prompt = SYSTEM_PROMPT.format(
+            # Crear el user_prompt usando la nueva plantilla
+            user_prompt = USER_PROMPT_TEMPLATE.format(
                 context=context,
                 question=question
             )
             
-            # Validar longitud total del prompt
-            if len(prompt) > 1800:
-                # Reducir contexto aún más
+            # Validar longitud total del user_prompt (solo datos)
+            if len(user_prompt) > 1800:
+                # Reducir contexto aún más si es necesario
                 context = context[:800] + "..."
-                prompt = SYSTEM_PROMPT.format(
+                user_prompt = USER_PROMPT_TEMPLATE.format(
                     context=context,
                     question=question
                 )
@@ -79,8 +84,10 @@ class RAGService:
                 # Modo streaming
                 def generate():
                     try:
+                        # Llamar a generate con los nuevos parámetros
                         for chunk in llm_client.generate(
-                            prompt,
+                            user_prompt=user_prompt,
+                            system_prompt=SYSTEM_PROMPT,
                             stream=True
                         ):
                             if request_id and self._stop_flags.get(request_id, False):
@@ -99,7 +106,12 @@ class RAGService:
             else:
                 # Modo normal con timeout y manejo de errores
                 try:
-                    answer = llm_client.generate(prompt, stream=False)
+                    # Llamar a generate con los nuevos parámetros
+                    answer = llm_client.generate(
+                        user_prompt=user_prompt,
+                        system_prompt=SYSTEM_PROMPT,
+                        stream=False
+                    )
                     
                     # Validar respuesta
                     if not answer or "Error" in answer[:20]:
