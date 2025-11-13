@@ -15,7 +15,7 @@ def user_data():
         "name": "Test User",
         "password": "pass1234",
         "group": "default",
-        "rol": 1,
+        "rol": 0,
         "status": 0,
     }
 

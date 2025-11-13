@@ -224,7 +224,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ## Funcionalidades
 
-- ConsultarIA _(el módulo de IA)_ ya funciona, falta implementarlo.
+- ConsultarIA _(el módulo de búsqueda impulsada por IA)_ ya funciona, falta implementarlo.
 - Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
 - Hay un POC para experimentar el flujo de uso del proyecto.
 - Hay un Ayudante basado en LLM/RAG para consultar información contable.
@@ -233,7 +233,7 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ---
 
-## Prueba de Concepto (POC):
+## Prueba de Concepto (PoC):
 
 Se agregó una versión duplicada del frontend con funcionalidades simuladas. 
 
@@ -272,6 +272,10 @@ mosaite/
 |   |   |   |   |   |   __init__.py
 |   |   |   |   |   |   init_plan_cuentas.py
 |   |   |   |   |   __init__.py
+|   |   |   |   tests/
+|   |   |   |   |   test_accounts_models.py
+|   |   |   |   |   test_accounts_serializers.py
+|   |   |   |   |   test_accounts_views.py
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
 |   |   |   |   apps.py
@@ -315,7 +319,29 @@ mosaite/
 |   |   |   |   serializers.py
 |   |   |   |   urls.py
 |   |   |   |   views.py
+|   |   |   dash/
+|   |   |   |   management/
+|   |   |   |   |   commands/
+|   |   |   |   |   |   __init__.py
+|   |   |   |   |   |   check_dashboard_stats.py
+|   |   |   |   |   |   clear_dahsboard_data.py
+|   |   |   |   |   |   init_dashboard_data.py
+|   |   |   |   |   __init__.py
+|   |   |   |   tests/
+|   |   |   |   |   test_dash_views.py
+|   |   |   |   __init__.py
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   serializers.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
 |   |   |   trans/
+|   |   |   |   tests/
+|   |   |   |   |   test_trans_models.py
+|   |   |   |   |   test_trans_permissions.py
+|   |   |   |   |   test_trans_serializers.py
+|   |   |   |   |   test_trans_views.py
 |   |   |   |   __init__.py
 |   |   |   |   admin.py
 |   |   |   |   apps.py
@@ -415,6 +441,7 @@ mosaite/
 |   |   |   |   |   AuthService.js
 |   |   |   |   |   ChatService.js
 |   |   |   |   |   ConfigService.js
+|   |   |   |   |   DashboardService.js
 |   |   |   |   |   TransactionService.js
 |   |   |   |   |   UserService.js
 |   |   |   |   App.css

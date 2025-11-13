@@ -39,15 +39,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Manejo de Sesiones y Autenticación
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist', # Para logout
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+
+    # Aplicaciones del proyecto
     'apps.users',
     'apps.config',
     'apps.chat',
     'apps.accounts',
     'apps.trans',
+    'apps.dash',
 ]
 
 MIDDLEWARE = [
