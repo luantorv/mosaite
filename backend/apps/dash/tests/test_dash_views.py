@@ -14,13 +14,13 @@ class TestDashboardStatsView:
 
     def test_get_dashboard_stats_unauthenticated(self, api_client):
         """Test obtener stats sin autenticación"""
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_get_dashboard_stats_authenticated(self, api_client, user):
         """Test obtener stats autenticado"""
         api_client.force_authenticate(user=user)
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert 'total-alumnos' in response.data
@@ -52,7 +52,7 @@ class TestDashboardStatsView:
             status=0
         )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data['total-alumnos'] == 2
@@ -87,7 +87,7 @@ class TestDashboardStatsView:
             status=0
         )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data['cantidad-grupos'] == 2
@@ -114,7 +114,7 @@ class TestDashboardStatsView:
             created_at=now, updated_at=now
         )  # Cuenta (closed)
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data['asientos-cargados'] == 2
@@ -138,7 +138,7 @@ class TestDashboardStatsView:
             created_at=now, updated_at=now
         )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data['libros-diarios'] == 2
@@ -147,7 +147,7 @@ class TestDashboardStatsView:
         """Test estructura de evolución histórica"""
         api_client.force_authenticate(user=user)
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data['evolucionHistorica']) == 6
@@ -179,7 +179,7 @@ class TestDashboardStatsView:
             created_at=now, updated_at=now
         )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data['actividadPorGrupo']) > 0
@@ -202,7 +202,7 @@ class TestDashboardStatsView:
             code="21101", name="Pasivo", saldo=-100000, nature=False, status=True
         )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         # No debe haber campo 'alerta' o debe ser None
@@ -220,7 +220,7 @@ class TestDashboardStatsView:
             code="21101", name="Pasivo", saldo=-100000, nature=False, status=True
         )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         assert 'alerta' in response.data
@@ -265,7 +265,7 @@ class TestDashboardStatsView:
                 created_at=now, updated_at=now
             )
         
-        response = api_client.get('/api/dashboard/stats/')
+        response = api_client.get('/api/dash/stats/')
         
         assert response.status_code == status.HTTP_200_OK
         actividad = response.data['actividadPorGrupo']

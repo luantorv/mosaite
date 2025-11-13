@@ -3,7 +3,7 @@ from rest_framework import status
 from apps.accounts.models import Account
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 class TestAccountViewSet:
     """Tests para AccountViewSet"""
 
@@ -15,6 +15,9 @@ class TestAccountViewSet:
     def test_list_accounts_authenticated(self, api_client, user):
         """Test listar cuentas autenticado"""
         api_client.force_authenticate(user=user)
+        
+        # Limpiar cuentas existentes y crear solo las del test
+        Account.objects.all().delete()
         
         Account.objects.create(
             code="11101", name="Caja MN", saldo=0, nature=True, status=True

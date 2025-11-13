@@ -5,7 +5,7 @@ from apps.trans.models import Transaction, TransactionEntry
 from apps.accounts.models import Account
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 class TestTransactionViewSet:
     """Tests para TransactionViewSet"""
 
@@ -17,6 +17,9 @@ class TestTransactionViewSet:
     def test_list_transactions_authenticated(self, api_client, user):
         """Test listar transacciones autenticado"""
         api_client.force_authenticate(user=user)
+        
+        # Limpiar transacciones existentes
+        Transaction.objects.all().delete()
         
         now = datetime.now().isoformat()
         Transaction.objects.create(
