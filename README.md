@@ -1,6 +1,6 @@
 # Mosaite
 
-**Mosaite** es una plataforma interactiva para la **enseñanza y práctica de la contabilidad básica**.
+**Mosaite** es una plataforma que sirve como entorno de práctica para la **enseñanza y práctica de la contabilidad básica**.
 
 Permite registrar asientos contables, generar libros diarios y explorar conceptos clave desde una interfaz web intuitiva.
 
