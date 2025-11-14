@@ -19,6 +19,16 @@ Mosaite está diseñado para su uso tanto individual como en entornos educativos
 
 ---
 
+## Manual de Usuario
+
+Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalle distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
+
+En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
+
+> **Estado:** Completo respecto a las funcionalidades finalizadas hasta la fecha.
+
+---
+
 ## Instalación del Proyecto
 
 1. Tener instaladas las dependencias:
@@ -162,16 +172,6 @@ python main.py # en MacOS o Linux
 ```
 
 > **Estado:** No terminado.
-
----
-
-## Manual de Usuario
-
-Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalle distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
-
-En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
-
-> **Estado:** Completo respecto a las funcionalidades finalizadas hasta la fecha.
 
 ---
 
