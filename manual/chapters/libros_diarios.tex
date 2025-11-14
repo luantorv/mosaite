@@ -1,0 +1,123 @@
+\chapter{Libros Diarios}
+
+\section{¿Qué es un Libro Diario?}
+
+El Libro Diario es un documento contable que registra cronológicamente todas las operaciones de un período determinado. En Mosaite se genera en formato PDF.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/libro_diario_ejemplo.png}
+    \caption{Ejemplo de libro diario generado}
+    \label{fig:libro}
+\end{figure}
+
+\section{Crear un Libro Diario}
+
+\begin{enumerate}
+    \item Acceda a \textbf{Libros Diarios > Crear Libro Diario}
+    \item Configure los parámetros:
+    \begin{itemize}
+        \item \textbf{Nombre}: Identificador descriptivo (ej: "Libro Enero 2025")
+        \item \textbf{Rango de fechas}: Período a incluir
+        \item \textbf{Filtros}: Por usuario o grupo (opcional)
+    \end{itemize}
+    \item Haga clic en \textbf{Vista Previa} para revisar transacciones
+    \item Verifique la cantidad y totales
+    \item Haga clic en \textbf{Generar Libro Diario}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/crear_libro.png}
+    \caption{Formulario de creación de libro diario}
+    \label{fig:crear_libro}
+\end{figure}
+
+\begin{warningbox}
+Al generar un libro, todas las transacciones incluidas quedan en estado "Cerrada" y no pueden modificarse.
+\end{warningbox}
+
+\section{Proceso de Generación}
+
+Al generar un libro diario, el sistema:
+
+\begin{enumerate}
+    \item Selecciona transacciones \textbf{validadas} del período especificado
+    \item Las ordena cronológicamente
+    \item Genera un documento PDF estructurado
+    \item Cambia el estado de las transacciones a "Cerrada"
+    \item Guarda el libro en el sistema
+\end{enumerate}
+
+\section{Contenido del Libro Diario}
+
+El PDF generado incluye:
+
+\begin{description}
+    \item[Encabezado] Nombre, período, fecha de generación, usuario/grupo
+    \item[Cuerpo] Para cada transacción:
+        \begin{itemize}
+            \item Número de asiento
+            \item Fecha
+            \item Leyenda
+            \item Detalle de cuentas con débitos y créditos
+            \item Totales parciales
+        \end{itemize}
+    \item[Pie] Total general, cantidad de asientos, validación
+\end{description}
+
+\section{Buscar y Visualizar Libros}
+
+\subsection{Búsqueda}
+
+Acceda a \textbf{Libros Diarios > Buscar} y use filtros:
+\begin{itemize}
+    \item Por nombre
+    \item Por fecha de creación
+    \item Por período que cubren
+    \item Por usuario creador
+\end{itemize}
+
+\subsection{Visualización}
+
+Para ver un libro diario:
+\begin{itemize}
+    \item \textbf{Ver en línea}: Visualiza el PDF en el navegador
+    \item \textbf{Descargar}: Guarda el PDF en su dispositivo
+    \item \textbf{Ver Detalles}: Información del libro y transacciones incluidas
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/lista_libros.png}
+    \caption{Lista de libros diarios con opciones de visualización}
+    \label{fig:lista_libros}
+\end{figure}
+
+\section{Eliminación de Libros}
+
+Los administradores pueden eliminar libros diarios:
+
+\begin{enumerate}
+    \item Acceda al libro que desea eliminar
+    \item Seleccione \textbf{Eliminar}
+    \item Confirme la acción
+\end{enumerate}
+
+\begin{notebox}
+Al eliminar un libro, las transacciones vuelven al estado "Validada" y pueden incluirse en un nuevo libro.
+\end{notebox}
+
+\section{Recomendaciones}
+
+\begin{itemize}
+    \item Genere libros periódicamente (mensual, bimestral)
+    \item Use nombres descriptivos con el período
+    \item Descargue y respalde los PDF generados
+    \item En modo educativo, considere libros individuales por estudiante
+    \item Revise la vista previa antes de generar
+\end{itemize}
+
+\begin{tipbox}
+Es buena práctica generar un libro diario al finalizar cada período de práctica para mantener registros organizados.
+\end{tipbox}

@@ -1,0 +1,137 @@
+\chapter{Roles y Permisos}
+
+\section{Sistema de Control de Acceso}
+
+Mosaite implementa un sistema basado en roles que determina qué acciones puede realizar cada usuario.
+
+\section{Roles en Modo Educativo}
+
+\subsection{Professor}
+
+Rol administrativo con control total del sistema.
+
+\textbf{Permisos:}
+\begin{itemize}
+    \item Crear, editar y eliminar usuarios
+    \item Configurar el sistema
+    \item Administrar el plan de cuentas
+    \item Crear, validar y cerrar transacciones
+    \item Generar libros diarios
+    \item Supervisar trabajo de todos los estudiantes
+    \item Acceder al dashboard completo
+\end{itemize}
+
+\subsection{Student}
+
+Rol de usuario estándar para práctica contable.
+
+\textbf{Permisos:}
+\begin{itemize}
+    \item Crear y editar propias transacciones
+    \item Validar propias transacciones
+    \item Generar libros diarios propios
+    \item Consultar el plan de cuentas
+    \item Usar Chat RAG y ConsultorIA
+    \item Ver propio dashboard
+\end{itemize}
+
+\textbf{Restricciones:}
+\begin{itemize}
+    \item No puede modificar configuración
+    \item No puede gestionar usuarios
+    \item No puede editar plan de cuentas
+    \item No puede ver transacciones de otros
+\end{itemize}
+
+\section{Roles en Modo Empresarial}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{10cm}|}
+\hline
+\textbf{Rol} & \textbf{Descripción y Permisos Principales} \\
+\hline
+\textbf{Admin} & Control total. Todas las operaciones, configuración, gestión de usuarios, administración completa. \\
+\hline
+\textbf{Manager} & Supervisión amplia. Ver/editar transacciones, generar reportes, gestionar usuarios. No modifica configuración global. \\
+\hline
+\textbf{Accountant} & Operaciones contables. Crear/validar transacciones, generar libros, administrar cuentas. \\
+\hline
+\textbf{Operator} & Carga básica. Crear transacciones, consultar plan de cuentas, ver propias transacciones. \\
+\hline
+\textbf{Viewer} & Solo lectura. Consultar transacciones, ver libros, consultar plan de cuentas, ver dashboards. \\
+\hline
+\end{tabular}
+\caption{Roles en modo empresarial}
+\label{tab:roles}
+\end{table}
+
+\section{Permisos por Funcionalidad}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+\textbf{Funcionalidad} & \textbf{Crear} & \textbf{Ver} & \textbf{Editar} & \textbf{Eliminar} \\
+\hline
+Transacciones & Todos* & Todos & Account+ & Admin \\
+\hline
+Libros Diarios & Account+ & Todos & Admin & Admin \\
+\hline
+Usuarios & Admin & Manager+ & Admin & Admin \\
+\hline
+Plan de Cuentas & Account+ & Account+ & Account+ & Admin \\
+\hline
+Configuración & Admin & Manager+ & Admin & Admin \\
+\hline
+\end{tabular}
+\caption{Permisos por funcionalidad (*excepto Viewer, +y superiores)}
+\label{tab:permisos}
+\end{table}
+
+\section{Reglas Especiales}
+
+\subsection{Alcance de Datos}
+
+\begin{description}
+    \item[Students] Solo ven sus propias transacciones y libros
+    \item[Professors] Ven todo el contenido de sus grupos
+    \item[Accountants] Ven sus propios registros
+    \item[Managers y Admins] Ven todos los registros
+\end{description}
+
+\subsection{Edición de Transacciones}
+
+\begin{itemize}
+    \item Solo se editan transacciones "Por Validar"
+    \item Una vez validada, solo Admin puede revertir
+    \item Transacciones cerradas no se editan nunca
+\end{itemize}
+
+\subsection{Eliminación Protegida}
+
+\begin{itemize}
+    \item Cuentas usadas en transacciones solo se desactivan
+    \item Transacciones en libros cerrados no se eliminan
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/gestion_usuarios.png}
+    \caption{Pantalla de gestión de usuarios y roles}
+    \label{fig:usuarios}
+\end{figure}
+
+\section{Verificación de Permisos}
+
+\begin{itemize}
+    \item Los menús no disponibles aparecen deshabilitados o no visibles
+    \item Intentar una acción sin permiso muestra mensaje de error
+    \item Consulte con su administrador si cree que debería tener acceso a alguna funcionalidad
+\end{itemize}
+
+\begin{notebox}
+Su rol determina completamente qué puede hacer en el sistema. Revise su rol en su perfil de usuario.
+\end{notebox}

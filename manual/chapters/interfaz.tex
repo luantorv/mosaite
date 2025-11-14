@@ -1,0 +1,112 @@
+\chapter{Interfaz Principal}
+
+\section{Estructura General}
+
+La interfaz de Mosaite está organizada en tres áreas principales:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/interfaz_completa.png}
+    \caption{Estructura de la interfaz principal}
+    \label{fig:interfaz}
+\end{figure}
+
+\subsection{Barra Superior}
+
+Contiene elementos de navegación global:
+\begin{itemize}
+    \item \textbf{Logo}: Regreso a la pantalla principal
+    \item \textbf{Barra de búsqueda}: Búsqueda rápida de transacciones
+    \item \textbf{Selector de tema}: Cambio entre modo claro y oscuro
+    \item \textbf{Menú de usuario}: Perfil y cierre de sesión
+\end{itemize}
+
+\subsection{Menú Lateral (Sidebar)}
+
+Acceso a todas las funcionalidades:
+
+\begin{description}
+    \item[Dashboard] Vista general con estadísticas
+    \item[Transacciones] Gestión de asientos contables
+        \begin{itemize}
+            \item Crear Transacción
+            \item Buscar Transacciones
+            \item Transacciones Recientes
+        \end{itemize}
+    \item[Libros Diarios] Generación y consulta de libros
+        \begin{itemize}
+            \item Crear Libro Diario
+            \item Buscar Libros
+            \item Libros Recientes
+        \end{itemize}
+    \item[Plan de Cuentas] Administración de cuentas
+    \item[Chat] Asistente contable inteligente
+    \item[Usuarios] Gestión de usuarios (solo administradores)
+    \item[Configuración] Ajustes del sistema
+\end{description}
+
+\subsection{Área de Contenido Principal}
+
+Espacio central donde se visualiza el contenido de cada sección seleccionada.
+
+\section{Navegación}
+
+Para navegar entre secciones, haga clic en las opciones del menú lateral. El sistema actualiza el contenido sin recargar la página completa.
+
+\section{Temas Visuales}
+
+Mosaite ofrece dos temas:
+
+\begin{itemize}
+    \item \textbf{Tema Claro}: Fondo blanco, ideal para ambientes iluminados
+    \item \textbf{Tema Oscuro}: Fondo oscuro, reduce fatiga visual
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{img/tema_claro.png}
+    \hfill
+    \includegraphics[width=0.4\textwidth]{img/tema_oscuro.png}
+    \caption{Comparación entre tema claro y oscuro}
+    \label{fig:temas}
+\end{figure}
+
+Cambie de tema usando el selector en la barra superior.
+
+\section{Dashboard}
+
+El Dashboard muestra métricas clave de actividad:
+
+\begin{itemize}
+    \item \textbf{Total de Alumnos/Usuarios}: Cantidad de usuarios registrados
+    \item \textbf{Cantidad de Grupos}: Número de cursos o comisiones
+    \item \textbf{Asientos Totales}: Volumen de transacciones registradas
+    \item \textbf{Libros Diarios Creados}: Cantidad de libros generados
+\end{itemize}
+
+\subsection{Gráficos de Actividad}
+
+\begin{description}
+    \item[Gráfico Temporal] Evolución mensual de asientos y cobertura de validación
+    \item[Gráfico por Grupo] Comparación de actividad entre diferentes grupos
+\end{description}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/graficos_dashboard.png}
+    \caption{Gráficos de actividad en el Dashboard}
+    \label{fig:graficos}
+\end{figure}
+
+\begin{notebox}
+La \textbf{Cobertura} representa el porcentaje de transacciones validadas sobre el total. Una cobertura alta indica buen seguimiento del trabajo.
+\end{notebox}
+
+\subsection{Alertas de Consistencia}
+
+El Dashboard muestra alertas cuando detecta:
+\begin{itemize}
+    \item Diferencias entre saldo deudor y acreedor (error de partida doble)
+    \item Transacciones pendientes de validación por mucho tiempo
+    \item Usuarios inactivos por períodos prolongados
+\end{itemize}

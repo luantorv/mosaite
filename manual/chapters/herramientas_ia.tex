@@ -1,0 +1,170 @@
+\chapter{Herramientas de Inteligencia Artificial}
+
+\section{Chat RAG - Asistente Contable}
+
+El Chat RAG es un asistente inteligente que responde preguntas sobre teoría contable y funcionamiento del sistema.
+
+\subsection{¿Qué es RAG?}
+
+RAG (Retrieval Augmented Generation) combina búsqueda de información con generación de respuestas, proporcionando respuestas contextualizadas basadas en documentación teórica.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/chat_rag.png}
+    \caption{Interfaz del asistente contable}
+    \label{fig:chat}
+\end{figure}
+
+\subsection{Uso del Chat}
+
+\begin{enumerate}
+    \item Acceda a \textbf{Chat} desde el menú lateral
+    \item Escriba su pregunta en lenguaje natural
+    \item Presione Enter o haga clic en Enviar
+    \item El asistente procesará y responderá
+\end{enumerate}
+
+\subsection{Tipos de Consultas}
+
+El Chat puede responder sobre:
+
+\begin{description}
+    \item[Teoría Contable] Conceptos fundamentales, principios, definiciones
+    \item[Plan de Cuentas] Información sobre cuentas predeterminadas
+    \item[Uso del Sistema] Cómo realizar tareas en Mosaite
+\end{description}
+
+\textbf{Ejemplos de preguntas:}
+\begin{itemize}
+    \item "¿Qué es el principio de partida doble?"
+    \item "¿Cuál es la diferencia entre activo y pasivo?"
+    \item "¿Cómo creo una nueva transacción?"
+    \item "¿Para qué se usa la cuenta Proveedores?"
+\end{itemize}
+
+\subsection{Cómo Hacer Buenas Preguntas}
+
+\begin{tipbox}
+\textbf{Consejos para mejores respuestas:}
+\begin{itemize}
+    \item Sea específico en su pregunta
+    \item Proporcione contexto cuando sea necesario
+    \item Haga una pregunta a la vez
+    \item Use lenguaje natural y claro
+\end{itemize}
+\end{tipbox}
+
+\subsection{Limitaciones del Chat}
+
+\begin{warningbox}
+El Chat RAG \textbf{NO} puede:
+\begin{itemize}
+    \item Acceder a sus transacciones específicas
+    \item Realizar cálculos sobre sus datos
+    \item Generar asientos automáticamente
+    \item Proporcionar asesoramiento profesional legal
+\end{itemize}
+\end{warningbox}
+
+Para consultas sobre sus datos contables, use ConsultorIA.
+
+\section{ConsultorIA - Búsqueda por Lenguaje Natural}
+
+ConsultorIA permite consultar sus datos contables usando lenguaje natural.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/consultoria.png}
+    \caption{Interfaz de ConsultorIA}
+    \label{fig:consultoria}
+\end{figure}
+
+\subsection{¿Qué Hace ConsultorIA?}
+
+\begin{itemize}
+    \item Interpreta preguntas en lenguaje cotidiano
+    \item Las convierte automáticamente en consultas SQL
+    \item Busca en su base de datos de transacciones
+    \item Presenta resultados comprensibles
+\end{itemize}
+
+\subsection{Uso de ConsultorIA}
+
+\begin{enumerate}
+    \item Acceda a \textbf{Transacciones > Búsqueda por Lenguaje Natural}
+    \item Escriba su pregunta
+    \item Haga clic en \textbf{Consultar}
+    \item Revise los resultados
+\end{enumerate}
+
+\subsection{Tipos de Consultas}
+
+\textbf{Sobre gastos o ingresos:}
+\begin{itemize}
+    \item "¿Cuánto gasté en proveedores en abril?"
+    \item "¿Cuál fue el total de ventas este mes?"
+\end{itemize}
+
+\textbf{Sobre cuentas específicas:}
+\begin{itemize}
+    \item "¿Cuál es el saldo de la cuenta Caja?"
+    \item "Muéstrame movimientos de Bancos"
+\end{itemize}
+
+\textbf{Consultas temporales:}
+\begin{itemize}
+    \item "¿Cuántas transacciones registré ayer?"
+    \item "Muestra asientos de la semana pasada"
+\end{itemize}
+
+\textbf{Consultas comparativas:}
+\begin{itemize}
+    \item "¿Gasté más en marzo o abril?"
+    \item "Compara ventas de enero con febrero"
+\end{itemize}
+
+\subsection{Interpretación de Resultados}
+
+Los resultados pueden presentarse como:
+
+\begin{description}
+    \item[Valores numéricos] "El total gastado fue \$45,320"
+    \item[Listas] Detalle de transacciones encontradas
+    \item[Tablas comparativas] Comparaciones por período
+    \item[Respuestas descriptivas] Resúmenes de actividad
+\end{description}
+
+\subsection{Diferencias Entre Chat y ConsultorIA}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Característica} & \textbf{Chat RAG} & \textbf{ConsultorIA} \\
+\hline
+Propósito & Teoría y uso del sistema & Consultas sobre sus datos \\
+\hline
+Acceso a datos & NO accede a transacciones & SÍ accede a sus transacciones \\
+\hline
+Tipo de respuestas & Conceptuales y educativas & Numéricas y basadas en datos \\
+\hline
+Ejemplo de uso & "¿Qué es un activo?" & "¿Cuánto gasté en mayo?" \\
+\hline
+\end{tabular}
+\caption{Comparación entre Chat RAG y ConsultorIA}
+\label{tab:comparacion}
+\end{table}
+
+\subsection{Consejos para Mejores Resultados}
+
+\begin{enumerate}
+    \item Sea claro y específico en sus preguntas
+    \item Especifique períodos cuando sea relevante
+    \item Use nombres correctos de cuentas
+    \item Para consultas complejas, divídalas en varias simples
+    \item Si no obtiene el resultado esperado, reformule
+\end{enumerate}
+
+\begin{notebox}
+ConsultorIA solo consulta información, no modifica datos. Es una herramienta de solo lectura.
+\end{notebox}

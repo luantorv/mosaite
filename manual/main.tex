@@ -1,36 +1,120 @@
-\documentclass[12pt]{article}
-\usepackage[spanish]{babel}
-\usepackage[T1]{fontenc}
+\documentclass[12pt,a4paper]{report}
+
+% Paquetes esenciales
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx} % Required for inserting images
-\usepackage{xcolor}   % Para usar colores
-\usepackage{geometry} % Para ajustar márgenes
-\usepackage{tocloft}  % Para el indice
-\usepackage{hyperref} % Para links
-\usepackage{tcolorbox} % Cuadros de texto
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{float}
 
-\title{Mosaite - Manual de Usuario}
-\author{Reis Viera, Luis Antonio}
-\date{Año 2025}
-
-% Cambiar márgenes
-\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
-
-\hypersetup{
-    colorlinks=true,      % Colores en lugar de cajas
-    linkcolor=black,      % Color para enlaces internos
-    urlcolor=blue,        % Color para enlaces externos
-    breaklinks=true       % Permitir saltos de línea en los enlaces
+% Configuración de página
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
 }
 
+% Configuración de colores
+\definecolor{mosaiteblue}{RGB}{41, 128, 185}
+\definecolor{mosaitegreen}{RGB}{39, 174, 96}
+\definecolor{mosaitewarning}{RGB}{230, 126, 34}
+
+% Configuración de enlaces
+\hypersetup{
+    colorlinks=true,
+    linkcolor=mosaiteblue,
+    filecolor=mosaiteblue,
+    urlcolor=mosaiteblue,
+    citecolor=mosaiteblue,
+    pdfborder={0 0 0}
+}
+
+% Configuración de encabezados y pies de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\textbf{Mosaite}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Formato de títulos de capítulos
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries\color{mosaiteblue}}
+    {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+% Formato de secciones
+\titleformat{\section}
+    {\normalfont\Large\bfseries\color{mosaiteblue}}
+    {\thesection}{1em}{}
+\titleformat{\subsection}
+    {\normalfont\large\bfseries\color{mosaitegreen}}
+    {\thesubsection}{1em}{}
+
+% Cajas personalizadas
+\newtcolorbox{notebox}{
+    colback=blue!5!white,
+    colframe=mosaiteblue,
+    title=Nota,
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{warningbox}{
+    colback=orange!5!white,
+    colframe=mosaitewarning,
+    title=Importante,
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{tipbox}{
+    colback=green!5!white,
+    colframe=mosaitegreen,
+    title=Consejo,
+    fonttitle=\bfseries
+}
+
+% Información del documento
+\title{
+    \vspace{-2cm}
+    \includegraphics[width=0.4\textwidth]{img/logo.png}\\[2cm]
+    {\Huge\bfseries Manual de Usuario}\\[0.5cm]
+    {\Large Mosaite}\\[0.3cm]
+    {\large Plataforma Educativa de Contabilidad Básica}
+}
+\author{Luis Antonio Reis Viera}
+\date{Nov. 2025}
 
 \begin{document}
 
-\input{other/portada.tex}
+% Portada
+\maketitle
+\thispagestyle{empty}
+\newpage
 
-\input{other/intro.tex}
+% Tabla de contenidos
+\tableofcontents
+\newpage
 
-\input{cap/cap1.tex}
-\input{cap/cap2.tex}
+% Capítulos
+\input{chapters/introduccion}
+\input{chapters/primeros_pasos}
+\input{chapters/interfaz}
+\input{chapters/transacciones}
+\input{chapters/libros_diarios}
+\input{chapters/herramientas_ia}
+\input{chapters/roles_permisos}
+
+% Apéndices
+\appendix
+\input{chapters/faq}
+\input{chapters/glosario}
 
 \end{document}

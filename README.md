@@ -171,7 +171,7 @@ Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/
 
 En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
 
-> **Estado:** No terminado.
+> **Estado:** Completo respecto a las funcionalidades finalizadas hasta la fecha.
 
 ---
 
@@ -225,11 +225,11 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 ## Funcionalidades
 
 - ConsultarIA _(el módulo de búsqueda impulsada por IA)_ ya funciona, falta implementarlo.
-- Daily _(el módulo de creación de libros diarios en PDF)_ ya está listo para su implementación.
+- Daily _(el módulo de creación de libros diarios en PDF)_ está listo para su implementación.
 - Hay un POC para experimentar el flujo de uso del proyecto.
 - Hay un Ayudante basado en LLM/RAG para consultar información contable.
-- El frontend está hecho (Falta terminar la integración con el backend).
-- El login funciona y hay manejo de usuarios mediante el componente UsuariosLista.js.
+- Las funcionalidades terminadas en el backend también lo está en el frontend; las que no, tienen un _spaceholder_ de momento.
+- La documentación y el manual de usuarios están al día con las funcionalidades terminadas.
 
 ---
 
@@ -248,12 +248,11 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 
 ## Por hacer
 
-- Terminar el backend _(en progreso)_.
-- Hacer el testing _(en progreso)_.
-- Realizar la documentación _(en progreso)_
-- Terminar el frontend _(en progreso)_.
-- Complementar la integración de back y front _(en progreso)_.
-- Terminar el manual de usuario.
+- Hacer la app `daily` para la creación y manejo de libros diarios y el frontend correspondiente.
+- Hacer la app `search` para el consumo del servicio `consultoIA` y el frontend correspondiente.
+- Mejorar el testing.
+- Hacer testing en el frontend.
+- Terminar el manual de usuario cuando se terminen las _features_ principales.
 
 ---
 
@@ -456,14 +455,32 @@ mosaite/
 |   |   |   package.json
 |   |   |   README.md
 |   manual/
-|   |   cap/
-|   |   |   cap1.tex
-|   |   |   cap2.tex
+|   |   chapter/
+|   |   |   faq.tex
+|   |   |   glosario.tex
+|   |   |   herramientas.tex
+|   |   |   interfaz.tex
+|   |   |   introduccion.tex
+|   |   |   libros_diarios.tex
+|   |   |   primeros_pasos.tex
+|   |   |   roles_permisos.tex
+|   |   |   transacciones.tex
 |   |   img/
+|   |   |   buscar_transacciones.png
+|   |   |   chat_rag.png
+|   |   |   configuracion.png
+|   |   |   crear_transaccion.png
+|   |   |   dashboard_principal.png
+|   |   |   estados_transaccion.png
+|   |   |   gestion_usuarios.png
+|   |   |   graficos_dashboard.png
+|   |   |   interfaz_completa.png
+|   |   |   lista_usuarios.png
+|   |   |   login.png
 |   |   |   logo.png
-|   |   other/
-|   |   |   intro.tex
-|   |   |   portada.tex
+|   |   |   plan_cuentas.png
+|   |   |   tema_claro.png
+|   |   |   tema_oscuro.png
 |   |   main.pdf
 |   |   main.tex
 |   POC/

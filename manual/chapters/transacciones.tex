@@ -1,0 +1,177 @@
+\chapter{Gestión de Transacciones}
+
+\section{Conceptos Básicos}
+
+Una \textbf{transacción} es un asiento contable que registra un hecho económico siguiendo el principio de \textbf{partida doble}: el total de los débitos debe ser igual al total de los créditos.
+
+\subsection{Componentes de una Transacción}
+
+\begin{itemize}
+    \item \textbf{Fecha}: Cuando ocurrió la operación
+    \item \textbf{Leyenda}: Descripción del hecho económico
+    \item \textbf{Entradas}: Líneas del asiento con cuentas, importes y clasificación (Debe/Haber)
+\end{itemize}
+
+\section{Crear una Transacción}
+
+\begin{enumerate}
+    \item Acceda a \textbf{Transacciones > Crear Transacción}
+    \item Complete los datos generales:
+    \begin{itemize}
+        \item Fecha de la transacción
+        \item Leyenda descriptiva
+    \end{itemize}
+    \item Agregue las entradas del asiento:
+    \begin{itemize}
+        \item Haga clic en \textbf{Agregar Entrada}
+        \item Seleccione la cuenta
+        \item Ingrese el importe
+        \item Especifique Debe o Haber
+    \end{itemize}
+    \item Verifique el balance (Total Debe = Total Haber)
+    \item Guarde la transacción
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/crear_transaccion.png}
+    \caption{Formulario de creación de transacción}
+    \label{fig:crear_trans}
+\end{figure}
+
+\begin{warningbox}
+El sistema solo permitirá guardar cuando el asiento esté balanceado (Debe = Haber).
+\end{warningbox}
+
+\section{Estados de las Transacciones}
+
+Las transacciones pueden tener tres estados:
+
+\begin{description}
+    \item[Por Validar] Estado inicial. Puede editarse y eliminarse.
+    \item[Validada] Revisada y confirmada. Lista para libro diario. No puede editarse.
+    \item[Cerrada] Incluida en un libro diario. No puede modificarse nunca.
+\end{description}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/estados_transaccion.png}
+    \caption{Flujo de estados de una transacción}
+    \label{fig:estados}
+\end{figure}
+
+\section{Validación de Transacciones}
+
+La validación confirma que una transacción está correcta:
+
+\begin{enumerate}
+    \item Acceda a \textbf{Transacciones > Buscar Transacciones}
+    \item Filtre por estado "Por Validar"
+    \item Revise cada transacción:
+    \begin{itemize}
+        \item Fecha correcta
+        \item Leyenda descriptiva
+        \item Cuentas apropiadas
+        \item Importes correctos
+        \item Asiento balanceado
+    \end{itemize}
+    \item Haga clic en \textbf{Validar}
+\end{enumerate}
+
+\begin{tipbox}
+Valide transacciones regularmente. Solo las transacciones validadas pueden incluirse en libros diarios.
+\end{tipbox}
+
+\section{Búsqueda de Transacciones}
+
+\subsection{Búsqueda Rápida}
+
+Use la barra superior para búsquedas simples por:
+\begin{itemize}
+    \item Número de transacción
+    \item Palabras en la leyenda
+\end{itemize}
+
+\subsection{Búsqueda Avanzada}
+
+Acceda a \textbf{Transacciones > Buscar} para filtrar por:
+
+\begin{itemize}
+    \item \textbf{Fecha}: Específica o rango
+    \item \textbf{Estado}: Por Validar, Validada, Cerrada
+    \item \textbf{Usuario}: Creador de la transacción
+    \item \textbf{Cuenta}: Transacciones que incluyan una cuenta específica
+    \item \textbf{Monto}: Rango de importes
+    \item \textbf{Texto}: Búsqueda en leyendas
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/buscar_transacciones.png}
+    \caption{Filtros de búsqueda avanzada}
+    \label{fig:busqueda}
+\end{figure}
+
+Puede combinar múltiples filtros para búsquedas precisas.
+
+\section{Plan de Cuentas}
+
+El plan de cuentas es la estructura de clasificación contable.
+
+\subsection{Visualizar el Plan de Cuentas}
+
+Acceda a \textbf{Plan de Cuentas > Ver Plan de Cuentas} para consultar todas las cuentas disponibles.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/plan_cuentas.png}
+    \caption{Vista del plan de cuentas}
+    \label{fig:plan_cuentas}
+\end{figure}
+
+\subsection{Crear Nuevas Cuentas}
+
+Usuarios con permisos apropiados pueden agregar cuentas:
+
+\begin{enumerate}
+    \item Acceda a \textbf{Plan de Cuentas > Crear Cuenta}
+    \item Complete los datos:
+    \begin{itemize}
+        \item Código único
+        \item Nombre descriptivo
+        \item Naturaleza (Deudora o Acreedora)
+    \end{itemize}
+    \item Guarde la cuenta
+\end{enumerate}
+
+\begin{notebox}
+Las cuentas no pueden modificarse una vez creadas. Si comete un error, desactive la cuenta y cree una nueva.
+\end{notebox}
+
+\subsection{Desactivar Cuentas}
+
+En lugar de eliminar, las cuentas se desactivan:
+\begin{itemize}
+    \item Estado \textbf{Activo}: Disponible para nuevas transacciones
+    \item Estado \textbf{Inactivo}: No disponible, pero se mantiene por integridad histórica
+\end{itemize}
+
+\begin{warningbox}
+Las cuentas utilizadas en transacciones no pueden eliminarse, solo desactivarse.
+\end{warningbox}
+
+\section{Ejemplo Práctico}
+
+\textbf{Caso}: Registrar compra de mercadería en efectivo por \$10,000
+
+\begin{enumerate}
+    \item Crear nueva transacción con fecha actual
+    \item Leyenda: "Compra de mercadería en efectivo"
+    \item Agregar entradas:
+    \begin{itemize}
+        \item Cuenta "Mercaderías" - Debe \$10,000
+        \item Cuenta "Caja" - Haber \$10,000
+    \end{itemize}
+    \item Verificar balance: Debe = Haber = \$10,000
+    \item Guardar transacción (quedará en estado "Por Validar")
+\end{enumerate}
