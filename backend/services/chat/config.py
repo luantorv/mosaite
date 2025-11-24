@@ -5,14 +5,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 VECTOR_STORE_DIR = BASE_DIR / "vector_store"
-MODEL_PATH = BASE_DIR.parent / "consultorIA" / "core" / "Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
 
 # Configuración del modelo de embeddings
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIMENSION = 384  # Dimensión del modelo all-MiniLM-L6-v2
 
 # Configuración del modelo LLM
-LLM_MODEL_PATH = str(MODEL_PATH)
 LLM_CONTEXT_SIZE = 2048
 LLM_MAX_TOKENS = 512
 LLM_TEMPERATURE = 0.7

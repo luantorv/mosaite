@@ -372,26 +372,46 @@ mosaite/
 |   |   |   chat/
 |   |   |   |   data/
 |   |   |   |   |   manual_cuentas.md
+|   |   |   |   |   manual_usuario.md
 |   |   |   |   |   SIC1.md
 |   |   |   |   __init__.py
 |   |   |   |   config.py
 |   |   |   |   embedder.py
 |   |   |   |   init_index.py
-|   |   |   |   llm.client.py
+|   |   |   |   llm_client.py
 |   |   |   |   rag_service.py
 |   |   |   |   vector_store.py
 |   |   |   consultorIA/
-|   |   |   |   core/
-|   |   |   |   |   Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
 |   |   |   |   __init__.py
-|   |   |   |   example.py
+|   |   |   |   config.py
+|   |   |   |   consultor_service.py
 |   |   |   |   examples.json
+|   |   |   |   llm_client.py
 |   |   |   |   main.py
 |   |   |   |   schema.txt
+|   |   |   |   sql_classifier.py
+|   |   |   |   sql_validator.py
 |   |   |   daily/
 |   |   |   |   __init__.py
 |   |   |   |   main.py
+|   |   |   llm_gateway/
+|   |   |   |   core/
+|   |   |   |   |   Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
+|   |   |   |   providers/
+|   |   |   |   |   __init__.py
+|   |   |   |   |   anthropic_provider.py
+|   |   |   |   |   base.py
+|   |   |   |   |   google_provider.py
+|   |   |   |   |   local_provider.py
+|   |   |   |   |   openai_provider.py
+|   |   |   |   __init__.py
+|   |   |   |   .env.example
+|   |   |   |   config.py
+|   |   |   |   llm_gateway.py
+|   |   |   |   test.py
+|   |   conftest.py
 |   |   manage.py
+|   |   pytest.ini
 |   |   README.md
 |   |   requirements.txt
 |   frontend/

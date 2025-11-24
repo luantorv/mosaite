@@ -11,11 +11,18 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Agregar services/ al PYTHONPATH para poder importar llm_gateway
+SERVICES_DIR = BASE_DIR / 'services'
+if str(SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVICES_DIR))
+    print(f"[Django] PYTHONPATH configurado: {SERVICES_DIR}")
 
 
 # Quick-start development settings - unsuitable for production

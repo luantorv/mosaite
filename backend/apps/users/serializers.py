@@ -8,27 +8,38 @@ from .utils import get_role_display_name, validate_role_for_system
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
-    Serializer personalizado para login que valida el estado del usuario
+    Serializer personalizado para login que usa email y valida el estado del usuario
     """
+    username_field = 'email'  # Usar email en lugar de username
+    
     def validate(self, attrs):
-        # Primero obtenemos el usuario
+        # Ahora attrs contendrá 'email' en lugar de 'username'
+        email = attrs.get(self.username_field)
+        
         try:
-            user = User.objects.get(email=attrs.get('email'))
+            # Obtener el usuario por email
+            user = User.objects.get(email=email)
             
-            # Verificar si el usuario está inactivo
+            # Verificar si el usuario está inactivo (status != 0)
             if user.status != 0:
                 raise serializers.ValidationError(
                     'Esta cuenta está inactiva. Contacta al administrador.'
                 )
             
         except User.DoesNotExist:
-            pass  # Dejar que la validación normal maneje esto
+            # Si no existe, dejar que la validación normal lo maneje
+            pass
         
-        # Llamar a la validación original
+        # Llamar a la validación original de JWT
         data = super().validate(attrs)
         
+        # Opcional: Agregar información adicional del usuario al token
+        data['user_id'] = self.user.user_id
+        data['name'] = self.user.name
+        data['email'] = self.user.email
+        data['rol'] = self.user.rol
+        
         return data
-
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False, validators=[validate_password])
