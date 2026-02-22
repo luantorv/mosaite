@@ -1,8 +1,8 @@
 Notas/
+
+# Python
 backend/*/*/core/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
 backend/db.sqlite3
-.env
-frontend/front/.env
 backend/*/__pycache__
 backend/*/*/__pycache__
 backend/*/*/*/__pycache__
@@ -11,8 +11,9 @@ backend/apps/*/migrations/
 backend/services/chat/vector_store/
 backend/.pytest_cache
 backend/.coverage
-
 */__pycache__
+
+# LaTeX
 manual/*.toc
 manual/*.out
 manual/*.fls
@@ -20,3 +21,15 @@ manual/*.aux
 manual/*.fdb_latexmk
 manual/*.log
 manual/*.synctex.gz
+
+# Nix
+.direnv/
+result
+
+# Environment
+.venv
+.env
+frontend/front/.env
+
+# Node
+*/front/node_modules
