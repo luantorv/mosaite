@@ -13,8 +13,6 @@
 
         pythonEnv = pkgs.python312;
 
-        # Paquetes de sistema necesarios para compilar algunas dependencias pip
-        # (llama_cpp_python, faiss, etc. necesitan gcc, cmake, etc.)
         buildDeps = with pkgs; [
           gcc
           cmake
@@ -48,7 +46,6 @@
             # LaTeX
             latexEnv
 
-            # Herramientas de sistema para compilar deps de pip
           ] ++ buildDeps ++ (with pkgs; [
             # Utilidades generales
             git
