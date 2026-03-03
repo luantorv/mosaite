@@ -4,9 +4,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+
+    llama-model = {
+      url = "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, llama-model }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -74,12 +79,13 @@
           installPhase = ''
             mkdir -p $out/bin
             mkdir -p $out/share/mosaite
+            mkdir -p $out/share/mosaite/backend/services/llm_gateway/core/
 
-            # Copiamos el backend y el TUI
-            cp -r backend $out/share/mosaite/
-            cp -r tui $out/share/mosaite/
-            cp main.py $out/share/mosaite/
-            cp main.tcss $out/share/mosaite/
+            # Copiamos todo el código fuente
+            cp -r . $out/share/mosaite/
+
+            # Vínculo al modelo
+            ln -s ${llama-model} $out/share/mosaite/backend/services/llm_gateway/core/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
 
             # Hacemos un script ejecutable que lance tu TUI con el Python correcto
             cat <<EOF > $out/bin/mosaite-tui
