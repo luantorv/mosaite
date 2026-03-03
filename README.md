@@ -8,7 +8,7 @@ Además, incluye herramientas basadas en lenguaje natural —como búsquedas y u
 
 Mosaite está diseñado para su uso tanto individual como en entornos educativos, permitiendo que profesores y estudiantes trabajen sobre el mismo sistema.
 
-<img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto>
+<div align="center"><img src="./frontend/front/src/assets/logo.png" alt="Logo Mosaite" width=auto></div>
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/luantorv/mosaite)
 
@@ -21,7 +21,7 @@ Mosaite está diseñado para su uso tanto individual como en entornos educativos
 
 ## Manual de Usuario
 
-Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalle distintas cuestiones relacionadas a la instalación y configuración del sistema, como también del modo de uso.
+Se ha incluído un [Manual de Usuario](https://github.com/luantorv/mosaite/blob/main/manual/main.pdf) hecho en LaTeX donde se explicarán en detalle distintas cuestiones relacionadas a la instalación y configuración del sistema, como también al modo de uso.
 
 En éste repositorio también se dejarán los archivos `.tex` para quien quiera verlos y/o compilarlos, así como el `.pdf` correspondiente para su lectura.
 
