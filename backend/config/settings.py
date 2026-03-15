@@ -22,8 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SERVICES_DIR = BASE_DIR / 'services'
 if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
-    print(f"[Django] PYTHONPATH configurado: {SERVICES_DIR}")
 
+APPS_DIR = BASE_DIR / 'apps'
+if str(APPS_DIR) not in sys.path:
+    sys.path.insert(0, str(APPS_DIR))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
