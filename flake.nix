@@ -139,6 +139,14 @@
               python -m venv "$VENV_DIR"
               echo "[nix] Instalando dependencias desde requirements.txt ..."
               "$VENV_DIR/bin/pip" install --upgrade pip
+
+              # Instalar llama-cpp-python con flags de compilación optimizados
+              # antes del resto de requirements.txt para evitar que pip lo sobreescriba
+              echo "[nix] Compilando llama-cpp-python con soporte AVX2..."
+              CMAKE_ARGS="-DGGML_AVX=on -DGGML_AVX2=on -DGGML_F16C=on -DGGML_FMA=on" \
+              "$VENV_DIR/bin/pip" install llama-cpp-python --no-cache-dir --force-reinstall
+
+              echo "[nix] Instalando resto de dependencias..."
               "$VENV_DIR/bin/pip" install -r backend/requirements.txt
             fi
 
