@@ -23,9 +23,11 @@ API_KEY_ENV_VARS = {
 }
 
 # Configuración del modelo local
+total_cores = os.cpu_count() or 4 # fallback a 4
 LOCAL_MODEL_CONFIG = {
-    "n_ctx": 2048,
-    "n_threads": 4,
+    "n_ctx": 4096,
+    "n_threads": max(1, int(total_cores * (2/3))),
+    "n_threads_batch": max(1, int(total_cores * (2/3))),
     "n_batch": 512,
     "use_mlock": True,
 }

@@ -1,4 +1,5 @@
 import os
+from ..config import LOCAL_MODEL_CONFIG
 from pathlib import Path
 from typing import Optional, Generator
 import threading
@@ -23,9 +24,9 @@ class LocalProvider(LLMProvider):
         self._stop_generation = False
         
         # Configuración del modelo
-        self.n_ctx = 2048
-        self.n_threads = 4
-        self.n_batch = 512
+        self.n_ctx = LOCAL_MODEL_CONFIG["n_ctx"]
+        self.n_threads = LOCAL_MODEL_CONFIG["n_threads"]
+        self.n_batch = LOCAL_MODEL_CONFIG["n_batch"]
     
     def initialize(self) -> bool:
         """Inicializa verificando que el modelo existe"""
