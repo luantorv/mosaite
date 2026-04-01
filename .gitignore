@@ -23,7 +23,6 @@ manual/*.log
 manual/*.synctex.gz
 
 # Nix
-.direnv/
 result
 
 # Environment
