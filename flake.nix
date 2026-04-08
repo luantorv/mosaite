@@ -6,7 +6,7 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     llama-model = {
-      url = "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf";
+      url = "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/blob/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf";
       flake = false;
     };
   };
@@ -17,7 +17,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         # 1. Dependencias de desarrollo
-        buildDeps = with pkgs; [ gcc cmake gnumake pkg-config stdenv.cc.cc.lib ];
+        buildDeps = with pkgs; [ gcc cmake gnumake pkg-config stdenv.cc.cc.lib llvmPackages.openmp openblas openblas.dev ];
         
         latexEnv = pkgs.texlive.combine {
           inherit (pkgs.texlive) scheme-medium tcolorbox latexmk;
@@ -85,7 +85,7 @@
             cp -r . $out/share/mosaite/
 
             # Vínculo al modelo
-            ln -s ${llama-model} $out/share/mosaite/backend/services/llm_gateway/core/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
+            ln -s ${llama-model} $out/share/mosaite/backend/services/llm_gateway/core/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf
 
             # Hacemos un script ejecutable que lance tu TUI con el Python correcto
             cat <<EOF > $out/bin/mosaite-tui
@@ -128,6 +128,8 @@
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
             stdenv.cc.cc.lib
             zlib
+            openblas
+            llvmPackages.openmp
           ]);
 
           shellHook = ''
@@ -143,7 +145,7 @@
               # Instalar llama-cpp-python con flags de compilación optimizados
               # antes del resto de requirements.txt para evitar que pip lo sobreescriba
               echo "[nix] Compilando llama-cpp-python con soporte AVX2..."
-              CMAKE_ARGS="-DGGML_AVX=on -DGGML_AVX2=on -DGGML_F16C=on -DGGML_FMA=on" \
+              CMAKE_ARGS="-DGGML_NATIVE=ON -DGGML_OPENMP=ON -DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS -DBLAS_INCLUDE_DIRS=${pkgs.openblas.dev}/include" \
               "$VENV_DIR/bin/pip" install llama-cpp-python --no-cache-dir --force-reinstall
 
               echo "[nix] Instalando resto de dependencias..."

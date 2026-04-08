@@ -21,13 +21,13 @@
     "llama-model": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-SGqXl8E5YIJA5/gglXV0+PcwpCRlLIC3WwdL7Z5CEJ0=",
+        "narHash": "sha256-VvF1ZU0bD7M057FEBK36f2hZGc/LiLKB+NtREqJMfA8=",
         "type": "file",
-        "url": "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
+        "url": "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/blob/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
       },
       "original": {
         "type": "file",
-        "url": "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
+        "url": "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/blob/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
       }
     },
     "nixpkgs": {

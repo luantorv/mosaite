@@ -16,7 +16,7 @@ class LocalProvider(LLMProvider):
         # Si no se especifica ruta, usar la ruta por defecto
         if model_path is None:
             base_dir = Path(__file__).resolve().parent.parent
-            model_path = base_dir / "core" / "Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
+            model_path = base_dir / "core" / "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
         
         self.model_path = str(model_path)
         self.model: Optional[Llama] = None

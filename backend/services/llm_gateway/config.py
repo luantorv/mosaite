@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent
 MODEL_DIR = BASE_DIR / "core"
 
 # Ruta al modelo local
-LOCAL_MODEL_PATH = MODEL_DIR / "Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
+LOCAL_MODEL_PATH = MODEL_DIR / "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
 
 # Configuración de modelos por defecto para cada provider
 DEFAULT_MODELS = {
