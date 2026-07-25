@@ -172,7 +172,7 @@ def _replace_template_values(template_content: str, replacements: Dict[str, str]
 
 def _escape_latex_special_chars(text: str) -> str:
     """Escapa caracteres especiales de LaTeX"""
-    
+
     # Caracteres que necesitan ser escapados en LaTeX
     latex_special_chars = {
         '&': r'\&',
@@ -186,12 +186,13 @@ def _escape_latex_special_chars(text: str) -> str:
         '~': r'\textasciitilde{}',
         '\\': r'\textbackslash{}'
     }
-    
-    result = text
-    for char, replacement in latex_special_chars.items():
-        result = result.replace(char, replacement)
-    
-    return result
+
+    # Sustitución en una sola pasada: cada carácter se reemplaza una única vez y
+    # las sustituciones no se vuelven a escanear. Esto evita el bug de escapar
+    # varias veces (p. ej. el '\' que introduce '\&' no debe convertirse a su vez
+    # en '\textbackslash{}').
+    pattern = re.compile('|'.join(re.escape(char) for char in latex_special_chars))
+    return pattern.sub(lambda match: latex_special_chars[match.group()], text)
 
 
 def _compile_latex_to_pdf(
@@ -293,6 +294,47 @@ def _cleanup_auxiliary_files(directory: str, filename: str) -> None:
             except Exception:
                 # Si no se puede eliminar, no es crítico
                 pass
+
+
+def escape_latex(text: str) -> str:
+    """
+    Escapa los caracteres especiales de LaTeX de un texto (envoltura pública).
+
+    Útil cuando se construye un documento LaTeX dinámicamente y solo se quiere
+    escapar el contenido provisto por el usuario (nombres de cuentas, leyendas),
+    dejando intacta la estructura LaTeX que arma el propio código.
+    """
+    return _escape_latex_special_chars(text)
+
+
+def compile_latex_to_pdf(latex_content: str, output_dir: str, filename: str) -> str:
+    """
+    Compila un documento LaTeX ya renderizado a PDF y devuelve la ruta del PDF.
+
+    A diferencia de `latex_to_pdf`, no realiza sustitución de plantillas ni
+    validación de claves `{{...}}`: recibe el contenido LaTeX completo. Es la vía
+    adecuada para documentos con estructura dinámica (tablas de tamaño variable,
+    como un libro diario).
+
+    Args:
+        latex_content: Documento LaTeX completo como cadena.
+        output_dir: Directorio donde guardar el PDF resultante.
+        filename: Nombre del archivo PDF (sin extensión).
+
+    Returns:
+        str: Ruta absoluta del PDF generado.
+
+    Raises:
+        LaTeXToPDFError: Si ocurre algún error en la compilación.
+    """
+    if not isinstance(latex_content, str):
+        raise LaTeXToPDFError(f"latex_content debe ser string, recibido: {type(latex_content)}")
+
+    output_path = Path(output_dir)
+    _validate_output_directory(output_path)
+
+    pdf_path = _compile_latex_to_pdf(latex_content, output_path, filename)
+    return str(pdf_path)
 
 
 # Función auxiliar para uso más simple
