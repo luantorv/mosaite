@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useTheme } from "../../context/ThemeContext"
 import TransaccionesApp from "./TransaccionCard"
+import TransaccionEditar from "./TransaccionEditar"
 import transactionService from "../../services/TransactionService"
 
 function TransaccionRecientes() {
@@ -8,6 +9,7 @@ function TransaccionRecientes() {
   const [transacciones, setTransacciones] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [transaccionEnEdicion, setTransaccionEnEdicion] = useState(null)
 
   // Cargar transacciones al montar el componente
   useEffect(() => {
@@ -65,8 +67,14 @@ function TransaccionRecientes() {
 
   const handleEditar = (transaction) => {
     console.log("✏️ Editar transacción:", transaction)
-    // TODO: Implementar modal de edición o navegar a página de edición
-    alert("Funcionalidad de edición en desarrollo")
+    setTransaccionEnEdicion(transaction)
+  }
+
+  const handleTransaccionActualizada = (transaccionActualizada) => {
+    console.log("✅ Transacción actualizada:", transaccionActualizada)
+    setTransacciones((prev) =>
+      prev.map((t) => (t.trans_id === transaccionActualizada.trans_id ? transaccionActualizada : t))
+    )
   }
 
   if (loading) {
@@ -145,6 +153,14 @@ function TransaccionRecientes() {
         onActualizarEstado={handleActualizarEstado}
         onEditar={handleEditar}
       />
+
+      {transaccionEnEdicion && (
+        <TransaccionEditar
+          transaction={transaccionEnEdicion}
+          onClose={() => setTransaccionEnEdicion(null)}
+          onUpdated={handleTransaccionActualizada}
+        />
+      )}
     </div>
   )
 }
