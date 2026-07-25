@@ -1,7 +1,15 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTheme } from "../../context/ThemeContext"
+import Pagination from "./Pagination"
 
-const LibroDiarioCard = ({ libroDiario, onDescargar, onBorrar }) => {
+const LibroDiarioCard = ({
+  libroDiario,
+  onDescargar,
+  onBorrar,
+  selectable = false,
+  selected = false,
+  onToggleSelect,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [hoveredButton, setHoveredButton] = useState(null)
   const { theme } = useTheme()
@@ -29,6 +37,8 @@ const LibroDiarioCard = ({ libroDiario, onDescargar, onBorrar }) => {
         background: theme.background,
         borderRadius: "12px",
         boxShadow: theme.cardShadowOut,
+        border: selected ? `2px solid ${theme.primaryColor || "#667eea"}` : "2px solid transparent",
+        transition: "border 0.2s ease",
       }}
     >
       <div
@@ -38,6 +48,24 @@ const LibroDiarioCard = ({ libroDiario, onDescargar, onBorrar }) => {
           justifyContent: "space-between",
         }}
       >
+        {/* Checkbox de selección */}
+        {selectable && (
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggleSelect && onToggleSelect(libroDiario.id)}
+            title="Seleccionar libro diario"
+            style={{
+              width: "20px",
+              height: "20px",
+              marginRight: "12px",
+              cursor: "pointer",
+              accentColor: theme.primaryColor || "#667eea",
+              flexShrink: 0,
+            }}
+          />
+        )}
+
         {/* Parte izquierda - Contenido principal */}
         <div
           style={{
@@ -195,6 +223,65 @@ const LibroDiarioCard = ({ libroDiario, onDescargar, onBorrar }) => {
 // Componente principal que maneja la lista de libros diarios
 const LibrosDiariosApp = ({ librosDiarios = [], onDescargar, onBorrar }) => {
   const { theme } = useTheme()
+  const [selectedIds, setSelectedIds] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+
+  // Ordenar libros diarios por fecha (más reciente primero)
+  const librosDiariosOrdenados = [...(librosDiarios || [])].sort((a, b) => {
+    const fechaA = new Date(a.fecha).getTime()
+    const fechaB = new Date(b.fecha).getTime()
+    return fechaB - fechaA
+  })
+
+  // --- Paginación ---
+  const totalItems = librosDiariosOrdenados.length
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage))
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages)
+  }, [currentPage, totalPages])
+
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginaActual = librosDiariosOrdenados.slice(startIndex, startIndex + itemsPerPage)
+
+  const handleItemsPerPageChange = (n) => {
+    setItemsPerPage(n)
+    setCurrentPage(1)
+  }
+
+  // --- Selección múltiple ---
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+  }
+
+  const idsPaginaActual = paginaActual.map((l) => l.id)
+  const allPageSelected = idsPaginaActual.length > 0 && idsPaginaActual.every((id) => selectedIds.includes(id))
+
+  const toggleSelectAll = () => {
+    if (allPageSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !idsPaginaActual.includes(id)))
+    } else {
+      setSelectedIds((prev) => [...new Set([...prev, ...idsPaginaActual])])
+    }
+  }
+
+  const clearSelection = () => setSelectedIds([])
+
+  const seleccionados = librosDiariosOrdenados.filter((l) => selectedIds.includes(l.id))
+
+  const handleBulkDownload = () => {
+    if (!onDescargar || seleccionados.length === 0) return
+    seleccionados.forEach((libro) => onDescargar(libro))
+  }
+
+  const handleBulkDelete = () => {
+    if (!onBorrar || seleccionados.length === 0) return
+    if (window.confirm(`¿Eliminar ${seleccionados.length} libro(s) diario(s) seleccionado(s)?`)) {
+      seleccionados.forEach((libro) => onBorrar(libro))
+      clearSelection()
+    }
+  }
 
   if (!librosDiarios || librosDiarios.length === 0) {
     return (
@@ -211,12 +298,17 @@ const LibrosDiariosApp = ({ librosDiarios = [], onDescargar, onBorrar }) => {
     )
   }
 
-  // Ordenar libros diarios por fecha (más reciente primero)
-  const librosDiariosOrdenados = [...librosDiarios].sort((a, b) => {
-    const fechaA = new Date(a.fecha).getTime()
-    const fechaB = new Date(b.fecha).getTime()
-    return fechaB - fechaA
-  })
+  const toolbarButton = {
+    padding: "8px 16px",
+    borderRadius: "8px",
+    border: "none",
+    background: theme.background,
+    color: theme.textColor,
+    boxShadow: theme.cardShadowOut,
+    cursor: "pointer",
+    fontSize: "14px",
+    transition: "all 0.2s ease",
+  }
 
   return (
     <div
@@ -231,6 +323,66 @@ const LibrosDiariosApp = ({ librosDiarios = [], onDescargar, onBorrar }) => {
           padding: "16px",
         }}
       >
+        {/* Barra de herramientas: seleccionar todo + acciones masivas */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "12px",
+            padding: "12px 16px",
+            marginBottom: "12px",
+            borderRadius: "12px",
+            background: theme.background,
+            boxShadow: theme.cardShadowIn,
+          }}
+        >
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer",
+              color: theme.textColor,
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={allPageSelected}
+              onChange={toggleSelectAll}
+              style={{
+                width: "18px",
+                height: "18px",
+                cursor: "pointer",
+                accentColor: theme.primaryColor || "#667eea",
+              }}
+            />
+            Seleccionar página
+          </label>
+
+          {selectedIds.length > 0 && (
+            <>
+              <span style={{ color: theme.textColorSecondary, fontSize: "14px" }}>
+                {selectedIds.length} seleccionado(s)
+              </span>
+
+              <button onClick={handleBulkDownload} title="Descargar los libros seleccionados" style={{ ...toolbarButton, color: "#17a2b8" }}>
+                ⬇ Descargar
+              </button>
+
+              <button onClick={handleBulkDelete} title="Eliminar los libros seleccionados" style={{ ...toolbarButton, color: "#dc3545" }}>
+                🗑 Eliminar
+              </button>
+
+              <button onClick={clearSelection} style={{ ...toolbarButton, marginLeft: "auto" }}>
+                Limpiar selección
+              </button>
+            </>
+          )}
+        </div>
+
         <div
           style={{
             display: "flex",
@@ -238,15 +390,27 @@ const LibrosDiariosApp = ({ librosDiarios = [], onDescargar, onBorrar }) => {
             gap: "16px",
           }}
         >
-          {librosDiariosOrdenados.map((libroDiario, index) => (
+          {paginaActual.map((libroDiario, index) => (
             <LibroDiarioCard
               key={libroDiario.id || index}
               libroDiario={libroDiario}
               onDescargar={onDescargar}
               onBorrar={onBorrar}
+              selectable
+              selected={selectedIds.includes(libroDiario.id)}
+              onToggleSelect={toggleSelect}
             />
           ))}
         </div>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   )

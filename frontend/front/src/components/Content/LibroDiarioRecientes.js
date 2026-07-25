@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useTheme } from "../../context/ThemeContext"
-import LibroDiarioCard from "./LibroDiarioCard"
+import { LibrosDiariosApp } from "./LibroDiarioCard"
 
 const LibrosDiariosRecientes = () => {
   const { theme } = useTheme()
@@ -154,23 +154,11 @@ const LibrosDiariosRecientes = () => {
       </div>
 
       {/* Lista de libros diarios */}
-      <div>
-        {librosDiarios.length === 0 ? (
-          <div
-            style={{
-              padding: "40px",
-              textAlign: "center",
-              color: theme.textColorSecondary,
-            }}
-          >
-            <p style={{ fontSize: "18px" }}>No hay libros diarios para mostrar</p>
-          </div>
-        ) : (
-          librosDiarios.map((libro) => (
-            <LibroDiarioCard key={libro.id} libroDiario={libro} onDescargar={handleDescargar} onBorrar={handleBorrar} />
-          ))
-        )}
-      </div>
+      <LibrosDiariosApp
+        librosDiarios={librosDiarios}
+        onDescargar={handleDescargar}
+        onBorrar={handleBorrar}
+      />
     </div>
   )
 }
