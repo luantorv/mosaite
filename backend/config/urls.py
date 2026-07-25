@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/accounts/', include('apps.accounts.urls')),
     path('api/trans/', include('apps.trans.urls')),
     path('api/dash/', include('apps.dash.urls')),
+    path('api/daily/', include('apps.daily.urls')),
 
     path('api/auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

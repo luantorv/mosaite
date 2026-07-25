@@ -179,9 +179,6 @@ class DailyLedgerService:
         if not fecha or not isinstance(fecha, str):
             raise DailyLedgerError("Se requiere una fecha válida (YYYY-MM-DD).")
 
-        if not transacciones:
-            raise DailyLedgerError(f"No hay transacciones para generar el libro diario del {fecha}.")
-
         with self._lock:
             index = self._load_index()
             if fecha in index and not overwrite:
@@ -189,38 +186,17 @@ class DailyLedgerService:
                     f"Ya existe un libro diario para el {fecha}. Usa overwrite=True para regenerarlo."
                 )
 
-        # Calcular totales (en centavos)
-        total_debe = 0
-        total_haber = 0
-        for trans in transacciones:
-            for entry in trans.get("entries", []) or []:
-                total_debe += entry.get("debit") or 0
-                total_haber += entry.get("credit") or 0
-
-        # Renderizar el documento LaTeX
-        latex_content = self._render_document(
-            fecha=fecha,
-            autor=autor or "N/A",
-            filas=_render_rows(transacciones),
-            total_debe=_format_money(total_debe),
-            total_haber=_format_money(total_haber),
-        )
-
-        filename = f"{PDF_PREFIX}_{fecha}.pdf"
-        try:
-            compile_latex_to_pdf(latex_content, str(STORAGE_DIR), f"{PDF_PREFIX}_{fecha}")
-        except LaTeXToPDFError as e:
-            raise DailyLedgerError(f"Error al generar el PDF del libro diario: {e}")
+        info = self.build_pdf(fecha, transacciones, autor, f"{PDF_PREFIX}_{fecha}")
 
         record = {
             "id": fecha,
             "fecha": fecha,
-            "filename": filename,
+            "filename": info["filename"],
             "autor": autor or "N/A",
             "created_at": datetime.now().isoformat(timespec="seconds"),
-            "total_debe": total_debe,
-            "total_haber": total_haber,
-            "transacciones": len(transacciones),
+            "total_debe": info["total_debit"],
+            "total_haber": info["total_credit"],
+            "transacciones": info["transactions_count"],
         }
 
         with self._lock:
@@ -229,6 +205,85 @@ class DailyLedgerService:
             self._save_index(index)
 
         return self._record_with_path(record)
+
+    def build_pdf(
+        self,
+        fecha: str,
+        transacciones: List[Dict],
+        autor: Optional[str],
+        filename_stem: str,
+    ) -> Dict:
+        """
+        Renderiza y compila el PDF de un libro diario y lo guarda en STORAGE_DIR.
+
+        Es la primitiva de bajo nivel: solo produce el archivo PDF, sin mantener
+        ningún índice de metadatos (eso queda a cargo del llamador, p. ej. la app
+        de Django, que persiste los metadatos en su propia base de datos).
+
+        Args:
+            fecha: Fecha del libro diario (YYYY-MM-DD), usada en el encabezado.
+            transacciones: Lista de transacciones (ver módulo).
+            autor: Nombre de quien genera el libro (opcional).
+            filename_stem: Nombre del archivo PDF sin extensión.
+
+        Returns:
+            dict con: `path` (ruta absoluta), `filename`, `total_debit`,
+            `total_credit` (centavos) y `transactions_count`.
+
+        Raises:
+            DailyLedgerError: Si no hay transacciones o falla la compilación.
+        """
+        if not transacciones:
+            raise DailyLedgerError(f"No hay transacciones para generar el libro diario del {fecha}.")
+
+        # Calcular totales (en centavos)
+        total_debit = 0
+        total_credit = 0
+        for trans in transacciones:
+            for entry in trans.get("entries", []) or []:
+                total_debit += entry.get("debit") or 0
+                total_credit += entry.get("credit") or 0
+
+        latex_content = self._render_document(
+            fecha=fecha,
+            autor=autor or "N/A",
+            filas=_render_rows(transacciones),
+            total_debe=_format_money(total_debit),
+            total_haber=_format_money(total_credit),
+        )
+
+        try:
+            path = compile_latex_to_pdf(latex_content, str(STORAGE_DIR), filename_stem)
+        except LaTeXToPDFError as e:
+            raise DailyLedgerError(f"Error al generar el PDF del libro diario: {e}")
+
+        return {
+            "path": path,
+            "filename": f"{filename_stem}.pdf",
+            "total_debit": total_debit,
+            "total_credit": total_credit,
+            "transactions_count": len(transacciones),
+        }
+
+    # --- Primitivas de acceso a archivos por nombre ---
+
+    def pdf_path(self, filename: str) -> Optional[Path]:
+        """Devuelve la ruta del PDF si existe en el almacenamiento, o None."""
+        path = STORAGE_DIR / filename
+        return path if path.exists() else None
+
+    def read_pdf(self, filename: str) -> Optional[bytes]:
+        """Devuelve el contenido binario de un PDF por su nombre, o None."""
+        path = self.pdf_path(filename)
+        return path.read_bytes() if path else None
+
+    def remove_pdf(self, filename: str) -> bool:
+        """Elimina un PDF por su nombre. Devuelve True si existía y se borró."""
+        path = STORAGE_DIR / filename
+        if path.exists():
+            path.unlink()
+            return True
+        return False
 
     def _render_document(
         self,

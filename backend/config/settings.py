@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.trans',
     'apps.dash',
+    'apps.daily',
 ]
 
 MIDDLEWARE = [
