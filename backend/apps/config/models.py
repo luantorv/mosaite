@@ -6,6 +6,8 @@ class Config(models.Model):
     system_mode = models.BooleanField(default=False)  # False: educativo, True: empresarial
     date_format = models.TextField(default='DD/MM/YYYY')
     currency = models.TextField(null=True, blank=True, default='ARS')
+    # Si es True, se omite el paso "Verificado": el flujo pasa de crear a cerrar directamente
+    skip_verification = models.BooleanField(default=False)
     
     class Meta:
         db_table = 'config'

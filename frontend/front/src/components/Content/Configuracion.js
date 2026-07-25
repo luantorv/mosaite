@@ -280,6 +280,93 @@ function Configuracion() {
           </div>
         </div>
 
+        {/* Verificación de Transacciones */}
+        <div
+          style={{
+            marginBottom: "24px",
+            padding: "20px",
+            backgroundColor: theme.background,
+            borderRadius: "12px",
+            boxShadow: theme.cardShadowIn,
+          }}
+        >
+          <div style={{ marginBottom: "12px" }}>
+            <label
+              style={{
+                color: theme.textColor,
+                fontSize: "15px",
+                fontWeight: "600",
+                display: "block",
+                marginBottom: "8px",
+              }}
+            >
+              Verificación de Transacciones
+            </label>
+            <p
+              style={{
+                color: theme.textColorMuted,
+                fontSize: "13px",
+                marginBottom: "12px",
+              }}
+            >
+              {config.skip_verification
+                ? "Flujo simplificado: las transacciones pasan de creadas a cerradas directamente (crear → cerrar)."
+                : "Flujo completo: las transacciones deben verificarse antes de cerrarse (crear → verificar → cerrar)."}
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "inline-flex",
+              gap: "8px",
+              padding: "4px",
+              backgroundColor: theme.background,
+              borderRadius: "10px",
+              boxShadow: theme.smallButtonShadowIn,
+            }}
+          >
+            <div
+              style={{
+                padding: "8px 20px",
+                borderRadius: "8px",
+                backgroundColor: !config.skip_verification ? theme.primaryColor : "transparent",
+                color: !config.skip_verification ? "white" : theme.textColor,
+                fontWeight: "500",
+                fontSize: "14px",
+                boxShadow: !config.skip_verification ? theme.smallButtonShadowOut : "none",
+              }}
+            >
+              Completa
+            </div>
+            <div
+              style={{
+                padding: "8px 20px",
+                borderRadius: "8px",
+                backgroundColor: config.skip_verification ? theme.primaryColor : "transparent",
+                color: config.skip_verification ? "white" : theme.textColor,
+                fontWeight: "500",
+                fontSize: "14px",
+                boxShadow: config.skip_verification ? theme.smallButtonShadowOut : "none",
+              }}
+            >
+              Simplificada
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "10px 12px",
+              backgroundColor: "#fff3cd",
+              color: "#856404",
+              borderRadius: "6px",
+              fontSize: "12px",
+            }}
+          >
+            <strong>⚠️ Nota:</strong> El modo de verificación no se puede cambiar después de la instalación inicial.
+          </div>
+        </div>
+
         {/* Formato de Fechas */}
         <div
           style={{

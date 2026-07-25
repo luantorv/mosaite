@@ -1,10 +1,13 @@
 import { useState } from "react"
 import { useTheme } from "../../context/ThemeContext"
+import { useAuth } from "../../context/AuthContext"
 
 const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [hoveredButton, setHoveredButton] = useState(null)
   const { theme } = useTheme()
+  const { systemConfig } = useAuth()
+  const skipVerification = systemConfig?.skip_verification || false
 
   if (!transaction || typeof transaction !== "object") {
     console.error("TransactionCard recibió una transacción inválida:", transaction)
@@ -65,17 +68,23 @@ const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
   const leyenda = transaction.legend || ""
 
   // Sistema de 3 estados (como Git)
-  // status: false = 0 (Por verificar / to check)
-  // status: true = 1 (Verificado / checked)
-  // locked: true = 2 (Cerrado / closed - cuando está en un libro diario)
-  
-  // Por ahora usamos solo el campo status del backend
-  // Cuando implementes libros diarios, agregarás el campo 'locked'
-  const estadoActual = transaction.locked ? 2 : (transaction.status ? 1 : 0)
-  
+  // status: 0 (Por verificar / to check)
+  // status: 1 (Verificado / checked)
+  // status: 2 (Cerrado / closed - cuando está en un libro diario)
+  //
+  // Con skip_verification activo, el flujo se simplifica a crear -> cerrar:
+  // el estado "Por verificar" pasa directamente a "Cerrado".
+  const estadoActual = typeof transaction.status === "number" ? transaction.status : 0
+
   // Configuración de estados (estilo Git)
   const estadoConfig = {
-    0: { icon: "📋", color: "#ffc107", bg: "#fff3cd", label: "Por verificar", nextLabel: "Marcar como verificado" },
+    0: {
+      icon: "📋",
+      color: "#ffc107",
+      bg: "#fff3cd",
+      label: "Por verificar",
+      nextLabel: skipVerification ? "Marcar como cerrado" : "Marcar como verificado",
+    },
     1: { icon: "✓", color: "#17a2b8", bg: "#d1ecf1", label: "Verificado", nextLabel: "Marcar como cerrado" },
     2: { icon: "🔒", color: "#28a745", bg: "#d4edda", label: "Cerrado", nextLabel: "Transacción cerrada" },
   }
@@ -406,23 +415,26 @@ const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
 const TransaccionesApp = ({ transacciones = [], onEliminar, onActualizarEstado, onEditar }) => {
   const { theme } = useTheme()
 
+  // Una transacción cerrada (status 2) no se puede modificar
+  const isClosed = (transaction) => transaction.status === 2
+
   // Handlers para los eventos
   const handleStatusChange = (transaction) => {
-    if (onActualizarEstado && !transaction.locked) {
-      // Ciclar entre estados: 0 -> 1 -> 2 (pero 2 solo cuando esté en libro diario)
-      // Por ahora solo toggle entre 0 y 1 hasta que implementes libros diarios
+    if (onActualizarEstado && !isClosed(transaction)) {
+      // El backend decide el siguiente estado según skip_verification:
+      // flujo completo (0 -> 1 -> 0) o flujo simplificado (0 -> 2)
       onActualizarEstado(transaction.trans_id)
     }
   }
 
   const handleEdit = (transaction) => {
-    if (onEditar && !transaction.locked) {
+    if (onEditar && !isClosed(transaction)) {
       onEditar(transaction)
     }
   }
 
   const handleDelete = (transaction) => {
-    if (onEliminar && !transaction.locked && window.confirm("¿Estás seguro de que quieres eliminar esta transacción?")) {
+    if (onEliminar && !isClosed(transaction) && window.confirm("¿Estás seguro de que quieres eliminar esta transacción?")) {
       onEliminar(transaction.trans_id)
     }
   }

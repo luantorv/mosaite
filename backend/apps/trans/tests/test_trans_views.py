@@ -357,6 +357,35 @@ class TestTransactionViewSet:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['status'] == 0
 
+    def test_toggle_status_skip_verification_closes_directly(self, api_client, user):
+        """Con skip_verification, toggle_status pasa de 0 a 2 (cerrado) directamente"""
+        from apps.config.models import Config
+        Config.objects.create(skip_verification=True)
+
+        api_client.force_authenticate(user=user)
+
+        now = datetime.now().isoformat()
+        transaction = Transaction.objects.create(
+            user=user, status=0, date="2025-11-12",
+            created_at=now, updated_at=now
+        )
+
+        account = Account.objects.create(
+            code="11101", name="Caja MN", saldo=0, nature=True, status=True
+        )
+        TransactionEntry.objects.create(
+            trans=transaction, acc=account, debit=10000, credit=0
+        )
+        TransactionEntry.objects.create(
+            trans=transaction, acc=account, debit=0, credit=10000
+        )
+
+        # Se omite el estado "Verificado": pasa directo a cerrado
+        response = api_client.post(f'/api/trans/{transaction.trans_id}/toggle_status/')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['status'] == Transaction.STATUS_CLOSED
+
     def test_cannot_toggle_closed_transaction(self, api_client, user):
         """Test que no se puede cambiar estado de transacción cerrada"""
         api_client.force_authenticate(user=user)
