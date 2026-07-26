@@ -3,6 +3,7 @@ import { useTheme } from "../../context/ThemeContext"
 import { useAuth } from "../../context/AuthContext"
 import DashboardHome from "./DashboardHome"
 import TransaccionCrear from "./TransaccionCrear"
+import TransaccionEditar from "./TransaccionEditar"
 import TransaccionRecientes from "./TransaccionRecientes"
 import TransaccionBuscar from "./TransaccionBuscar"
 import LibroDiarioCrear from "./LibroDiarioCrear"
@@ -19,6 +20,7 @@ function Content({ activePanel, searchQuery, setSearchQuery }) {
 
   const [transacciones, setTransacciones] = useState([])
   const [loadingTransactions, setLoadingTransactions] = useState(false)
+  const [transaccionEnEdicion, setTransaccionEnEdicion] = useState(null)
 
   // Cargar todas las transacciones al montar
   useEffect(() => {
@@ -81,8 +83,14 @@ function Content({ activePanel, searchQuery, setSearchQuery }) {
 
   const editarTransaccion = (transaction) => {
     console.log("✏️ Editar transacción:", transaction)
-    // TODO: Implementar modal de edición
-    alert("Funcionalidad de edición en desarrollo")
+    setTransaccionEnEdicion(transaction)
+  }
+
+  const handleTransaccionActualizada = (transaccionActualizada) => {
+    console.log("✅ Transacción actualizada:", transaccionActualizada)
+    setTransacciones((prev) =>
+      prev.map((t) => (t.trans_id === transaccionActualizada.trans_id ? transaccionActualizada : t))
+    )
   }
 
   const renderContent = () => {
@@ -116,14 +124,8 @@ function Content({ activePanel, searchQuery, setSearchQuery }) {
         )
 
       case "Libros Diarios-Crear":
-        return (
-          <LibroDiarioCrear
-            transacciones={transacciones}
-            onEliminar={eliminarTransaccion}
-            onActualizarEstado={actualizarEstadoTransaccion}
-            onEditar={editarTransaccion}
-          />
-        )
+        return <LibroDiarioCrear />
+
       case "Libros Diarios-Recientes":
         return <LibroDiarioRecientes />
 
@@ -158,6 +160,14 @@ function Content({ activePanel, searchQuery, setSearchQuery }) {
       }}
     >
       {renderContent()}
+
+      {transaccionEnEdicion && (
+        <TransaccionEditar
+          transaction={transaccionEnEdicion}
+          onClose={() => setTransaccionEnEdicion(null)}
+          onUpdated={handleTransaccionActualizada}
+        />
+      )}
     </div>
   )
 }

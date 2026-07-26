@@ -1,0 +1,3 @@
+# Los libros diarios generados y su índice no se versionan
+*.pdf
+index.json

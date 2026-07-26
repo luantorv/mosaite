@@ -6,6 +6,7 @@ from django.db.models import Q
 from .models import Transaction, TransactionEntry
 from .serializers import TransactionSerializer, TransactionListSerializer
 from .permissions import CanManageTransactions
+from apps.config.models import Config
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -88,12 +89,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
         """
         Cambia el estado de la transacción siguiendo el ciclo:
         0 (Por verificar) -> 1 (Verificado) -> 0 (vuelve al inicio)
-        
+
+        Si la configuración tiene skip_verification activo, se omite el paso
+        "Verificado" y la transacción pasa directamente a 2 (Cerrado),
+        simplificando el flujo a crear -> cerrar.
+
         Estado 2 (Cerrado) solo se puede establecer cuando la transacción
         se agregue a un libro diario (funcionalidad futura)
         """
         transaction = self.get_object()
-        
+
         # No permitir cambiar estado de transacciones cerradas
         if transaction.status == Transaction.STATUS_CLOSED:
             return Response(
@@ -103,13 +108,19 @@ class TransactionViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
-        # Ciclar entre 0 y 1
-        if transaction.status == Transaction.STATUS_TO_CHECK:
+
+        config = Config.objects.first()
+        skip_verification = config.skip_verification if config else False
+
+        if skip_verification:
+            # Flujo simplificado: crear -> cerrar (se omite "Verificado")
+            transaction.status = Transaction.STATUS_CLOSED
+        elif transaction.status == Transaction.STATUS_TO_CHECK:
+            # Ciclar entre 0 y 1
             transaction.status = Transaction.STATUS_CHECKED
         else:
             transaction.status = Transaction.STATUS_TO_CHECK
-        
+
         transaction.save()
         
         serializer = self.get_serializer(transaction)

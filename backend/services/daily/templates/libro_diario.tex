@@ -1,0 +1,45 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Libro Diario -- {{fecha}}}
+\lfoot{Generado por {{autor}}}
+\rfoot{Página \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Libro Diario}}\\[6pt]
+    {\large Fecha: {{fecha}}}\\[3pt]
+    {\normalsize Generado por {{autor}} el {{generado}}}
+\end{center}
+
+\vspace{0.6cm}
+
+\renewcommand{\arraystretch}{1.35}
+\begin{longtable}{p{2.5cm} p{7.5cm} >{\raggedleft\arraybackslash}p{2.8cm} >{\raggedleft\arraybackslash}p{2.8cm}}
+    \hline
+    \textbf{Código} & \textbf{Cuenta} & \textbf{Debe} & \textbf{Haber} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Código} & \textbf{Cuenta} & \textbf{Debe} & \textbf{Haber} \\
+    \hline
+    \endhead
+
+{{filas}}
+    \hline
+    \multicolumn{2}{r}{\textbf{TOTALES}} & \textbf{\${{total_debe}}} & \textbf{\${{total_haber}}} \\
+    \hline
+\end{longtable}
+
+\end{document}

@@ -1,10 +1,22 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTheme } from "../../context/ThemeContext"
+import { useAuth } from "../../context/AuthContext"
+import Pagination from "./Pagination"
 
-const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
+const TransactionCard = ({
+  transaction,
+  onStatusChange,
+  onEdit,
+  onDelete,
+  selectable = false,
+  selected = false,
+  onToggleSelect,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [hoveredButton, setHoveredButton] = useState(null)
   const { theme } = useTheme()
+  const { systemConfig } = useAuth()
+  const skipVerification = systemConfig?.skip_verification || false
 
   if (!transaction || typeof transaction !== "object") {
     console.error("TransactionCard recibió una transacción inválida:", transaction)
@@ -65,17 +77,23 @@ const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
   const leyenda = transaction.legend || ""
 
   // Sistema de 3 estados (como Git)
-  // status: false = 0 (Por verificar / to check)
-  // status: true = 1 (Verificado / checked)
-  // locked: true = 2 (Cerrado / closed - cuando está en un libro diario)
-  
-  // Por ahora usamos solo el campo status del backend
-  // Cuando implementes libros diarios, agregarás el campo 'locked'
-  const estadoActual = transaction.locked ? 2 : (transaction.status ? 1 : 0)
-  
+  // status: 0 (Por verificar / to check)
+  // status: 1 (Verificado / checked)
+  // status: 2 (Cerrado / closed - cuando está en un libro diario)
+  //
+  // Con skip_verification activo, el flujo se simplifica a crear -> cerrar:
+  // el estado "Por verificar" pasa directamente a "Cerrado".
+  const estadoActual = typeof transaction.status === "number" ? transaction.status : 0
+
   // Configuración de estados (estilo Git)
   const estadoConfig = {
-    0: { icon: "📋", color: "#ffc107", bg: "#fff3cd", label: "Por verificar", nextLabel: "Marcar como verificado" },
+    0: {
+      icon: "📋",
+      color: "#ffc107",
+      bg: "#fff3cd",
+      label: "Por verificar",
+      nextLabel: skipVerification ? "Marcar como cerrado" : "Marcar como verificado",
+    },
     1: { icon: "✓", color: "#17a2b8", bg: "#d1ecf1", label: "Verificado", nextLabel: "Marcar como cerrado" },
     2: { icon: "🔒", color: "#28a745", bg: "#d4edda", label: "Cerrado", nextLabel: "Transacción cerrada" },
   }
@@ -92,6 +110,8 @@ const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
         background: theme.background,
         borderRadius: "12px",
         boxShadow: theme.cardShadowOut,
+        border: selected ? `2px solid ${theme.primaryColor || "#667eea"}` : "2px solid transparent",
+        transition: "border 0.2s ease",
       }}
     >
       {/* Header del componente */}
@@ -102,6 +122,25 @@ const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
           justifyContent: "space-between",
         }}
       >
+        {/* Checkbox de selección */}
+        {selectable && (
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggleSelect && onToggleSelect(transaction.trans_id)}
+            title="Seleccionar transacción"
+            style={{
+              width: "20px",
+              height: "20px",
+              marginRight: "12px",
+              marginTop: "14px",
+              cursor: "pointer",
+              accentColor: theme.primaryColor || "#667eea",
+              flexShrink: 0,
+            }}
+          />
+        )}
+
         {/* Parte izquierda - Contenido principal */}
         <div
           style={{
@@ -405,29 +444,107 @@ const TransactionCard = ({ transaction, onStatusChange, onEdit, onDelete }) => {
 // Componente principal que maneja la lista de transacciones
 const TransaccionesApp = ({ transacciones = [], onEliminar, onActualizarEstado, onEditar }) => {
   const { theme } = useTheme()
+  const [selectedIds, setSelectedIds] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+
+  // Una transacción cerrada (status 2) no se puede modificar
+  const isClosed = (transaction) => transaction.status === 2
 
   // Handlers para los eventos
   const handleStatusChange = (transaction) => {
-    if (onActualizarEstado && !transaction.locked) {
-      // Ciclar entre estados: 0 -> 1 -> 2 (pero 2 solo cuando esté en libro diario)
-      // Por ahora solo toggle entre 0 y 1 hasta que implementes libros diarios
+    if (onActualizarEstado && !isClosed(transaction)) {
+      // El backend decide el siguiente estado según skip_verification:
+      // flujo completo (0 -> 1 -> 0) o flujo simplificado (0 -> 2)
       onActualizarEstado(transaction.trans_id)
     }
   }
 
   const handleEdit = (transaction) => {
-    if (onEditar && !transaction.locked) {
+    if (onEditar && !isClosed(transaction)) {
       onEditar(transaction)
     }
   }
 
   const handleDelete = (transaction) => {
-    if (onEliminar && !transaction.locked && window.confirm("¿Estás seguro de que quieres eliminar esta transacción?")) {
+    if (onEliminar && !isClosed(transaction) && window.confirm("¿Estás seguro de que quieres eliminar esta transacción?")) {
       onEliminar(transaction.trans_id)
     }
   }
 
   const transaccionesValidas = transacciones.filter((t) => t && typeof t === "object" && t.trans_id)
+
+  // Ordenar transacciones por fecha (más reciente primero)
+  const transaccionesOrdenadas = [...transaccionesValidas].sort((a, b) => {
+    const fechaA = new Date(a.created_at || a.date).getTime()
+    const fechaB = new Date(b.created_at || b.date).getTime()
+    return fechaB - fechaA
+  })
+
+  // --- Paginación ---
+  const totalItems = transaccionesOrdenadas.length
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage))
+
+  // Mantener la página dentro de rango si cambia el listado o los items por página
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages)
+  }, [currentPage, totalPages])
+
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginaActual = transaccionesOrdenadas.slice(startIndex, startIndex + itemsPerPage)
+
+  const handleItemsPerPageChange = (n) => {
+    setItemsPerPage(n)
+    setCurrentPage(1)
+  }
+
+  // --- Selección múltiple ---
+  const toggleSelect = (transId) => {
+    setSelectedIds((prev) =>
+      prev.includes(transId) ? prev.filter((id) => id !== transId) : [...prev, transId]
+    )
+  }
+
+  // "Seleccionar todo" opera sobre las transacciones visibles en la página actual
+  const idsPaginaActual = paginaActual.map((t) => t.trans_id)
+  const allPageSelected = idsPaginaActual.length > 0 && idsPaginaActual.every((id) => selectedIds.includes(id))
+
+  const toggleSelectAll = () => {
+    if (allPageSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !idsPaginaActual.includes(id)))
+    } else {
+      setSelectedIds((prev) => [...new Set([...prev, ...idsPaginaActual])])
+    }
+  }
+
+  const clearSelection = () => setSelectedIds([])
+
+  // Transacciones seleccionadas que no están cerradas (las cerradas no se pueden modificar)
+  const seleccionadasModificables = transaccionesValidas.filter(
+    (t) => selectedIds.includes(t.trans_id) && !isClosed(t)
+  )
+
+  const handleBulkDelete = () => {
+    if (!onEliminar || seleccionadasModificables.length === 0) return
+    if (
+      window.confirm(
+        `¿Eliminar ${seleccionadasModificables.length} transacción(es) seleccionada(s)? Esta acción no se puede deshacer.`
+      )
+    ) {
+      seleccionadasModificables.forEach((t) => onEliminar(t.trans_id))
+      clearSelection()
+    }
+  }
+
+  const handleBulkStatus = () => {
+    if (!onActualizarEstado || seleccionadasModificables.length === 0) return
+    if (
+      window.confirm(`¿Cambiar el estado de ${seleccionadasModificables.length} transacción(es) seleccionada(s)?`)
+    ) {
+      seleccionadasModificables.forEach((t) => onActualizarEstado(t.trans_id))
+      clearSelection()
+    }
+  }
 
   if (transaccionesValidas.length === 0) {
     return (
@@ -444,12 +561,17 @@ const TransaccionesApp = ({ transacciones = [], onEliminar, onActualizarEstado, 
     )
   }
 
-  // Ordenar transacciones por fecha (más reciente primero)
-  const transaccionesOrdenadas = [...transaccionesValidas].sort((a, b) => {
-    const fechaA = new Date(a.created_at || a.date).getTime()
-    const fechaB = new Date(b.created_at || b.date).getTime()
-    return fechaB - fechaA
-  })
+  const toolbarButton = {
+    padding: "8px 16px",
+    borderRadius: "8px",
+    border: "none",
+    background: theme.background,
+    color: theme.textColor,
+    boxShadow: theme.cardShadowOut,
+    cursor: "pointer",
+    fontSize: "14px",
+    transition: "all 0.2s ease",
+  }
 
   return (
     <div
@@ -464,6 +586,85 @@ const TransaccionesApp = ({ transacciones = [], onEliminar, onActualizarEstado, 
           padding: "16px",
         }}
       >
+        {/* Barra de herramientas: seleccionar todo + acciones masivas */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "12px",
+            padding: "12px 16px",
+            marginBottom: "12px",
+            borderRadius: "12px",
+            background: theme.background,
+            boxShadow: theme.cardShadowIn,
+          }}
+        >
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer",
+              color: theme.textColor,
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={allPageSelected}
+              onChange={toggleSelectAll}
+              style={{
+                width: "18px",
+                height: "18px",
+                cursor: "pointer",
+                accentColor: theme.primaryColor || "#667eea",
+              }}
+            />
+            Seleccionar página
+          </label>
+
+          {selectedIds.length > 0 && (
+            <>
+              <span style={{ color: theme.textColorSecondary, fontSize: "14px" }}>
+                {selectedIds.length} seleccionada(s)
+              </span>
+
+              <button
+                onClick={handleBulkStatus}
+                disabled={seleccionadasModificables.length === 0}
+                title="Cambiar el estado de las transacciones seleccionadas"
+                style={{
+                  ...toolbarButton,
+                  opacity: seleccionadasModificables.length === 0 ? 0.5 : 1,
+                  cursor: seleccionadasModificables.length === 0 ? "not-allowed" : "pointer",
+                }}
+              >
+                🔄 Cambiar estado
+              </button>
+
+              <button
+                onClick={handleBulkDelete}
+                disabled={seleccionadasModificables.length === 0}
+                title="Eliminar las transacciones seleccionadas"
+                style={{
+                  ...toolbarButton,
+                  color: "#dc3545",
+                  opacity: seleccionadasModificables.length === 0 ? 0.5 : 1,
+                  cursor: seleccionadasModificables.length === 0 ? "not-allowed" : "pointer",
+                }}
+              >
+                🗑️ Eliminar
+              </button>
+
+              <button onClick={clearSelection} style={{ ...toolbarButton, marginLeft: "auto" }}>
+                Limpiar selección
+              </button>
+            </>
+          )}
+        </div>
+
         <div
           style={{
             display: "flex",
@@ -471,16 +672,28 @@ const TransaccionesApp = ({ transacciones = [], onEliminar, onActualizarEstado, 
             gap: "16px",
           }}
         >
-          {transaccionesOrdenadas.map((transaction) => (
+          {paginaActual.map((transaction) => (
             <TransactionCard
               key={transaction.trans_id}
               transaction={transaction}
               onStatusChange={handleStatusChange}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              selectable
+              selected={selectedIds.includes(transaction.trans_id)}
+              onToggleSelect={toggleSelect}
             />
           ))}
         </div>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   )

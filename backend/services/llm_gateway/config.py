@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent
 MODEL_DIR = BASE_DIR / "core"
 
 # Ruta al modelo local
-LOCAL_MODEL_PATH = MODEL_DIR / "Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf"
+LOCAL_MODEL_PATH = MODEL_DIR / "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
 
 # Configuración de modelos por defecto para cada provider
 DEFAULT_MODELS = {
@@ -23,9 +23,11 @@ API_KEY_ENV_VARS = {
 }
 
 # Configuración del modelo local
+total_cores = os.cpu_count() or 4 # fallback a 4
 LOCAL_MODEL_CONFIG = {
-    "n_ctx": 2048,
-    "n_threads": 4,
+    "n_ctx": 4096,
+    "n_threads": max(1, int(total_cores * (2/3))),
+    "n_threads_batch": max(1, int(total_cores * (2/3))),
     "n_batch": 512,
     "use_mlock": True,
 }
