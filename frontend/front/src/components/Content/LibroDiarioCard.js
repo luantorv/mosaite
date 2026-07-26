@@ -28,6 +28,10 @@ const LibroDiarioCard = ({
     }
   }
 
+  // Formatear montos (llegan en centavos desde el backend)
+  const formatCurrency = (cents) =>
+    new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format((cents || 0) / 100)
+
   return (
     <div
       style={{
@@ -121,6 +125,15 @@ const LibroDiarioCard = ({
                 }}
               >
                 <div>Creado por: {libroDiario.autor || "N/A"}</div>
+                {libroDiario.transaccionesCount != null && (
+                  <div>Transacciones: {libroDiario.transaccionesCount}</div>
+                )}
+                {libroDiario.totalDebe != null && (
+                  <div>Total Debe: {formatCurrency(libroDiario.totalDebe)}</div>
+                )}
+                {libroDiario.totalHaber != null && (
+                  <div>Total Haber: {formatCurrency(libroDiario.totalHaber)}</div>
+                )}
               </div>
             )}
           </div>

@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useTheme } from "../../context/ThemeContext"
 import { LibrosDiariosApp } from "./LibroDiarioCard"
+import libroDiarioService from "../../services/LibroDiarioService"
 
 const LibrosDiariosRecientes = () => {
   const { theme } = useTheme()
   const [fechaDesde, setFechaDesde] = useState("")
   const [fechaHasta, setFechaHasta] = useState("")
   const [librosDiarios, setLibrosDiarios] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   // Función para formatear fecha a yyyy-mm-dd
   const formatDate = (date) => {
@@ -16,14 +19,21 @@ const LibrosDiariosRecientes = () => {
     return `${year}-${month}-${day}`
   }
 
-  // Función para generar hora random entre 19:00 y 20:00
-  const generateRandomHour = () => {
-    const minutes = Math.floor(Math.random() * 60)
-    const hour = 19
-    return `${hour}:${String(minutes).padStart(2, "0")}`
-  }
+  // Mapear un libro diario del backend al formato que espera la tarjeta
+  const mapLedger = (ledger) => ({
+    id: ledger.ledger_id,
+    ledger_id: ledger.ledger_id,
+    fecha: ledger.date,
+    autor: ledger.user_name,
+    hora: (ledger.created_at || "").split("T")[1]?.slice(0, 5) || "",
+    pdf_filename: ledger.pdf_filename,
+    date: ledger.date,
+    transaccionesCount: ledger.transactions_count,
+    totalDebe: ledger.total_debit,
+    totalHaber: ledger.total_credit,
+  })
 
-  // Inicializar fechas por defecto
+  // Inicializar fechas por defecto (últimos 7 días)
   useEffect(() => {
     const hoy = new Date()
     const hace7Dias = new Date()
@@ -33,50 +43,45 @@ const LibrosDiariosRecientes = () => {
     setFechaHasta(formatDate(hoy))
   }, [])
 
-  // Generar libros diarios cuando cambian las fechas
-  useEffect(() => {
-    if (fechaDesde && fechaHasta) {
-      const generarLibrosDiarios = () => {
-        const libros = []
-        const desde = new Date(fechaDesde + "T00:00:00")
-        const hasta = new Date(fechaHasta + "T00:00:00")
-        const hoy = new Date()
-        hoy.setHours(0, 0, 0, 0)
+  // Cargar libros diarios desde el backend cuando cambian las fechas
+  const cargarLibrosDiarios = useCallback(async () => {
+    if (!fechaDesde || !fechaHasta) return
 
-        // Iterar desde la fecha "desde" hasta "hasta"
-        const currentDate = new Date(desde)
-        while (currentDate <= hasta) {
-          // Solo agregar si es una fecha pasada (no incluye hoy)
-          if (currentDate < hoy) {
-            libros.push({
-              id: formatDate(currentDate),
-              fecha: formatDate(currentDate),
-              hora: generateRandomHour(),
-              autor: "usuario_poc",
-            })
-          }
-          currentDate.setDate(currentDate.getDate() + 1)
-        }
+    setLoading(true)
+    setError(null)
 
-        // Ordenar de más reciente a más antiguo
-        libros.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-        setLibrosDiarios(libros)
-      }
+    const result = await libroDiarioService.getLedgers({
+      date_from: fechaDesde,
+      date_to: fechaHasta,
+    })
 
-      generarLibrosDiarios()
+    if (result.success) {
+      setLibrosDiarios(result.ledgers.map(mapLedger))
+    } else {
+      setError(result.error)
+      setLibrosDiarios([])
     }
+
+    setLoading(false)
   }, [fechaDesde, fechaHasta])
 
-  const handleDescargar = (libro) => {
-    console.log("Descargar libro diario:", libro)
-    // Aquí iría la lógica para descargar el libro
+  useEffect(() => {
+    cargarLibrosDiarios()
+  }, [cargarLibrosDiarios])
+
+  const handleDescargar = async (libro) => {
+    const result = await libroDiarioService.downloadLedger(libro)
+    if (!result.success) {
+      alert(`Error al descargar: ${result.error}`)
+    }
   }
 
-  const handleBorrar = (libro) => {
-    if (window.confirm(`¿Estás seguro de que quieres eliminar el libro diario del ${libro.fecha}?`)) {
-      console.log("Borrar libro diario:", libro)
-      // Aquí iría la lógica para borrar el libro
-      setLibrosDiarios(librosDiarios.filter((l) => l.id !== libro.id))
+  const handleBorrar = async (libro) => {
+    const result = await libroDiarioService.deleteLedger(libro.ledger_id)
+    if (result.success) {
+      setLibrosDiarios((prev) => prev.filter((l) => l.id !== libro.id))
+    } else {
+      alert(`Error al eliminar: ${result.error}`)
     }
   }
 
@@ -153,12 +158,38 @@ const LibrosDiariosRecientes = () => {
         </div>
       </div>
 
-      {/* Lista de libros diarios */}
-      <LibrosDiariosApp
-        librosDiarios={librosDiarios}
-        onDescargar={handleDescargar}
-        onBorrar={handleBorrar}
-      />
+      {error && (
+        <div
+          style={{
+            padding: "12px 16px",
+            marginBottom: "16px",
+            borderRadius: "8px",
+            background: "#f8d7da",
+            color: "#dc3545",
+            fontSize: "14px",
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      {loading ? (
+        <div
+          style={{
+            padding: "40px",
+            textAlign: "center",
+            color: theme.textColorSecondary,
+          }}
+        >
+          Cargando libros diarios...
+        </div>
+      ) : (
+        <LibrosDiariosApp
+          librosDiarios={librosDiarios}
+          onDescargar={handleDescargar}
+          onBorrar={handleBorrar}
+        />
+      )}
     </div>
   )
 }

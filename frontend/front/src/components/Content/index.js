@@ -124,14 +124,8 @@ function Content({ activePanel, searchQuery, setSearchQuery }) {
         )
 
       case "Libros Diarios-Crear":
-        return (
-          <LibroDiarioCrear
-            transacciones={transacciones}
-            onEliminar={eliminarTransaccion}
-            onActualizarEstado={actualizarEstadoTransaccion}
-            onEditar={editarTransaccion}
-          />
-        )
+        return <LibroDiarioCrear />
+
       case "Libros Diarios-Recientes":
         return <LibroDiarioRecientes />
 
