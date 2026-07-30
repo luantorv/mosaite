@@ -177,13 +177,15 @@ python main.py # en MacOS o Linux
 
 ## Consultas por Lenguaje Natural
 
-El sistema permitirá a los usuarios hacer preguntas como:
+El sistema permite a los usuarios hacer preguntas en lenguaje natural sobre sus datos contables. Se activa desde la **barra de búsqueda** superior anteponiendo el prefijo `/ia` a la pregunta, por ejemplo:
 
-> _"¿Cuánto gasté en proveedores en abril?"_
+> _"/ia ¿cuántas transacciones hay por estado?"_
 
-Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta la intensión y busca los datos contables correspondientes.
+El servicio `consultorIA` interpreta la intención, genera una consulta SQL de **solo lectura** (SELECT), la ejecuta sobre la base de datos y muestra la consulta generada junto con los resultados en una tabla, dentro del panel de búsqueda de transacciones.
 
-> **Estado:** Está listo para implementarlo en el backend _(todavía no está terminado el backend)_.
+El consumo del servicio se realiza desde la app `chat` (endpoint `POST /api/chat/consultoria/`).
+
+> **Estado:** Implementado en backend y frontend.
 
 ---
 
@@ -224,11 +226,11 @@ Y obterner respuestas automáticas usando un modelo de lenguaje que interpreta l
 
 ## Funcionalidades
 
-- ConsultarIA _(el módulo de búsqueda impulsada por IA)_ ya funciona, falta implementarlo.
-- Daily _(el módulo de creación de libros diarios en PDF)_ está listo para su implementación.
+- ConsultorIA _(el módulo de búsqueda impulsada por IA)_ ya funciona y está integrado: se usa desde la barra de búsqueda con el prefijo `/ia`.
+- Daily _(el módulo de creación de libros diarios en PDF)_ está implementado, tanto el servicio (`services/daily`) como la app (`apps/daily`) y su interfaz.
 - Hay un POC para experimentar el flujo de uso del proyecto.
 - Hay un Ayudante basado en LLM/RAG para consultar información contable.
-- Las funcionalidades terminadas en el backend también lo está en el frontend; las que no, tienen un _spaceholder_ de momento.
+- Las funcionalidades terminadas en el backend también lo están en el frontend; las que no, tienen un _spaceholder_ de momento.
 - La documentación y el manual de usuarios están al día con las funcionalidades terminadas.
 
 ---
@@ -248,324 +250,345 @@ Sirve solo para mostrar el flujo y la apariencia: no hay lógica real detrás de
 
 ## Por hacer
 
-- Hacer la app `daily` para la creación y manejo de libros diarios y el frontend correspondiente.
-- Hacer la app `search` para el consumo del servicio `consultoIA` y el frontend correspondiente.
-- Mejorar el testing.
+- Mejorar el testing del backend.
 - Hacer testing en el frontend.
-- Terminar el manual de usuario cuando se terminen las _features_ principales.
+- Terminar el gestor de proyecto TUI.
+- Mantener el manual de usuario al día con las nuevas _features_.
 
 ---
 
 ## Estrucutra del Proyecto
 
 ```
-mosaite/
-|   backend/
-|   |   apps/
-|   |   |   accounts/
-|   |   |   |   data/
-|   |   |   |   |   __init__.py
-|   |   |   |   |   plan_cuentas_inicial.py
-|   |   |   |   management/
-|   |   |   |   |   commands/
-|   |   |   |   |   |   __init__.py
-|   |   |   |   |   |   init_plan_cuentas.py
-|   |   |   |   |   __init__.py
-|   |   |   |   tests/
-|   |   |   |   |   test_accounts_models.py
-|   |   |   |   |   test_accounts_serializers.py
-|   |   |   |   |   test_accounts_views.py
-|   |   |   |   __init__.py
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   models.py
-|   |   |   |   serializers.py
-|   |   |   |   tests.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   chat/
-|   |   |   |   management/
-|   |   |   |   |   commands/
-|   |   |   |   |   |   __init__.py
-|   |   |   |   |   |   init_chat.py
-|   |   |   |   |   |   rebuild_chat_index.py
-|   |   |   |   |   __init__.py
-|   |   |   |   tests/
-|   |   |   |   |   test_chat_models.py
-|   |   |   |   |   test_chat_permissions.py
-|   |   |   |   |   test_chat_serializers.py
-|   |   |   |   |   test_chat_views.py
-|   |   |   |   __init__.py
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   models.py
-|   |   |   |   permissions.py
-|   |   |   |   serializers.py
-|   |   |   |   tasks.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   config/
-|   |   |   |   tests/
-|   |   |   |   |   test_config_middleware.py
-|   |   |   |   |   test_config_models.py
-|   |   |   |   |   test_config_serializers.py
-|   |   |   |   |   test_config_views.py
-|   |   |   |   __init__.py
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   middleware.py
-|   |   |   |   models.py
-|   |   |   |   serializers.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   dash/
-|   |   |   |   management/
-|   |   |   |   |   commands/
-|   |   |   |   |   |   __init__.py
-|   |   |   |   |   |   check_dashboard_stats.py
-|   |   |   |   |   |   clear_dahsboard_data.py
-|   |   |   |   |   |   init_dashboard_data.py
-|   |   |   |   |   __init__.py
-|   |   |   |   tests/
-|   |   |   |   |   test_dash_views.py
-|   |   |   |   __init__.py
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   models.py
-|   |   |   |   serializers.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   trans/
-|   |   |   |   tests/
-|   |   |   |   |   test_trans_models.py
-|   |   |   |   |   test_trans_permissions.py
-|   |   |   |   |   test_trans_serializers.py
-|   |   |   |   |   test_trans_views.py
-|   |   |   |   __init__.py
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   models.py
-|   |   |   |   permissions.py
-|   |   |   |   serializers.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   users/
-|   |   |   |   tests/
-|   |   |   |   |   test_users_models.py
-|   |   |   |   |   test_users_serializers.py
-|   |   |   |   |   test_users_views.py
-|   |   |   |   __init__.py
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   models.py
-|   |   |   |   permissions.py
-|   |   |   |   urls.py
-|   |   |   |   utils.py
-|   |   |   |   views.py
-|   |   config/
-|   |   |   __init__.py
-|   |   |   asgi.py
-|   |   |   settings.py
-|   |   |   urls.py
-|   |   |   wsgi.py
-|   |   services/
-|   |   |   chat/
-|   |   |   |   data/
-|   |   |   |   |   manual_cuentas.md
-|   |   |   |   |   manual_usuario.md
-|   |   |   |   |   SIC1.md
-|   |   |   |   __init__.py
-|   |   |   |   config.py
-|   |   |   |   embedder.py
-|   |   |   |   init_index.py
-|   |   |   |   llm_client.py
-|   |   |   |   rag_service.py
-|   |   |   |   vector_store.py
-|   |   |   consultorIA/
-|   |   |   |   __init__.py
-|   |   |   |   config.py
-|   |   |   |   consultor_service.py
-|   |   |   |   examples.json
-|   |   |   |   llm_client.py
-|   |   |   |   main.py
-|   |   |   |   schema.txt
-|   |   |   |   sql_classifier.py
-|   |   |   |   sql_validator.py
-|   |   |   daily/
-|   |   |   |   __init__.py
-|   |   |   |   main.py
-|   |   |   llm_gateway/
-|   |   |   |   core/
-|   |   |   |   |   Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
-|   |   |   |   providers/
-|   |   |   |   |   __init__.py
-|   |   |   |   |   anthropic_provider.py
-|   |   |   |   |   base.py
-|   |   |   |   |   google_provider.py
-|   |   |   |   |   local_provider.py
-|   |   |   |   |   openai_provider.py
-|   |   |   |   __init__.py
-|   |   |   |   .env.example
-|   |   |   |   config.py
-|   |   |   |   llm_gateway.py
-|   |   |   |   test.py
-|   |   conftest.py
-|   |   manage.py
-|   |   pytest.ini
-|   |   README.md
-|   |   requirements.txt
-|   frontend/
-|   |   front/
-|   |   |   public/
-|   |   |   |   icon.png
-|   |   |   |   index.html
-|   |   |   |   logo.png
-|   |   |   |   manifest.json
-|   |   |   |   robots.txt
-|   |   |   src/
-|   |   |   |   assets/
-|   |   |   |   |   icon.png
-|   |   |   |   |   logo.png
-|   |   |   |   components/
-|   |   |   |   |   Content/
-|   |   |   |   |   |   Chat.js
-|   |   |   |   |   |   Configuracion.js
-|   |   |   |   |   |   CuentaCrear.js
-|   |   |   |   |   |   DashboardHome.js
-|   |   |   |   |   |   index.js
-|   |   |   |   |   |   LibroDiarioCard.js
-|   |   |   |   |   |   LibroDiarioBuscar.js
-|   |   |   |   |   |   LibroDiarioCrear.js
-|   |   |   |   |   |   LibroDiariosRecientes.js
-|   |   |   |   |   |   TransaccionBuscar.js
-|   |   |   |   |   |   TransaccionCard.js
-|   |   |   |   |   |   TransaccionCrear.js
-|   |   |   |   |   |   TransaccionRecientes.js
-|   |   |   |   |   |   UsuariosLista.js
-|   |   |   |   |   Dashboard.js
-|   |   |   |   |   Login.js
-|   |   |   |   |   LogoutButton.js
-|   |   |   |   |   ProtectedRoute.js
-|   |   |   |   |   Searchbar.js
-|   |   |   |   |   SideBar.js
-|   |   |   |   |   SidebarMenu.js
-|   |   |   |   |   ThemeToggle.js
-|   |   |   |   |   UserMenu.js
-|   |   |   |   context/
-|   |   |   |   |   AuthContext.js
-|   |   |   |   |   ThemeContext.js
-|   |   |   |   services/
-|   |   |   |   |   AccountService.js
-|   |   |   |   |   api.js
-|   |   |   |   |   AuthService.js
-|   |   |   |   |   ChatService.js
-|   |   |   |   |   ConfigService.js
-|   |   |   |   |   DashboardService.js
-|   |   |   |   |   TransactionService.js
-|   |   |   |   |   UserService.js
-|   |   |   |   App.css
-|   |   |   |   App.js
-|   |   |   |   App.test.js
-|   |   |   |   index.css
-|   |   |   |   index.js
-|   |   |   |   reportWebVitals.js
-|   |   |   |   setupTests.js
-|   |   |   .gitignore
-|   |   |   package-lock.json
-|   |   |   package.json
-|   |   |   README.md
-|   manual/
-|   |   chapter/
-|   |   |   faq.tex
-|   |   |   glosario.tex
-|   |   |   herramientas.tex
-|   |   |   interfaz.tex
-|   |   |   introduccion.tex
-|   |   |   libros_diarios.tex
-|   |   |   primeros_pasos.tex
-|   |   |   roles_permisos.tex
-|   |   |   transacciones.tex
-|   |   img/
-|   |   |   buscar_transacciones.png
-|   |   |   chat_rag.png
-|   |   |   configuracion.png
-|   |   |   crear_transaccion.png
-|   |   |   dashboard_principal.png
-|   |   |   estados_transaccion.png
-|   |   |   gestion_usuarios.png
-|   |   |   graficos_dashboard.png
-|   |   |   interfaz_completa.png
-|   |   |   lista_usuarios.png
-|   |   |   login.png
-|   |   |   logo.png
-|   |   |   plan_cuentas.png
-|   |   |   tema_claro.png
-|   |   |   tema_oscuro.png
-|   |   main.pdf
-|   |   main.tex
-|   POC/
-|   |   front/
-|   |   |   public/
-|   |   |   |   icon.png
-|   |   |   |   index.html
-|   |   |   |   manifest.json
-|   |   |   |   logo.png
-|   |   |   |   robots.txt
-|   |   |   src/
-|   |   |   |   assets/
-|   |   |   |   |   icon.png
-|   |   |   |   |   logo.png
-|   |   |   |   components/
-|   |   |   |   |   Content/
-|   |   |   |   |   |   Chat.js
-|   |   |   |   |   |   Configuracion.js
-|   |   |   |   |   |   CuentaCrear.js
-|   |   |   |   |   |   DashboardHome.js
-|   |   |   |   |   |   index.js
-|   |   |   |   |   |   LibroDiarioCard.js
-|   |   |   |   |   |   LibroDiarioBuscar.js
-|   |   |   |   |   |   LibroDiarioCrear.js
-|   |   |   |   |   |   LibroDiariosRecientes.js
-|   |   |   |   |   |   TransaccionBuscar.js
-|   |   |   |   |   |   TransaccionCard.js
-|   |   |   |   |   |   TransaccionCrear.js
-|   |   |   |   |   |   TransaccionRecientes.js
-|   |   |   |   |   |   UsuariosLista.js
-|   |   |   |   |   Dashboard.js
-|   |   |   |   |   Login.js
-|   |   |   |   |   LogoutButton.js
-|   |   |   |   |   ProtectedRoute.js
-|   |   |   |   |   Searchbar.js
-|   |   |   |   |   SideBar.js
-|   |   |   |   |   SidebarMenu.js
-|   |   |   |   |   ThemeToggle.js
-|   |   |   |   |   UserMenu.js
-|   |   |   |   context/
-|   |   |   |   |   AuthContext.js
-|   |   |   |   |   ThemeContext.js
-|   |   |   |   App.css
-|   |   |   |   App.js
-|   |   |   |   App.test.js
-|   |   |   |   index.css
-|   |   |   |   index.js
-|   |   |   |   reportWebVitals.js
-|   |   |   |   setupTests.js
-|   |   |   .gitignore
-|   |   |   package-lock.json
-|   |   |   package.json
-|   |   |   README.md
-|   tui/
-|   |   __init__.py
-|   |   app.py
-|   |   constants.py
-|   |   logic.py
-|   |   README.md
-|   |   screens.py
-|   .env
-|   .gitignore
-|   main.py
-|   main.tcss
-|   README.md
+mosaite
+|-- backend
+|   |-- apps
+|   |   |-- accounts
+|   |   |   |-- data
+|   |   |   |   |-- __init__.py
+|   |   |   |   `-- plan_cuentas_inicial.py
+|   |   |   |-- management
+|   |   |   |   |-- commands
+|   |   |   |   |   |-- init_plan_cuentas.py
+|   |   |   |   |   `-- __init__.py
+|   |   |   |   `-- __init__.py
+|   |   |   |-- tests
+|   |   |   |   |-- test_accounts_models.py
+|   |   |   |   |-- test_accounts_serializers.py
+|   |   |   |   `-- test_accounts_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- __init__.py
+|   |   |   |-- models.py
+|   |   |   |-- serializers.py
+|   |   |   |-- urls.py
+|   |   |   `-- views.py
+|   |   |-- chat
+|   |   |   |-- management
+|   |   |   |   |-- commands
+|   |   |   |   |   |-- init_chat.py
+|   |   |   |   |   |-- __init__.py
+|   |   |   |   |   `-- rebuild_chat_index.py
+|   |   |   |   `-- __init__.py
+|   |   |   |-- tests
+|   |   |   |   |-- test_chat_models.py
+|   |   |   |   |-- test_chat_permissions.py
+|   |   |   |   |-- test_chat_serializers.py
+|   |   |   |   `-- test_chat_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- consultoria_service.py
+|   |   |   |-- __init__.py
+|   |   |   |-- models.py
+|   |   |   |-- permissions.py
+|   |   |   |-- serializers.py
+|   |   |   |-- tasks.py
+|   |   |   |-- urls.py
+|   |   |   `-- views.py
+|   |   |-- config
+|   |   |   |-- tests
+|   |   |   |   |-- test_config_middleware.py
+|   |   |   |   |-- test_config_models.py
+|   |   |   |   |-- test_config_serializers.py
+|   |   |   |   `-- test_config_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- __init__.py
+|   |   |   |-- middleware.py
+|   |   |   |-- models.py
+|   |   |   |-- serializers.py
+|   |   |   |-- urls.py
+|   |   |   `-- views.py
+|   |   |-- daily
+|   |   |   |-- tests
+|   |   |   |   |-- __init__.py
+|   |   |   |   `-- test_daily_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- __init__.py
+|   |   |   |-- models.py
+|   |   |   |-- permissions.py
+|   |   |   |-- serializers.py
+|   |   |   |-- urls.py
+|   |   |   `-- views.py
+|   |   |-- dash
+|   |   |   |-- management
+|   |   |   |   |-- commands
+|   |   |   |   |   |-- check_dashboard_stats.py
+|   |   |   |   |   |-- clear_dashboard_data.py
+|   |   |   |   |   |-- init_dashboard_data.py
+|   |   |   |   |   `-- __init__.py
+|   |   |   |   `-- __init__.py
+|   |   |   |-- tests
+|   |   |   |   `-- test_dash_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- __init__.py
+|   |   |   |-- models.py
+|   |   |   |-- serializers.py
+|   |   |   |-- urls.py
+|   |   |   `-- views.py
+|   |   |-- trans
+|   |   |   |-- tests
+|   |   |   |   |-- test_trans_models.py
+|   |   |   |   |-- test_trans_permissions.py
+|   |   |   |   |-- test_trans_serializers.py
+|   |   |   |   `-- test_trans_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- __init__.py
+|   |   |   |-- models.py
+|   |   |   |-- permissions.py
+|   |   |   |-- serializers.py
+|   |   |   |-- urls.py
+|   |   |   `-- views.py
+|   |   |-- users
+|   |   |   |-- tests
+|   |   |   |   |-- test_users_models.py
+|   |   |   |   |-- test_users_serializers.py
+|   |   |   |   `-- test_users_views.py
+|   |   |   |-- admin.py
+|   |   |   |-- apps.py
+|   |   |   |-- __init__.py
+|   |   |   |-- models.py
+|   |   |   |-- permissions.py
+|   |   |   |-- serializers.py
+|   |   |   |-- urls.py
+|   |   |   |-- utils.py
+|   |   |   `-- views.py
+|   |   `-- __init__.py
+|   |-- config
+|   |   |-- asgi.py
+|   |   |-- __init__.py
+|   |   |-- settings.py
+|   |   |-- urls.py
+|   |   `-- wsgi.py
+|   |-- services
+|   |   |-- chat
+|   |   |   |-- data
+|   |   |   |   |-- manual_cuentas.md
+|   |   |   |   |-- manual_usuario.md
+|   |   |   |   `-- SIC1.md
+|   |   |   |-- config.py
+|   |   |   |-- embedder.py
+|   |   |   |-- init_index.py
+|   |   |   |-- __init__.py
+|   |   |   |-- llm_client.py
+|   |   |   |-- rag_service.py
+|   |   |   `-- vector_store.py
+|   |   |-- consultorIA
+|   |   |   |-- config.py
+|   |   |   |-- consultor_service.py
+|   |   |   |-- examples.json
+|   |   |   |-- __init__.py
+|   |   |   |-- llm_client.py
+|   |   |   |-- main.py
+|   |   |   |-- schema.txt
+|   |   |   |-- sql_classifier.py
+|   |   |   `-- sql_validator.py
+|   |   |-- daily
+|   |   |   |-- storage
+|   |   |   |   `-- index.json
+|   |   |   |-- templates
+|   |   |   |   `-- libro_diario.tex
+|   |   |   |-- config.py
+|   |   |   |-- __init__.py
+|   |   |   |-- ledger_service.py
+|   |   |   `-- main.py
+|   |   `-- llm_gateway
+|   |       |-- core
+|   |       |   |-- Meta-Llama-3.1-8B-Instruct-Q3_K_S.gguf
+|   |       |   `-- Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf
+|   |       |-- providers
+|   |       |   |-- anthropic_provider.py
+|   |       |   |-- base.py
+|   |       |   |-- google_provider.py
+|   |       |   |-- __init__.py
+|   |       |   |-- local_provider.py
+|   |       |   `-- openai_provider.py
+|   |       |-- config.py
+|   |       |-- __init__.py
+|   |       |-- llm_gateway.py
+|   |       `-- test.py
+|   |-- conftest.py
+|   |-- manage.py
+|   |-- pytest.ini
+|   |-- README.md
+|   `-- requirements.txt
+|-- frontend
+|   `-- front
+|       |-- public
+|       |   |-- icon.png
+|       |   |-- index.html
+|       |   |-- logo.png
+|       |   |-- manifest.json
+|       |   `-- robots.txt
+|       |-- src
+|       |   |-- assets
+|       |   |   |-- icon.png
+|       |   |   `-- logo.png
+|       |   |-- components
+|       |   |   |-- Content
+|       |   |   |   |-- Chat.js
+|       |   |   |   |-- Configuracion.js
+|       |   |   |   |-- CuentaCrear.js
+|       |   |   |   |-- DashboardHome.js
+|       |   |   |   |-- index.js
+|       |   |   |   |-- LibroDiarioCard.js
+|       |   |   |   |-- LibroDiarioCrear.js
+|       |   |   |   |-- LibroDiarioRecientes.js
+|       |   |   |   |-- Pagination.js
+|       |   |   |   |-- TransaccionBuscar.js
+|       |   |   |   |-- TransaccionCard.js
+|       |   |   |   |-- TransaccionCrear.js
+|       |   |   |   |-- TransaccionEditar.js
+|       |   |   |   |-- TransaccionRecientes.js
+|       |   |   |   `-- UsuariosLista.js
+|       |   |   |-- Dashboard.js
+|       |   |   |-- Login.js
+|       |   |   |-- LogoutButton.js
+|       |   |   |-- ProtectedRoute.js
+|       |   |   |-- SearchBar.js
+|       |   |   |-- Sidebar.js
+|       |   |   |-- SidebarMenu.js
+|       |   |   |-- ThemeToggle.js
+|       |   |   `-- UserMenu.js
+|       |   |-- context
+|       |   |   |-- AuthContext.js
+|       |   |   `-- ThemeContext.js
+|       |   |-- services
+|       |   |   |-- AccountService.js
+|       |   |   |-- api.js
+|       |   |   |-- AuthService.js
+|       |   |   |-- ChatService.js
+|       |   |   |-- ConfigService.js
+|       |   |   |-- DashboardService.js
+|       |   |   |-- LibroDiarioService.js
+|       |   |   |-- TransactionService.js
+|       |   |   `-- UserService.js
+|       |   |-- App.css
+|       |   |-- App.js
+|       |   |-- App.test.js
+|       |   |-- index.css
+|       |   |-- index.js
+|       |   |-- reportWebVitals.js
+|       |   `-- setupTests.js
+|       |-- package.json
+|       |-- package-lock.json
+|       `-- README.md
+|-- manual
+|   |-- chapters
+|   |   |-- faq.tex
+|   |   |-- glosario.tex
+|   |   |-- herramientas_ia.tex
+|   |   |-- interfaz.tex
+|   |   |-- introduccion.tex
+|   |   |-- libros_diarios.tex
+|   |   |-- primeros_pasos.tex
+|   |   |-- roles_permisos.tex
+|   |   `-- transacciones.tex
+|   |-- img
+|   |   |-- buscar_transacciones.png
+|   |   |-- chat_rag.png
+|   |   |-- configuracion.png
+|   |   |-- crear_libro.png
+|   |   |-- crear_transaccion.png
+|   |   |-- dashboard_principal.png
+|   |   |-- estados_transaccion.png
+|   |   |-- gestion_usuarios.png
+|   |   |-- graficos_dashboard.png
+|   |   |-- interfaz_completa.png
+|   |   |-- libro_diario_ejemplo.png
+|   |   |-- lista_libros.png
+|   |   |-- login.png
+|   |   |-- logo.png
+|   |   |-- plan_cuentas.png
+|   |   |-- tema_claro.png
+|   |   `-- tema_oscuro.png
+|   |-- main.pdf
+|   `-- main.tex
+|-- POC
+|   `-- front
+|       |-- public
+|       |   |-- icon.png
+|       |   |-- index.html
+|       |   |-- logo.png
+|       |   |-- manifest.json
+|       |   `-- robots.txt
+|       |-- src
+|       |   |-- assets
+|       |   |   |-- icon.png
+|       |   |   `-- logo.png
+|       |   |-- components
+|       |   |   |-- Content
+|       |   |   |   |-- Chat.js
+|       |   |   |   |-- Configuracion.js
+|       |   |   |   |-- CuentaCrear.js
+|       |   |   |   |-- DashboardHome.js
+|       |   |   |   |-- index.js
+|       |   |   |   |-- LibroDiarioCard.js
+|       |   |   |   |-- LibroDiarioCrear.js
+|       |   |   |   |-- LibroDiarioRecientes.js
+|       |   |   |   |-- TransaccionBuscar.js
+|       |   |   |   |-- TransaccionCard.js
+|       |   |   |   |-- TransaccionCrear.js
+|       |   |   |   |-- TransaccionRecientes.js
+|       |   |   |   `-- UsuariosLista.js
+|       |   |   |-- Dashboard.js
+|       |   |   |-- Login.js
+|       |   |   |-- LogoutButton.js
+|       |   |   |-- ProtectedRoute.js
+|       |   |   |-- SearchBar.js
+|       |   |   |-- Sidebar.js
+|       |   |   |-- SidebarMenu.js
+|       |   |   |-- ThemeToggle.js
+|       |   |   `-- UserMenu.js
+|       |   |-- context
+|       |   |   |-- AuthContext.js
+|       |   |   `-- ThemeContext.js
+|       |   |-- App.css
+|       |   |-- App.js
+|       |   |-- App.test.js
+|       |   |-- index.css
+|       |   |-- index.js
+|       |   |-- reportWebVitals.js
+|       |   `-- setupTests.js
+|       |-- package.json
+|       |-- package-lock.json
+|       `-- README.md
+|-- tui
+|   |-- app.py
+|   |-- constants.py
+|   |-- __init__.py
+|   |-- logic.py
+|   |-- README.md
+|   `-- screens.py
+|-- CLAUDE.md
+|-- flake.lock
+|-- flake.nix
+|-- main.py
+|-- main.tcss
+`-- README.md
 ```
 
 ---
