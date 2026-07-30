@@ -339,6 +339,9 @@ const LibrosDiariosApp = ({ librosDiarios = [], onDescargar, onBorrar }) => {
         {/* Barra de herramientas: seleccionar todo + acciones masivas */}
         <div
           style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 5,
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",

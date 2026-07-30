@@ -81,6 +81,9 @@ const Pagination = ({
   return (
     <div
       style={{
+        position: "sticky",
+        bottom: 0,
+        zIndex: 5,
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",
@@ -88,6 +91,8 @@ const Pagination = ({
         gap: "16px",
         padding: "16px",
         marginTop: "8px",
+        background: theme.background,
+        boxShadow: `0 -8px 12px -8px ${theme.background}`,
       }}
     >
       {/* Info + selector de elementos por página */}
