@@ -1,15 +1,64 @@
-TABLA clientes:
-  - id_cliente (INT, PK)
-  - nombre (VARCHAR)
-  - email (VARCHAR)
+Base de datos SQLite del sistema contable Mosaite (contabilidad de partida doble).
 
-TABLA pedidos:
-  - id_pedido (INT, PK)
-  - id_cliente (INT, FK → clientes.id_cliente)
-  - fecha (DATE)
-  - total (DECIMAL)
+REGLAS DE DIALECTO (IMPORTANTE):
+- El motor es SQLite. Usa funciones de SQLite: date('now'), date('now','-30 days'),
+  strftime('%Y', fecha), strftime('%m', fecha), etc.
+- NO uses funciones de MySQL como CURDATE(), NOW(), DATE_SUB(), DATE_ADD(),
+  MONTH(), YEAR(), DAYOFWEEK(), QUARTER(). No existen en SQLite.
+- Todos los importes monetarios (debit, credit, saldo, total_debit, total_credit)
+  se guardan en CENTAVOS como enteros. Para mostrarlos en unidades monetarias
+  divide por 100.0 (ej: saldo / 100.0).
+- Las fechas se guardan como TEXTO en formato ISO (ej: '2024-01-31' o
+  '2024-01-31T10:20:00'). Se pueden comparar con operadores de texto (>=, <=).
+- "group" es palabra reservada: escríbela siempre entre comillas dobles.
 
-TABLA productos:
-  - id_producto (INT, PK)
-  - nombre (VARCHAR)
-  - stock (INT)
+TABLA accounts (plan de cuentas):
+  - acc_id (INTEGER, PK)
+  - code (TEXT)         -- código de la cuenta
+  - name (TEXT)         -- nombre de la cuenta
+  - saldo (INTEGER)     -- saldo actual en centavos
+  - nature (BOOLEAN)    -- 1 = deudora, 0 = acreedora
+  - status (BOOLEAN)    -- 1 = activa, 0 = inactiva
+
+TABLA transactions (transacciones / asientos contables):
+  - trans_id (INTEGER, PK)
+  - user_id (INTEGER, FK -> users.user_id)   -- autor de la transacción
+  - status (INTEGER)    -- 0 = por verificar, 1 = verificada, 2 = cerrada
+  - date (TEXT)         -- fecha de la transacción (ISO)
+  - legend (TEXT)       -- descripción / leyenda
+  - created_at (TEXT)
+  - updated_at (TEXT)
+
+TABLA transaction_entries (líneas del asiento: debe y haber):
+  - entr_id (INTEGER, PK)
+  - trans_id (INTEGER, FK -> transactions.trans_id)
+  - acc_id (INTEGER, FK -> accounts.acc_id)
+  - debit (INTEGER)     -- monto al debe en centavos (0 si la línea es al haber)
+  - credit (INTEGER)    -- monto al haber en centavos (0 si la línea es al debe)
+
+TABLA daily_ledgers (libros diarios):
+  - ledger_id (INTEGER, PK)
+  - "group" (TEXT)              -- identificador de grupo / tenant
+  - date (TEXT)
+  - pdf_filename (TEXT)
+  - total_debit (INTEGER)       -- total del debe en centavos
+  - total_credit (INTEGER)      -- total del haber en centavos
+  - transactions_count (INTEGER)
+  - created_at (TEXT)
+  - user_id (INTEGER, FK -> users.user_id)
+
+TABLA users (usuarios):
+  - user_id (INTEGER, PK)
+  - name (TEXT)
+  - email (TEXT)
+  - "group" (TEXT)      -- identificador de grupo / tenant
+  - rol (INTEGER)       -- 0 = admin/profesor
+  - status (INTEGER)    -- 0 = activo, 1 = inactivo
+  - created_at (TEXT)
+
+TABLA config (configuración del sistema):
+  - config_id (INTEGER, PK)
+  - system_mode (BOOLEAN)
+  - date_format (TEXT)
+  - currency (TEXT)
+  - skip_verification (BOOLEAN)
