@@ -11,11 +11,13 @@ from .serializers import (
     ChatQuerySerializer,
     ChatRequestSerializer,
     ChatResponseSerializer,
+    ConsultoriaRequestSerializer,
     IndexStatusSerializer,
     RebuildIndexSerializer
 )
 from .permissions import CanUseChat, CanRebuildIndex, CanViewHistory
 from .tasks import start_rebuild_index
+from .consultoria_service import procesar_consulta
 from services.chat import rag_service
 
 
@@ -126,6 +128,41 @@ class ChatViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
     
+    @action(detail=False, methods=['post'])
+    def consultoria(self, request):
+        """
+        Genera una consulta SQL a partir de una pregunta en lenguaje natural
+        (servicio consultorIA), la ejecuta en modo lectura y devuelve los datos.
+
+        POST /api/chat/consultoria/
+        {
+            "question": "¿Cuántas transacciones hay en total?"
+        }
+        """
+        serializer = ConsultoriaRequestSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        question = serializer.validated_data['question']
+
+        try:
+            result = procesar_consulta(question)
+        except Exception as e:
+            return Response(
+                {
+                    'valid': False,
+                    'error': f'Error procesando la consulta: {str(e)}',
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        # Siempre 200: el frontend inspecciona `valid` para distinguir entre
+        # una consulta resuelta y una que no se pudo generar/ejecutar.
+        return Response(result, status=status.HTTP_200_OK)
+
     @action(detail=False, methods=['post'])
     def cancel(self, request):
         """

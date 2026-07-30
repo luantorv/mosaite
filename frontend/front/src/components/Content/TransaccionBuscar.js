@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react"
 import { useTheme } from "../../context/ThemeContext"
 import TransaccionesApp from "./TransaccionCard"
-import transactionService from "../../services/TransactionService"
+import ChatService from "../../services/ChatService"
+
+// Prefijo que activa la consulta en lenguaje natural (ConsultorIA)
+const IA_PREFIX = /^\/ia\b/i
+const isIaQuery = (q) => IA_PREFIX.test((q || "").trim())
+const extractIaQuestion = (q) => (q || "").trim().replace(IA_PREFIX, "").trim()
 
 function TransaccionBuscar({ 
   searchQuery = "", 
@@ -17,13 +22,46 @@ function TransaccionBuscar({
   const [searchResults, setSearchResults] = useState([])
   const [hasSearched, setHasSearched] = useState(false)
 
+  // Estado del modo ConsultorIA (búsqueda con prefijo "/ia")
+  const [iaActive, setIaActive] = useState(false)
+  const [iaLoading, setIaLoading] = useState(false)
+  const [iaData, setIaData] = useState(null) // { sql, columns, rows, row_count, truncated }
+  const [iaError, setIaError] = useState(null)
+  const [iaQuestion, setIaQuestion] = useState("")
+
+  const resetIa = () => {
+    setIaActive(false)
+    setIaLoading(false)
+    setIaData(null)
+    setIaError(null)
+    setIaQuestion("")
+  }
+
   useEffect(() => {
-    if (searchQuery && searchQuery.trim()) {
-      handleSearch(searchQuery)
-    } else if (searchQuery === "" && hasSearched) {
-      setHasSearched(false)
-      setSearchResults([])
+    const q = (searchQuery || "").trim()
+
+    if (!q) {
+      if (hasSearched) {
+        setHasSearched(false)
+        setSearchResults([])
+      }
+      resetIa()
+      return
     }
+
+    if (isIaQuery(q)) {
+      // Búsqueda con IA: con debounce para no disparar una llamada por tecla
+      setIaActive(true)
+      const question = extractIaQuestion(q)
+      setIaQuestion(question)
+      const handle = setTimeout(() => handleIaSearch(question), 700)
+      return () => clearTimeout(handle)
+    }
+
+    // Búsqueda normal (filtrado local)
+    resetIa()
+    handleSearch(searchQuery)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, transacciones])
 
   const handleSearch = async (query) => {
@@ -79,6 +117,38 @@ function TransaccionBuscar({
     }, 500)
   }
 
+  const handleIaSearch = async (question) => {
+    setIaActive(true)
+    setIaData(null)
+    setIaError(null)
+
+    if (!question) {
+      setIaLoading(false)
+      setIaError('Escribe una pregunta después de "/ia". Ej: /ia ¿cuántas transacciones hay?')
+      return
+    }
+
+    setIaLoading(true)
+    console.log("🤖 Consulta IA:", question)
+
+    const res = await ChatService.consultoria(question)
+    setIaLoading(false)
+
+    if (res.success && res.data) {
+      if (res.data.valid) {
+        setIaData(res.data)
+        setIaError(null)
+      } else {
+        // Se pudo generar el SQL pero no ejecutar, o no fue válido
+        setIaData(res.data.sql ? { sql: res.data.sql, columns: [], rows: [] } : null)
+        setIaError(res.data.error || "No se pudo procesar la consulta.")
+      }
+    } else {
+      setIaData(null)
+      setIaError(res.error || "Error al comunicarse con el servicio de IA.")
+    }
+  }
+
   if (loadingTransactions) {
     return (
       <div
@@ -101,6 +171,199 @@ function TransaccionBuscar({
           <span className="visually-hidden">Cargando...</span>
         </div>
         <h4 style={{ color: theme.textColor }}>Cargando transacciones...</h4>
+      </div>
+    )
+  }
+
+  // --- Vista del modo ConsultorIA ("/ia ...") ---
+  if (iaActive) {
+    return (
+      <div>
+        <div
+          style={{
+            marginTop: "30px",
+            marginBottom: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "12px",
+            flexWrap: "wrap",
+          }}
+        >
+          <h5 style={{ color: theme.textColor, margin: 0 }}>
+            🤖 Consulta IA
+          </h5>
+          {iaQuestion && (
+            <div
+              style={{
+                background: theme.background,
+                padding: "8px 16px",
+                borderRadius: "20px",
+                boxShadow: theme.cardShadowIn,
+                fontSize: "14px",
+                color: theme.textColor,
+              }}
+            >
+              Pregunta: <strong>"{iaQuestion}"</strong>
+            </div>
+          )}
+        </div>
+
+        {iaLoading && (
+          <div
+            style={{
+              background: theme.background,
+              textAlign: "center",
+              padding: "40px",
+              borderRadius: "20px",
+            }}
+          >
+            <div
+              className="spinner-border"
+              role="status"
+              style={{
+                width: "3rem",
+                height: "3rem",
+                color: theme.textColor,
+                marginBottom: "20px",
+              }}
+            >
+              <span className="visually-hidden">Procesando...</span>
+            </div>
+            <h4 style={{ color: theme.textColor }}>Generando y ejecutando la consulta...</h4>
+            <p style={{ color: theme.textColor, opacity: 0.7, fontSize: "14px", marginTop: "10px" }}>
+              El asistente traduce tu pregunta a SQL y la ejecuta
+            </p>
+          </div>
+        )}
+
+        {!iaLoading && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {/* SQL generada */}
+            {iaData?.sql && (
+              <div>
+                <div style={{ color: theme.textColorSecondary, fontSize: "13px", marginBottom: "6px" }}>
+                  Consulta SQL generada:
+                </div>
+                <pre
+                  style={{
+                    background: theme.background,
+                    boxShadow: theme.cardShadowIn,
+                    borderRadius: "12px",
+                    padding: "16px",
+                    margin: 0,
+                    color: theme.textColor,
+                    fontSize: "13px",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
+                    overflowX: "auto",
+                  }}
+                >
+                  {iaData.sql}
+                </pre>
+              </div>
+            )}
+
+            {/* Error */}
+            {iaError && (
+              <div
+                style={{
+                  background: "#ffebee",
+                  color: "#c62828",
+                  padding: "16px",
+                  borderRadius: "12px",
+                  fontSize: "14px",
+                }}
+              >
+                <strong>⚠️ </strong>{iaError}
+              </div>
+            )}
+
+            {/* Tabla de resultados */}
+            {iaData && iaData.columns && iaData.columns.length > 0 && (
+              <div>
+                <div
+                  style={{
+                    color: theme.textColor,
+                    fontSize: "14px",
+                    marginBottom: "10px",
+                    fontWeight: "500",
+                  }}
+                >
+                  {iaData.row_count} fila{iaData.row_count !== 1 ? "s" : ""}
+                  {iaData.truncated ? ` (mostrando las primeras ${iaData.rows.length})` : ""}
+                </div>
+
+                {iaData.rows.length > 0 ? (
+                  <div
+                    style={{
+                      overflowX: "auto",
+                      background: theme.background,
+                      boxShadow: theme.cardShadowOut,
+                      borderRadius: "12px",
+                      padding: "12px",
+                    }}
+                  >
+                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                      <thead>
+                        <tr style={{ borderBottom: `2px solid ${theme.textColorSecondary}` }}>
+                          {iaData.columns.map((col) => (
+                            <th
+                              key={col}
+                              style={{
+                                padding: "10px 12px",
+                                textAlign: "left",
+                                color: theme.textColor,
+                                fontSize: "14px",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {col}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {iaData.rows.map((row, rIdx) => (
+                          <tr
+                            key={rIdx}
+                            style={{ borderBottom: `1px solid ${theme.textColorSecondary}40` }}
+                          >
+                            {row.map((cell, cIdx) => (
+                              <td
+                                key={cIdx}
+                                style={{
+                                  padding: "8px 12px",
+                                  color: theme.textColorSecondary,
+                                  fontSize: "14px",
+                                }}
+                              >
+                                {cell === null || cell === undefined ? "—" : String(cell)}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      background: theme.background,
+                      textAlign: "center",
+                      padding: "40px",
+                      borderRadius: "12px",
+                      boxShadow: theme.cardShadowOut,
+                      color: theme.textColor,
+                    }}
+                  >
+                    La consulta no devolvió resultados.
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     )
   }

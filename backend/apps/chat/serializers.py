@@ -28,6 +28,18 @@ class ChatRequestSerializer(serializers.Serializer):
         return value.strip()
 
 
+class ConsultoriaRequestSerializer(serializers.Serializer):
+    """Serializer para las peticiones de consulta en lenguaje natural (ConsultorIA)"""
+    question = serializers.CharField(max_length=2000, required=True)
+
+    def validate_question(self, value):
+        if len(value.strip()) < 3:
+            raise serializers.ValidationError(
+                "La pregunta debe tener al menos 3 caracteres"
+            )
+        return value.strip()
+
+
 class ChatResponseSerializer(serializers.Serializer):
     """Serializer para las respuestas de chat"""
     answer = serializers.CharField()

@@ -30,6 +30,26 @@ const ChatService = {
     }
   },
 
+  // Consulta en lenguaje natural -> SQL (ConsultorIA). Ejecuta el SELECT
+  // generado en el backend y devuelve columnas y filas.
+  consultoria: async (question) => {
+    try {
+      const response = await api.post('/chat/consultoria/', {
+        question: question,
+      });
+
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Error al procesar la consulta IA',
+      };
+    }
+  },
+
   // Cancelar consulta (para implementación futura de streaming)
   cancelQuery: async (requestId) => {
     try {
