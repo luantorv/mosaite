@@ -84,35 +84,34 @@ Valide transacciones regularmente. Solo las transacciones validadas pueden inclu
 
 \section{Búsqueda de Transacciones}
 
-\subsection{Búsqueda Rápida}
+\subsection{Búsqueda por Texto}
 
-Use la barra superior para búsquedas simples por:
-\begin{itemize}
-    \item Número de transacción
-    \item Palabras en la leyenda
-\end{itemize}
-
-\subsection{Búsqueda Avanzada}
-
-Acceda a \textbf{Transacciones > Buscar} para filtrar por:
+Escriba un término en la barra de búsqueda superior y presione Enter. El sistema abre el panel de \textbf{Buscar Transacciones} y muestra las coincidencias. La búsqueda revisa varios campos a la vez:
 
 \begin{itemize}
-    \item \textbf{Fecha}: Específica o rango
-    \item \textbf{Estado}: Por Validar, Validada, Cerrada
-    \item \textbf{Usuario}: Creador de la transacción
-    \item \textbf{Cuenta}: Transacciones que incluyan una cuenta específica
-    \item \textbf{Monto}: Rango de importes
-    \item \textbf{Texto}: Búsqueda en leyendas
+    \item \textbf{Leyenda} de la transacción
+    \item \textbf{Fecha}
+    \item \textbf{Autor} (usuario que la creó)
+    \item \textbf{Número (ID)} de transacción
+    \item \textbf{Código y nombre de cuenta} incluidos en el asiento
 \end{itemize}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{img/buscar_transacciones.png}
-    \caption{Filtros de búsqueda avanzada}
+    \caption{Panel de búsqueda de transacciones}
     \label{fig:busqueda}
 \end{figure}
 
-Puede combinar múltiples filtros para búsquedas precisas.
+\subsection{Búsqueda por Lenguaje Natural (\texttt{/ia})}
+
+Para consultas más elaboradas sobre sus datos (conteos, totales, saldos, agrupaciones), anteponga \texttt{/ia} a su pregunta en la misma barra de búsqueda. Por ejemplo: \texttt{/ia ¿cuántas transacciones hay por estado?}
+
+Esto activa \textbf{ConsultorIA}, que traduce la pregunta a una consulta y muestra los resultados en una tabla. Consulte el capítulo \textit{Herramientas de Inteligencia Artificial} para más detalles.
+
+\subsection{Trabajar con los Resultados}
+
+En las listas de resultados y de transacciones recientes, la barra de \textbf{selección} (arriba) y los \textbf{controles de paginación} (abajo) permanecen fijos mientras el listado se desplaza. Desde la barra de selección puede elegir varias transacciones y aplicar acciones en lote (cambiar estado o eliminar); desde la paginación puede cambiar la cantidad de elementos por página y navegar entre páginas.
 
 \section{Plan de Cuentas}
 

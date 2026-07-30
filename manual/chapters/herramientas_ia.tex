@@ -70,69 +70,71 @@ Para consultas sobre sus datos contables, use ConsultorIA.
 
 \section{ConsultorIA - Búsqueda por Lenguaje Natural}
 
-ConsultorIA permite consultar sus datos contables usando lenguaje natural.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{img/consultoria.png}
-    \caption{Interfaz de ConsultorIA}
-    \label{fig:consultoria}
-\end{figure}
+ConsultorIA permite consultar sus datos contables escribiendo preguntas en lenguaje natural directamente desde la barra de búsqueda superior.
 
 \subsection{¿Qué Hace ConsultorIA?}
 
 \begin{itemize}
     \item Interpreta preguntas en lenguaje cotidiano
-    \item Las convierte automáticamente en consultas SQL
-    \item Busca en su base de datos de transacciones
-    \item Presenta resultados comprensibles
+    \item Las convierte automáticamente en una consulta SQL de solo lectura (SELECT)
+    \item Ejecuta la consulta sobre la base de datos del sistema
+    \item Muestra la consulta SQL generada y los resultados en una tabla
 \end{itemize}
 
-\subsection{Uso de ConsultorIA}
+\subsection{Cómo Activarlo: el Prefijo \texttt{/ia}}
+
+ConsultorIA se activa desde la \textbf{barra de búsqueda} de la parte superior, anteponiendo \texttt{/ia} a su pregunta.
 
 \begin{enumerate}
-    \item Acceda a \textbf{Transacciones > Búsqueda por Lenguaje Natural}
-    \item Escriba su pregunta
-    \item Haga clic en \textbf{Consultar}
-    \item Revise los resultados
+    \item Escriba \texttt{/ia} seguido de su pregunta en la barra de búsqueda superior. \\
+    Ejemplo: \texttt{/ia ¿cuántas transacciones hay?}
+    \item Presione Enter
+    \item El sistema abre el panel de \textbf{Buscar Transacciones} y procesa la consulta
+    \item Revise la consulta SQL generada y la tabla de resultados
 \end{enumerate}
+
+\begin{notebox}
+Sin el prefijo \texttt{/ia}, la barra de búsqueda funciona de forma normal (búsqueda de transacciones por texto). El prefijo \texttt{/ia} es lo único que cambia el comportamiento hacia la consulta inteligente.
+\end{notebox}
 
 \subsection{Tipos de Consultas}
 
-\textbf{Sobre gastos o ingresos:}
+\textbf{Conteos y totales:}
 \begin{itemize}
-    \item "¿Cuánto gasté en proveedores en abril?"
-    \item "¿Cuál fue el total de ventas este mes?"
+    \item \texttt{/ia ¿cuántas transacciones hay en total?}
+    \item \texttt{/ia suma total del debe de las transacciones cerradas}
 \end{itemize}
 
-\textbf{Sobre cuentas específicas:}
+\textbf{Sobre cuentas:}
 \begin{itemize}
-    \item "¿Cuál es el saldo de la cuenta Caja?"
-    \item "Muéstrame movimientos de Bancos"
+    \item \texttt{/ia ¿cuáles son las 5 cuentas con mayor saldo?}
+    \item \texttt{/ia listar todas las cuentas activas}
+\end{itemize}
+
+\textbf{Sobre transacciones y estados:}
+\begin{itemize}
+    \item \texttt{/ia mostrar las transacciones por verificar}
+    \item \texttt{/ia contar transacciones por estado}
 \end{itemize}
 
 \textbf{Consultas temporales:}
 \begin{itemize}
-    \item "¿Cuántas transacciones registré ayer?"
-    \item "Muestra asientos de la semana pasada"
-\end{itemize}
-
-\textbf{Consultas comparativas:}
-\begin{itemize}
-    \item "¿Gasté más en marzo o abril?"
-    \item "Compara ventas de enero con febrero"
+    \item \texttt{/ia transacciones de los últimos 30 días}
+    \item \texttt{/ia contar transacciones por mes en 2024}
 \end{itemize}
 
 \subsection{Interpretación de Resultados}
 
-Los resultados pueden presentarse como:
+La respuesta se muestra en el panel de búsqueda con dos partes:
 
 \begin{description}
-    \item[Valores numéricos] "El total gastado fue \$45,320"
-    \item[Listas] Detalle de transacciones encontradas
-    \item[Tablas comparativas] Comparaciones por período
-    \item[Respuestas descriptivas] Resúmenes de actividad
+    \item[Consulta SQL generada] La sentencia SELECT que el asistente construyó a partir de su pregunta. Sirve para verificar qué se consultó.
+    \item[Tabla de resultados] Las filas devueltas por la consulta, con sus columnas. Si la consulta no devuelve filas, se indica que no hubo resultados.
 \end{description}
+
+\begin{notebox}
+Los importes se almacenan en centavos; muchas consultas los muestran ya convertidos a la unidad monetaria. Se muestran como máximo 500 filas por consulta.
+\end{notebox}
 
 \subsection{Diferencias Entre Chat y ConsultorIA}
 
@@ -142,13 +144,15 @@ Los resultados pueden presentarse como:
 \hline
 \textbf{Característica} & \textbf{Chat RAG} & \textbf{ConsultorIA} \\
 \hline
-Propósito & Teoría y uso del sistema & Consultas sobre sus datos \\
+Propósito & Teoría y uso del sistema & Consultas sobre los datos \\
 \hline
-Acceso a datos & NO accede a transacciones & SÍ accede a sus transacciones \\
+Acceso a datos & NO accede a transacciones & SÍ consulta la base de datos \\
 \hline
-Tipo de respuestas & Conceptuales y educativas & Numéricas y basadas en datos \\
+Cómo se usa & Menú \textbf{Chat} & Prefijo \texttt{/ia} en la barra de búsqueda \\
 \hline
-Ejemplo de uso & "¿Qué es un activo?" & "¿Cuánto gasté en mayo?" \\
+Tipo de respuestas & Conceptuales y educativas & Consulta SQL y tabla de datos \\
+\hline
+Ejemplo de uso & "¿Qué es un activo?" & \texttt{/ia ¿cuántas cuentas activas hay?} \\
 \hline
 \end{tabular}
 \caption{Comparación entre Chat RAG y ConsultorIA}
@@ -158,13 +162,14 @@ Ejemplo de uso & "¿Qué es un activo?" & "¿Cuánto gasté en mayo?" \\
 \subsection{Consejos para Mejores Resultados}
 
 \begin{enumerate}
+    \item Recuerde anteponer siempre \texttt{/ia} a la pregunta
     \item Sea claro y específico en sus preguntas
     \item Especifique períodos cuando sea relevante
-    \item Use nombres correctos de cuentas
+    \item Use nombres o códigos correctos de cuentas
     \item Para consultas complejas, divídalas en varias simples
-    \item Si no obtiene el resultado esperado, reformule
+    \item Si no obtiene el resultado esperado, reformule la pregunta
 \end{enumerate}
 
-\begin{notebox}
-ConsultorIA solo consulta información, no modifica datos. Es una herramienta de solo lectura.
-\end{notebox}
+\begin{warningbox}
+ConsultorIA solo consulta información, nunca la modifica: únicamente ejecuta consultas de lectura (SELECT). Las operaciones de escritura o borrado están bloqueadas.
+\end{warningbox}
